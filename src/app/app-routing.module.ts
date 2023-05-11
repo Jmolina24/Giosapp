@@ -13,7 +13,7 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				loadChildren: () => import('app/pages/auth/auth.module').then((m: any) => m.AuthModule)
+				loadChildren: (): any => import('app/pages/auth/auth.module').then((m: any) => m.AuthModule)
 			}
 		]
 	},
@@ -23,7 +23,7 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				loadChildren: () => import('app/pages/main/main.module').then((m: any) => m.MainModule),
+				loadChildren: (): any => import('app/pages/main/main.module').then((m: any) => m.MainModule),
 			}
 		]
 	},
@@ -36,7 +36,7 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				loadChildren: () => import('app/pages/others/others.module').then((m: any) => m.OthersModule),
+				loadChildren: (): any => import('app/pages/others/others.module').then((m: any) => m.OthersModule),
 			}
 		]
 	},

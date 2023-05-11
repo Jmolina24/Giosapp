@@ -22,9 +22,6 @@ export class AuthSignInComponent implements OnInit {
 	signInForm: FormGroup;
 	showAlert: boolean = false;
 
-	/**
-	 * Constructor
-	 */
 	constructor(
 		private _authService: AuthService,
 		private _formBuilder: FormBuilder,
@@ -32,36 +29,18 @@ export class AuthSignInComponent implements OnInit {
 		private _storage: StorageService
 	) {}
 
-	// -----------------------------------------------------------------------------------------------------
-	// @ Lifecycle hooks
-	// -----------------------------------------------------------------------------------------------------
-
-	/**
-	 * On init
-	 */
 	ngOnInit(): void {
-		// Create the form
-		// hughes.brian@company.com -- admin
 		this.signInForm = this._formBuilder.group({
 			username: ['', [Validators.required]],
 			password: ['', Validators.required],
 		});
 	}
 
-	// -----------------------------------------------------------------------------------------------------
-	// @ Public methods
-	// -----------------------------------------------------------------------------------------------------
-
-	/**
-	 * Sign in
-	 */
 	signIn(): void {
-		// Return if the form is invalid
 		if (this.signInForm.invalid) {
 			return;
 		}
 
-		// Disable the form
 		this.signInForm.disable();
 
 		// Hide the alert
@@ -123,19 +102,13 @@ export class AuthSignInComponent implements OnInit {
 						this._storage.saveRolId(response.rol);
 						switch (response.rol) {
 							case 1:
-								this._router.navigate([
-									'/dashboard/admin/review',
-								]);
+								this._router.navigate(['/dashboard/admin/review']);
 								break;
 							case 2:
-								this._router.navigate([
-									'/dashboard/user/profile',
-								]);
+								this._router.navigate(['/dashboard/user/profile']);
 								break;
 							default:
-								this._router.navigate([
-									'/dashboard/user/profile',
-								]);
+								this._router.navigate(['/dashboard/user/profile']);
 								break;
 						}
 					}
