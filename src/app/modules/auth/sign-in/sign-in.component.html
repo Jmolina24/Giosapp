@@ -1,0 +1,88 @@
+<div class="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-auto min-w-0">
+	<div class="md:flex md:items-center md:justify-center w-full sm:w-auto md:h-full md:w-1/2 py-8 px-4 sm:p-12 md:p-16 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card">
+		<div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0 text-center">
+			<div class="w-72 flex items-center">
+				<img src="assets/images/logo/logo_l_negro.png" class="mr-3">
+			</div>
+			<span class="text-4xl font-extrabold tracking-tight leading-tight">Ingreso</span>
+
+			<fuse-alert class="mt-8 -mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
+				[type]="alert.type" [@shake]="alert.type === 'error'">
+				{{alert.message}}
+			</fuse-alert>
+
+			<form class="mt-8" [formGroup]="signInForm" #signInNgForm="ngForm">
+				<mat-form-field class="w-full">
+					<input id="username" matInput [formControlName]="'username'" placeholder="Correo">
+					<mat-error *ngIf="signInForm.get('username').hasError('required')">
+						El correo es requerido
+					</mat-error>
+				</mat-form-field>
+
+				<mat-form-field class="w-full">
+					<input id="password" matInput type="password" [formControlName]="'password'" #passwordField placeholder="Contraseña">
+					<button mat-icon-button type="button"
+						(click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+						matSuffix>
+						<mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'"
+							[svgIcon]="'heroicons_solid:eye'"></mat-icon>
+						<mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'"
+							[svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+					</button>
+					<mat-error>
+						La contraseña es requerida
+					</mat-error>
+				</mat-form-field>
+
+				<div class="inline-flex items-end justify-between w-full mt-1.5">
+					<a class="text-md font-medium text-primary-500 hover:underline" [routerLink]="['/sign-up']">Crear
+						cuenta
+					</a>
+				</div>
+				<div class="inline-flex items-end justify-between w-full mt-1.5">
+					<a class="text-md font-medium text-primary-500 hover:underline"
+						[routerLink]="['/forgot-password']">Olvidé mi contraseña
+					</a>
+				</div>
+
+				<button class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'"
+					[disabled]="signInForm.disabled" (click)="signIn()">
+					<span *ngIf="!signInForm.disabled">
+						Ingresar
+					</span>
+					<mat-progress-spinner *ngIf="signInForm.disabled" [diameter]="24"
+						[mode]="'indeterminate'"></mat-progress-spinner>
+				</button>
+			</form>
+		</div>
+	</div>
+	<div
+		class="relative hidden md:flex flex-auto items-center justify-center w-1/2 h-full p-16 lg:px-28 overflow-hidden bg-gray-800 dark:border-l ng-tns-c198-27">
+		<svg viewBox="0 0 960 540" width="100%" height="100%" preserveAspectRatio="xMidYMax slice"
+			xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 pointer-events-none ng-tns-c198-27">
+			<g fill="none" stroke="currentColor" stroke-width="100" class="text-gray-700 opacity-25 ng-tns-c198-27">
+				<circle r="234" cx="196" cy="23" class="ng-tns-c198-27"></circle>
+				<circle r="234" cx="790" cy="491" class="ng-tns-c198-27"></circle>
+			</g>
+		</svg><svg viewBox="0 0 220 192" width="220" height="192" fill="none"
+			class="absolute -top-16 -right-16 text-gray-700 ng-tns-c198-27">
+			<defs class="ng-tns-c198-27">
+				<pattern id="837c3e70-6c3a-44e6-8854-cc48c737b659" x="0" y="0" width="20" height="20"
+					patternUnits="userSpaceOnUse" class="ng-tns-c198-27">
+					<rect x="0" y="0" width="4" height="4" fill="currentColor" class="ng-tns-c198-27"></rect>
+				</pattern>
+			</defs>
+			<rect width="220" height="192" fill="url(#837c3e70-6c3a-44e6-8854-cc48c737b659)" class="ng-tns-c198-27">
+			</rect>
+		</svg>
+		<div class="z-10 relative w-full max-w-2xl ng-tns-c198-27">
+			<div class="text-7xl font-bold leading-none text-gray-100 ng-tns-c198-27">
+				<div class="ng-tns-c198-27">Bienvenido a</div>
+				<div class="ng-tns-c198-27">GIOS APP</div>
+			</div>
+			<div class="mt-6 text-lg tracking-tight leading-6 text-gray-400 ng-tns-c198-27"> Fuse helps developers to
+				build organized and well coded dashboards full of beautiful and rich modules. Join us and start building
+				your application today. </div>
+		</div>
+	</div>
+</div>
