@@ -18,7 +18,7 @@
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
 						"baseHref": "/",
-                        "outputPath": "dist/nutri_app",
+                        "outputPath": "dist/gios_app",
                         "index": "src/index.html",
                         "main": "src/main.ts",
                         "polyfills": "src/polyfills.ts",
@@ -138,7 +138,7 @@
             }
         }
     },
-    "defaultProject": "nutri_app",
+    "defaultProject": "gios_app",
     "cli": {
         "defaultCollection": "@angular-eslint/schematics"
     }
