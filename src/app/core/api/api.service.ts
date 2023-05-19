@@ -11,7 +11,7 @@ export class ApiService {
 
 	constructor(private _storage: StorageService) {}
 
-	async post(path: string, content): Promise<any> {
+	async post(path: string, content: any): Promise<any> {
 		const requestOptions = {
 			method: 'POST',
 			headers: {
@@ -25,11 +25,11 @@ export class ApiService {
 		);
 	}
 
-	async postFile(path: string, content): Promise<any> {
+	async postFile(path: string, content: any): Promise<any> {
 		const requestOptions = {
 			method: 'POST',
 			headers: {
-				'tsec': this._storage.getToken(),
+				tsec: this._storage.getToken(),
 			},
 			body: content,
 		};
@@ -40,7 +40,6 @@ export class ApiService {
 
 	async get(path: string): Promise<any> {
 		const headersList = {
-			// eslint-disable-next-line @typescript-eslint/naming-convention
 			Accept: '*/*',
 			tsec: this._storage.getToken(),
 		};
