@@ -59,12 +59,16 @@ export class AuthSignInComponent implements OnInit {
 			}
 			// this.signInNgForm.resetForm();
 			if (response.codigo === 0) {
-				this._storage.saveToken(response.token);
-				this._storage.saveUserId(response.id);
-				this._storage.saveRolId(response.idrol);
+
+				const { token, id, idrol, ...user } = response;
+
+				this._storage.saveToken(token);
+				this._storage.saveUser(user);
+				this._storage.saveUserId(id);
+				this._storage.saveRolId(idrol);
 
 				if (this._storage.getUserId()) {
-					this._router.navigate(['/dashboard']);
+					this._router.navigate(['/dashboard/home']);
 				}
 			}
 		});

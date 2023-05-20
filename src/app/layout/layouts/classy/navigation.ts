@@ -1,55 +1,43 @@
-const navigationAdmin: any = [
+const navigation = [
 	{
 		id: 'admin',
-		title: 'Adminstración',
-		subtitle: 'Información general',
+		title: 'Menú',
+		subtitle: '',
 		type: 'group',
 		icon: 'heroicons_outline:user',
 		children: [
 			{
-				id: 'admin.review',
-				title: 'Pendientes',
+				id: 'menu.home',
+				title: 'Inicio',
 				type: 'basic',
-				icon: 'heroicons_outline:eye',
-				link: '/dashboard/admin/review',
+				icon: 'heroicons_outline:home',
+				link: '/dashboard/home',
 			},
 			{
-				id: 'admin.users',
+				id: 'divider-2',
+				type: 'divider',
+			},
+			{
+				id: 'menu.users',
 				title: 'Usuarios',
 				type: 'basic',
 				icon: 'heroicons_outline:users',
-				link: '/dashboard/admin/details/users',
+				link: '/dashboard/users',
 			},
 			{
-				id: 'admin.reports',
-				title: 'Reportes',
+				id: 'admin.clients',
+				title: 'Clientes',
 				type: 'basic',
 				icon: 'heroicons_outline:document-report',
-				link: '/dashboard/admin/reports',
+				link: '/dashboard/clients',
 			},
-		],
-	},
-	{
-		id: 'divider-2',
-		type: 'divider',
-	},
-];
-
-const navigationClient: any = [
-	{
-		id: 'users',
-		title: 'Usuario',
-		subtitle: 'Información del usuario',
-		type: 'group',
-		icon: 'heroicons_outline:users',
-		children: [
 			{
-				id: 'user.profile',
-				title: 'Perfil',
+				id: 'menu.roles',
+				title: 'Roles',
 				type: 'basic',
-				icon: 'heroicons_outline:user-circle',
-				link: '/dashboard/user/profile',
-			},
+				icon: 'heroicons_outline:key',
+				link: '/dashboard/roles',
+			}
 		],
 	},
 	{
@@ -58,4 +46,4 @@ const navigationClient: any = [
 	},
 ];
 
-export { navigationAdmin, navigationClient };
+export { navigation };

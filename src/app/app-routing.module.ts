@@ -5,7 +5,7 @@ import { AuthGuard } from './core/auth/guards/auth.guard';
 import { NoAuthGuard } from './core/auth/guards/no-auth.guard';
 
 const routes: Routes = [
-	{ path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+	{ path: '', pathMatch: 'full', redirectTo: 'dashboard/home' },
 	{
 		path: 'auth',
 		data: {
