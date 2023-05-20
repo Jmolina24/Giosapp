@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from 'app/layout/layout.component';
+import { AuthGuard } from './core/auth/guards/auth.guard';
+import { NoAuthGuard } from './core/auth/guards/no-auth.guard';
 
 const routes: Routes = [
-	{ path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+	{ path: '', pathMatch: 'full', redirectTo: 'dashboard/home' },
 	{
 		path: 'auth',
 		data: {
@@ -15,7 +17,8 @@ const routes: Routes = [
 				path: '',
 				loadChildren: (): any => import('app/pages/auth/auth.module').then((m: any) => m.AuthModule)
 			}
-		]
+		],
+		canActivate: [NoAuthGuard]
 	},
 	{
 		path: 'dashboard',
@@ -25,7 +28,8 @@ const routes: Routes = [
 				path: '',
 				loadChildren: (): any => import('app/pages/main/main.module').then((m: any) => m.MainModule),
 			}
-		]
+		],
+		canActivate: [AuthGuard]
 	},
 	{
 		path: 'others',
@@ -38,7 +42,8 @@ const routes: Routes = [
 				path: '',
 				loadChildren: (): any => import('app/pages/others/others.module').then((m: any) => m.OthersModule),
 			}
-		]
+		],
+		canActivate: [AuthGuard]
 	},
 	{ path: '**', redirectTo: 'others/404-not-found' },
 ];

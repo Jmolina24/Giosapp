@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
@@ -40,79 +40,37 @@ export class AuthSignInComponent implements OnInit {
 		if (this.signInForm.invalid) {
 			return;
 		}
-
 		this.signInForm.disable();
 
-		// Hide the alert
 		this.showAlert = false;
 
-		// Sign in
 		const { username, password } = this.signInForm.value;
-		this._authService
-			.signIn({ usuario: username, password })
-			.then((response) => {
-				if (response.hasOwnProperty('errors')) {
-					switch (response.errors[0].param) {
-						case 'usuario':
-							this.signInForm.enable();
-							this.alert = {
-								type: 'error',
-								message: 'Usuario invalido',
-							};
 
-							this.showAlert = true;
-							break;
-						case 'password':
-							this.signInForm.enable();
-							this.alert = {
-								type: 'error',
-								message: 'Contraseña invalido',
-							};
+		this._authService.signIn({ username, password }).then((response) => {
+			this.alert = {
+				type: response.codigo === 0 ? 'success' : 'error',
+				message: response.mensaje,
+			};
+			this.showAlert = true;
+			this.signInForm.enable();
 
-							this.showAlert = true;
-							break;
-					}
+			if (response.codigo !== 0) {
+				return;
+			}
+			// this.signInNgForm.resetForm();
+			if (response.codigo === 0) {
 
-					return;
+				const { token, id, idrol, ...user } = response;
+
+				this._storage.saveToken(token);
+				this._storage.saveUser(user);
+				this._storage.saveUserId(id);
+				this._storage.saveRolId(idrol);
+
+				if (this._storage.getUserId()) {
+					this._router.navigate(['/dashboard/home']);
 				}
-
-				this.alert = {
-					type: response.codigo === 0 ? 'success' : 'error',
-					message: response.mensaje,
-				};
-				this.showAlert = true;
-				this.signInForm.enable();
-				// this.signInNgForm.resetForm();
-				if (response.codigo === 0) {
-					this._storage.saveToken(response.token);
-					this._storage.saveUserId(response.user_id);
-
-					if (response.temporal) {
-						this.alert = {
-							type: response.codigo === 0 ? 'success' : 'error',
-							message: 'Restablecimiento de contraseña.',
-						};
-						this.showAlert = true;
-						this._storage.saveIsTemporal(true);
-						this._router.navigate(['/reset-password']);
-						return;
-					}
-
-					if (this._storage.getUserId()) {
-						this._storage.saveRolId(response.rol);
-						switch (response.rol) {
-							case 1:
-								this._router.navigate(['/dashboard/admin/review']);
-								break;
-							case 2:
-								this._router.navigate(['/dashboard/user/profile']);
-								break;
-							default:
-								this._router.navigate(['/dashboard/user/profile']);
-								break;
-						}
-					}
-				}
-			});
+			}
+		});
 	}
 }

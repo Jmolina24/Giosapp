@@ -8,7 +8,7 @@ import { ApiService } from '../api/api.service';
 export class AuthService {
 	constructor(private _api: ApiService) {}
 
-	async signIn(content: { usuario: string; password: string }): Promise<any> {
+	async signIn(content: { username: string; password: string }): Promise<any> {
 		return await this._api.post('login/sign', content);
 	}
 

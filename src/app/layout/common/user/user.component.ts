@@ -47,9 +47,8 @@ export class UserComponent implements OnInit, OnDestroy {
 	 * On init
 	 */
 	ngOnInit(): void {
-		this._activatedRoute.data.subscribe(({ initial }) => {
-			this.user = initial[0];
-		});
+		this.user = this._storage.getUser();
+
 	}
 
 	/**

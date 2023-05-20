@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { navigationAdmin, navigationClient } from './navigation';
+import { navigation } from './navigation';
 import {
 	FuseNavigationService,
 	FuseVerticalNavigationComponent,
@@ -30,19 +30,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
 		private _fuseNavigationService: FuseNavigationService,
 		private _storage: StorageService
 	) {
-		const rolId = this._storage.getRolID();
-
-		switch (Number(rolId)) {
-			case 1:
-				this.navigation = navigationAdmin;
-				break;
-			case 2:
-				this.navigation = navigationClient;
-				break;
-			default:
-				this.navigation = navigationClient;
-				break;
-		}
+		this.navigation = navigation;
 	}
 
 	// -----------------------------------------------------------------------------------------------------
@@ -64,19 +52,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
 	 * On init
 	 */
 	ngOnInit(): void {
-		// Subscribe to navigation data
-
-		// Subscribe to media changes
-		this._fuseMediaWatcherService.onMediaChange$
-			.pipe(takeUntil(this._unsubscribeAll))
-			.subscribe(({ matchingAliases }) => {
-				// Check if the screen is small
-				this.isScreenSmall = !matchingAliases.includes('md');
-			});
-
-		this._activatedRoute.data.subscribe(
-			({ initial }) => (this.user = initial[0])
-		);
+		this.user = this._storage.getUser();
 	}
 
 	/**
