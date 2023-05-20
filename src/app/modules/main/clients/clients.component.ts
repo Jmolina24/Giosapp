@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ClientsService } from 'app/core/services/clients.service';
+import { GeneralService } from 'app/core/services/general.service';
 
 @Component({
 	selector: 'app-clients',
@@ -23,8 +24,6 @@ export class ClientsComponent implements OnInit {
 			}
 
 			this.list = response;
-
-			console.log(response);
 		})
 	}
 }

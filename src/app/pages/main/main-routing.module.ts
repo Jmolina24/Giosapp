@@ -16,7 +16,12 @@ const routes: Routes = [
 	},
 	{
 		path: 'clients',
-		component: ClientsComponent
+		children: [
+			{
+				path: '',
+				loadChildren: (): any => import('app/modules/main/clients/clients.module').then((m: any) => m.ClientsModule),
+			}
+		]
 	},
 	{
 		path: 'roles',
