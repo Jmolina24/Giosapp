@@ -1,5 +1,5 @@
 /* Variables */
-$fuse-vertical-navigation-width: 280;
+$fuse-vertical-navigation-width: 200;
 
 fuse-vertical-navigation {
     position: sticky;
@@ -223,7 +223,7 @@ fuse-vertical-navigation {
                 display: flex;
                 align-items: center;
                 justify-content: flex-start;
-                padding: 10px 16px;
+                padding: 4px 10px;
                 font-size: 13px;
                 font-weight: 500;
                 line-height: 20px;
@@ -412,7 +412,7 @@ fuse-vertical-navigation {
                 .fuse-vertical-navigation-item-title-wrapper {
 
                     .fuse-vertical-navigation-item-title {
-                        font-size: 12px;
+                        font-size: 10px;
                         font-weight: 600;
                         letter-spacing: 0.05em;
                         text-transform: uppercase;

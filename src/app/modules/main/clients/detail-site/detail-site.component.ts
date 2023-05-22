@@ -42,31 +42,31 @@ export class DetailSiteComponent implements OnInit {
 	}
 
 	get(idcliente: string): void {
-		// this._service.get({ idcliente }).then((response) => {
-		// 	if (!response) {
-		// 		return;
-		// 	}
+		this._service.get({ idcliente }).subscribe((response) => {
+			if (!response) {
+				return;
+			}
 
-		// 	this.info = response[0];
-		// })
+			this.info = response[0];
+		})
 	}
 
 	getBySite(idcliente: string = '0', idciudad: string = '0'): void {
-		// this._service.bySite({ idcliente, idciudad }).then((response) => {
-		// 	this.list = response;
-		// })
+		this._service.bySite({ idcliente, idciudad }).subscribe((response: any) => {
+			this.list = response;
+		})
 	}
 
 
 	getDeptos(): void {
-		// this._general.getDeptos().then((response) => {
-		// 	this.listDeptos = response;
-		// })
+		this._general.getDeptos().subscribe((response: any) => {
+			this.listDeptos = response;
+		})
 	}
 
 	getCities(iddepartamento: string): void {
-		// this._general.getCities({ iddepartamento }).then((response) => {
-		// 	this.listCities = response;
-		// })
+		this._general.getCities({ iddepartamento }).subscribe((response: any) => {
+			this.listCities = response;
+		})
 	}
 }
