@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -27,7 +28,7 @@ export class AuthSignInComponent implements OnInit {
 		private _formBuilder: FormBuilder,
 		private _router: Router,
 		private _storage: StorageService
-	) {}
+	) { }
 
 	ngOnInit(): void {
 		this.signInForm = this._formBuilder.group({
@@ -46,13 +47,11 @@ export class AuthSignInComponent implements OnInit {
 
 		const { username, password } = this.signInForm.value;
 
-		this._authService.signIn({ username, password }).then((response) => {
+		this._authService.signIn({ username, password }).subscribe((response: any) => {
 			this.alert = {
 				type: response.codigo === 0 ? 'success' : 'error',
 				message: response.mensaje,
 			};
-			this.showAlert = true;
-			this.signInForm.enable();
 
 			if (response.codigo !== 0) {
 				return;
@@ -71,6 +70,17 @@ export class AuthSignInComponent implements OnInit {
 					this._router.navigate(['/dashboard/home']);
 				}
 			}
+		}, ({ error }: HttpErrorResponse) => {
+			this.alert = {
+				type: 'error',
+				message: error.mensaje,
+			};
+
+			this.showAlert = true;
+			this.signInForm.enable();
+		}, () => {
+			this.showAlert = true;
+			this.signInForm.enable();
 		});
 	}
 }

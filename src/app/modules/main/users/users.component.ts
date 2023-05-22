@@ -17,7 +17,7 @@ export class UsersComponent implements OnInit {
 	}
 
 	get(): void {
-		this._service.get().then((response) => {
+		this._service.get().subscribe((response: any) => {
 			if (!response) {
 				return;
 			}

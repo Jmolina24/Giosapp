@@ -18,12 +18,12 @@ export class ClientsComponent implements OnInit {
 	}
 
 	get(): void {
-		this._service.get().then((response) => {
-			if (!response) {
-				return;
-			}
+		this._service.get().subscribe((response) => {
+			// if (!response) {
+			// 	return;
+			// }
 
-			this.list = response;
+			// this.list = response;
 		})
 	}
 }

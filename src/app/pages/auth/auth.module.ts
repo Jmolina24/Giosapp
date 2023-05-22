@@ -1,11 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AuthForgotPasswordComponent } from 'app/modules/auth/forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from 'app/modules/auth/reset-password/reset-password.component';
 import { AuthSignInComponent } from 'app/modules/auth/sign-in/sign-in.component';
 import { AuthSignOutComponent } from 'app/modules/auth/sign-out/sign-out.component';
-import { AuthSignUpComponent } from 'app/modules/auth/sign-up/sign-up.component';
 
 import { AuthRoutingModule } from './auth-routing.module';
 
@@ -24,7 +21,7 @@ import { SharedModule } from 'app/shared/shared.module';
 
 
 @NgModule({
-	declarations: [AuthForgotPasswordComponent, ResetPasswordComponent, AuthSignInComponent, AuthSignOutComponent, AuthSignUpComponent],
+	declarations: [AuthSignInComponent, AuthSignOutComponent],
 	imports: [
 		CommonModule,
 		AuthRoutingModule,

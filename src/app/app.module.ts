@@ -10,6 +10,8 @@ import { LayoutModule } from 'app/layout/layout.module';
 import { AppComponent } from 'app/app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ApiInterceptor } from './core/interceptors/api.interceptor';
 
 @NgModule({
 	declarations: [AppComponent],
@@ -25,5 +27,10 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 		SweetAlert2Module.forRoot()
 	],
 	bootstrap: [AppComponent],
+	providers: [
+		{
+			provide: HTTP_INTERCEPTORS, useClass: ApiInterceptor, multi: true
+		}
+	]
 })
-export class AppModule {}
+export class AppModule { }

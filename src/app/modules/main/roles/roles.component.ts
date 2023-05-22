@@ -17,13 +17,13 @@ export class RolesComponent implements OnInit {
 	}
 
 	get(): void {
-		this._service.get().then((response) => {
+		this._service.get().subscribe((response) => {
 			if (!response) {
 				return;
 			}
 
-			this.list = response;
-			console.log(response)
+			// this.list = response;
+			// console.log(response)
 		})
 	}
 }

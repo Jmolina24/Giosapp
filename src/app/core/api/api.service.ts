@@ -1,51 +1,37 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { StorageService } from '../helpers/storage.service';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { catchError, map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { ErrorService } from '../errors/error.service';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class ApiService {
-	url: string = environment.baseApi;
 
-	constructor(private _storage: StorageService) {}
+	private apiUrl = environment.baseApi;
 
-	async post(path: string, content: any): Promise<any> {
-		const requestOptions = {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'tsec': this._storage.getToken(),
-			},
-			body: JSON.stringify(content),
-		};
-		return await fetch(this.url + path, requestOptions).then(
-			(response: any) => response.json()
-		);
+	constructor(private http: HttpClient, private error: ErrorService) { }
+
+	public post<R, T>(url: string, data?: T | any): Observable<HttpResponse<R | any>> {
+		url = this.apiUrl + url
+		return this.http.post<R | any>(url, data).pipe(catchError(error => this.error.handleError(error)));
 	}
 
-	async postFile(path: string, content: any): Promise<any> {
-		const requestOptions = {
-			method: 'POST',
-			headers: {
-				tsec: this._storage.getToken(),
-			},
-			body: content,
-		};
-		return await fetch(this.url + path, requestOptions).then(
-			(response: any) => response.json()
-		);
+	public get<T>(url: string): Observable<HttpResponse<T | any>> {
+		url = this.apiUrl + url
+		return this.http.get<T | any>(url).pipe(catchError(error => this.error.handleError(error)));
 	}
 
-	async get(path: string): Promise<any> {
-		const headersList = {
-			Accept: '*/*',
-			tsec: this._storage.getToken(),
-		};
+	public put<R, T>(url: string, data?: T | any): Observable<HttpResponse<R | any>> {
+		url = this.apiUrl + url
+		return this.http.put<R | any>(url, data).pipe(catchError(error => this.error.handleError(error)));
+	}
 
-		return await fetch(this.url + path, { headers: headersList }).then(
-			(response: any) => response.json()
-		);
+	public delete<T>(url: string): Observable<HttpResponse<T | any>> {
+		url = this.apiUrl + url
+		return this.http.delete<T | any>(url).pipe(catchError(error => this.error.handleError(error)));
 	}
 }
