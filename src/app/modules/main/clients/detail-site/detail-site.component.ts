@@ -6,10 +6,9 @@ import { GeneralService } from 'app/core/services/general.service';
 @Component({
 	selector: 'app-detail-site',
 	templateUrl: './detail-site.component.html',
-	styleUrls: ['./detail-site.component.scss']
+	styleUrls: ['./detail-site.component.scss'],
 })
 export class DetailSiteComponent implements OnInit {
-
 	info: any = {};
 
 	list: any[] = [];
@@ -22,12 +21,15 @@ export class DetailSiteComponent implements OnInit {
 
 	idcliente: string = '0';
 
-	constructor(private _service: ClientsService, private _general: GeneralService, private route: ActivatedRoute) { }
+	constructor(
+		private _service: ClientsService,
+		private _general: GeneralService,
+		private route: ActivatedRoute
+	) {}
 
 	ngOnInit(): void {
-
 		this.route.params.subscribe((params) => {
-			this.idcliente = params["id"];
+			this.idcliente = params['id'];
 			if (!this.idcliente) {
 				return;
 			}
@@ -38,7 +40,6 @@ export class DetailSiteComponent implements OnInit {
 
 			this.getDeptos();
 		});
-
 	}
 
 	get(idcliente: string): void {
@@ -48,25 +49,28 @@ export class DetailSiteComponent implements OnInit {
 			}
 
 			this.info = response[0];
-		})
+		});
 	}
 
 	getBySite(idcliente: string = '0', idciudad: string = '0'): void {
-		this._service.bySite({ idcliente, idciudad }).subscribe((response: any) => {
-			this.list = response;
-		})
+		this._service
+			.bySite({ idcliente, idciudad })
+			.subscribe((response: any) => {
+				this.list = response;
+			});
 	}
-
 
 	getDeptos(): void {
 		this._general.getDeptos().subscribe((response: any) => {
 			this.listDeptos = response;
-		})
+		});
 	}
 
 	getCities(iddepartamento: string): void {
-		this._general.getCities({ iddepartamento }).subscribe((response: any) => {
-			this.listCities = response;
-		})
+		this._general
+			.getCities({ iddepartamento })
+			.subscribe((response: any) => {
+				this.listCities = response;
+			});
 	}
 }

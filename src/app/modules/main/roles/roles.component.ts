@@ -4,13 +4,12 @@ import { RolesService } from 'app/core/services/roles.service';
 @Component({
 	selector: 'app-roles',
 	templateUrl: './roles.component.html',
-	styleUrls: ['./roles.component.scss']
+	styleUrls: ['./roles.component.scss'],
 })
 export class RolesComponent implements OnInit {
-
 	list: any[] = [];
 
-	constructor(private _service: RolesService) { }
+	constructor(private _service: RolesService) {}
 
 	ngOnInit(): void {
 		this.get();
@@ -22,8 +21,7 @@ export class RolesComponent implements OnInit {
 				return;
 			}
 
-			// this.list = response;
-			// console.log(response)
-		})
+			this.list = response;
+		});
 	}
 }

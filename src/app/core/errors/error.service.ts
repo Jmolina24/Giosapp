@@ -1,13 +1,18 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
 export class ErrorService {
-
-	handleError(error: HttpErrorResponse) {
+	/**
+	 * Maneja el error de una respuesta HTTP.
+	 *
+	 * @param error El objeto HttpErrorResponse que representa el error.
+	 * @returns Un observable que emite el error recibido.
+	 */
+	handleError(error: HttpErrorResponse): Observable<never> {
 		return throwError(error);
 	}
 }

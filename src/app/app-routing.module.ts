@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from 'app/layout/layout.component';
-import { AuthGuard } from './core/auth/guards/auth.guard';
-import { NoAuthGuard } from './core/auth/guards/no-auth.guard';
+import { AuthGuard } from './core/guards/auth.guard';
+import { NoAuthGuard } from './core/guards/no-auth.guard';
 
 const routes: Routes = [
 	{ path: '', pathMatch: 'full', redirectTo: 'dashboard/home' },
@@ -15,10 +15,13 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				loadChildren: (): any => import('app/pages/auth/auth.module').then((m: any) => m.AuthModule)
-			}
+				loadChildren: (): any =>
+					import('app/pages/auth/auth.module').then(
+						(m: any) => m.AuthModule
+					),
+			},
 		],
-		canActivate: [NoAuthGuard]
+		canActivate: [NoAuthGuard],
 	},
 	{
 		path: 'dashboard',
@@ -26,24 +29,30 @@ const routes: Routes = [
 		children: [
 			{
 				path: '',
-				loadChildren: (): any => import('app/pages/main/main.module').then((m: any) => m.MainModule),
-			}
+				loadChildren: (): any =>
+					import('app/pages/main/main.module').then(
+						(m: any) => m.MainModule
+					),
+			},
 		],
-		canActivate: [AuthGuard]
+		canActivate: [AuthGuard],
 	},
 	{
 		path: 'others',
 		component: LayoutComponent,
 		data: {
-			layout: 'empty'
+			layout: 'empty',
 		},
 		children: [
 			{
 				path: '',
-				loadChildren: (): any => import('app/pages/others/others.module').then((m: any) => m.OthersModule),
-			}
+				loadChildren: (): any =>
+					import('app/pages/others/others.module').then(
+						(m: any) => m.OthersModule
+					),
+			},
 		],
-		canActivate: [AuthGuard]
+		canActivate: [AuthGuard],
 	},
 	{ path: '**', redirectTo: 'others/404-not-found' },
 ];
@@ -57,4 +66,4 @@ const routes: Routes = [
 	],
 	exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

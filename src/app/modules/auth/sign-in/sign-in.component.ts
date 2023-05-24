@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
-import { AuthService } from 'app/core/auth/auth.service';
+import { AuthService } from 'app/core/services/auth.service';
 import { StorageService } from 'app/core/helpers/storage.service';
 
 @Component({
@@ -28,7 +28,7 @@ export class AuthSignInComponent implements OnInit {
 		private _formBuilder: FormBuilder,
 		private _router: Router,
 		private _storage: StorageService
-	) { }
+	) {}
 
 	ngOnInit(): void {
 		this.signInForm = this._formBuilder.group({
@@ -47,40 +47,43 @@ export class AuthSignInComponent implements OnInit {
 
 		const { username, password } = this.signInForm.value;
 
-		this._authService.signIn({ username, password }).subscribe((response: any) => {
-			this.alert = {
-				type: response.codigo === 0 ? 'success' : 'error',
-				message: response.mensaje,
-			};
+		this._authService.signIn({ username, password }).subscribe(
+			(response: any) => {
+				this.alert = {
+					type: response.codigo === 0 ? 'success' : 'error',
+					message: response.mensaje,
+				};
 
-			if (response.codigo !== 0) {
-				return;
-			}
-			// this.signInNgForm.resetForm();
-			if (response.codigo === 0) {
-
-				const { token, id, idrol, ...user } = response;
-
-				this._storage.saveToken(token);
-				this._storage.saveUser(user);
-				this._storage.saveUserId(id);
-				this._storage.saveRolId(idrol);
-
-				if (this._storage.getUserId()) {
-					this._router.navigate(['/dashboard/home']);
+				if (response.codigo !== 0) {
+					return;
 				}
-			}
-		}, ({ error }: HttpErrorResponse) => {
-			this.alert = {
-				type: 'error',
-				message: error.mensaje,
-			};
+				// this.signInNgForm.resetForm();
+				if (response.codigo === 0) {
+					const { token, id, idrol, ...user } = response;
 
-			this.showAlert = true;
-			this.signInForm.enable();
-		}, () => {
-			this.showAlert = true;
-			this.signInForm.enable();
-		});
+					this._storage.saveToken(token);
+					this._storage.saveUser(user);
+					this._storage.saveUserId(id);
+					this._storage.saveRolId(idrol);
+
+					if (this._storage.getUserId()) {
+						this._router.navigate(['/dashboard/home']);
+					}
+				}
+			},
+			({ error }: HttpErrorResponse) => {
+				this.alert = {
+					type: 'error',
+					message: error.mensaje,
+				};
+
+				this.showAlert = true;
+				this.signInForm.enable();
+			},
+			() => {
+				this.showAlert = true;
+				this.signInForm.enable();
+			}
+		);
 	}
 }

@@ -4,13 +4,12 @@ import { UsersService } from 'app/core/services/users.service';
 @Component({
 	selector: 'app-users',
 	templateUrl: './users.component.html',
-	styleUrls: ['./users.component.scss']
+	styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements OnInit {
-
 	list: any[] = [];
 
-	constructor(private _service: UsersService) { }
+	constructor(private _service: UsersService) {}
 
 	ngOnInit(): void {
 		this.get();
@@ -23,8 +22,6 @@ export class UsersComponent implements OnInit {
 			}
 
 			this.list = response;
-
-			console.log(response);
-		})
+		});
 	}
 }
