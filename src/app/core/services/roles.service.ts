@@ -7,7 +7,7 @@ import { StorageService } from '../helpers/storage.service';
 	providedIn: 'root',
 })
 export class RolesService {
-	constructor(private _api: ApiService, private _storage: StorageService) { }
+	constructor(private _api: ApiService, private _storage: StorageService) {}
 
 	/**
 	 * Función `get(options?: {
@@ -46,30 +46,30 @@ export class RolesService {
 			return;
 		}
 
-		return this._api.post(`admin/role-status/` + status, {
+		return this._api.post('admin/role-status/' + status, {
 			idrol,
-			idusuarioregistra: this._storage.getUserId()
+			idusuarioregistra: this._storage.getUserId(),
 		});
 	}
 
 	public create(content: {
-		nombre: string,
-		menu: string,
-		tipo: string,
-		crear: string,
-		editar: string,
-		detalle: string,
-		ver: string,
-		modificarestado: string,
+		idrol: string;
+		nombre: string;
+		menu: string;
+		tipo: string;
+		crear: string;
+		editar: string;
+		detalle: string;
+		ver: string;
+		modificarestado: string;
 	}): Observable<any> {
-		if (Object.keys(content).some((element) => !element)) {
+		if (Object.keys(content).some(element => !element)) {
 			return;
 		}
 
-		return this._api.post(`admin/create-rol`, {
-			idrol: 0,
+		return this._api.post('admin/create-rol', {
 			...content,
-			idusuarioregistra: this._storage.getUserId()
+			idusuarioregistra: this._storage.getUserId(),
 		});
 	}
 }
