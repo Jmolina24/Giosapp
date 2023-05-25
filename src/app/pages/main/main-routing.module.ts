@@ -2,7 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ClientsComponent } from 'app/modules/main/clients/clients.component';
 import { HomeComponent } from 'app/modules/main/home/home.component';
+import { OrdersComponent } from 'app/modules/main/orders/orders.component';
 import { RolesComponent } from 'app/modules/main/roles/roles.component';
+import { ServicesComponent } from 'app/modules/main/services/services.component';
+import { ThirdPartiesComponent } from 'app/modules/main/third-parties/third-parties.component';
 import { UsersComponent } from 'app/modules/main/users/users.component';
 
 const routes: Routes = [
@@ -26,11 +29,23 @@ const routes: Routes = [
 	{
 		path: 'roles',
 		component: RolesComponent
+	},
+	{
+		path: 'orders',
+		component: OrdersComponent
+	},
+	{
+		path: 'services',
+		component: ServicesComponent
+	},
+	{
+		path: 'third-parties',
+		component: ThirdPartiesComponent
 	}
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+	imports: [RouterModule.forChild(routes)],
+	exports: [RouterModule]
 })
 export class MainRoutingModule { }

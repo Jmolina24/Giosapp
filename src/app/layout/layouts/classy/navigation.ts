@@ -32,12 +32,37 @@ const navigation = [
 				link: '/dashboard/clients',
 			},
 			{
+				id: 'menu.third-parties',
+				title: 'Terceros',
+				type: 'basic',
+				icon: 'heroicons_outline:user',
+				link: '/dashboard/third-parties',
+			},
+			{
+				id: 'divider-2',
+				type: 'divider',
+			},
+			{
+				id: 'menu.orders',
+				title: 'Ordenes',
+				type: 'basic',
+				icon: 'heroicons_outline:clipboard-list',
+				link: '/dashboard/orders',
+			},
+			{
+				id: 'menu.services',
+				title: 'Servicios',
+				type: 'basic',
+				icon: 'heroicons_outline:cog',
+				link: '/dashboard/services',
+			},
+			{
 				id: 'menu.roles',
 				title: 'Roles',
 				type: 'basic',
 				icon: 'heroicons_outline:key',
 				link: '/dashboard/roles',
-			}
+			},
 		],
 	},
 	{

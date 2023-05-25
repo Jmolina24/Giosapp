@@ -11,17 +11,20 @@ import { MatSelectModule } from '@angular/material/select';
 import { SharedModule } from 'app/shared/shared.module';
 import { DetailSiteComponent } from 'app/modules/main/clients/detail-site/detail-site.component';
 import { MatIconModule } from '@angular/material/icon';
+import { OrdersComponent } from 'app/modules/main/orders/orders.component';
+import { ServicesComponent } from 'app/modules/main/services/services.component';
+import { ThirdPartiesComponent } from 'app/modules/main/third-parties/third-parties.component';
 
 
 @NgModule({
-  declarations: [HomeComponent, UsersComponent, ClientsComponent, RolesComponent, DetailSiteComponent],
-  imports: [
-    CommonModule,
-    MainRoutingModule,
-	MatFormFieldModule,
-	MatSelectModule,
-	MatIconModule,
-	SharedModule
-  ]
+	declarations: [HomeComponent, UsersComponent, ClientsComponent, RolesComponent, DetailSiteComponent, OrdersComponent, ServicesComponent, ThirdPartiesComponent],
+	imports: [
+		CommonModule,
+		MainRoutingModule,
+		MatFormFieldModule,
+		MatSelectModule,
+		MatIconModule,
+		SharedModule
+	]
 })
 export class MainModule { }

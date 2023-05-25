@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../api/api.service';
 import { Observable } from 'rxjs';
+import { StorageService } from '../helpers/storage.service';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class RolesService {
-	constructor(private _api: ApiService) {}
+	constructor(private _api: ApiService, private _storage: StorageService) { }
 
 	/**
 	 * Función `get(options?: {
@@ -38,5 +39,37 @@ export class RolesService {
 		return this._api.get<any[]>(
 			`option/list-roles?id=${id}&estado=${estado}`
 		);
+	}
+
+	public changeStatus(idrol = '0', status: string = 'A'): Observable<any> {
+		if (idrol) {
+			return;
+		}
+
+		return this._api.post(`admin/role-status/` + status, {
+			idrol,
+			idusuarioregistra: this._storage.getUserId()
+		});
+	}
+
+	public create(content: {
+		nombre: string,
+		menu: string,
+		tipo: string,
+		crear: string,
+		editar: string,
+		detalle: string,
+		ver: string,
+		modificarestado: string,
+	}): Observable<any> {
+		if (Object.keys(content).some((element) => !element)) {
+			return;
+		}
+
+		return this._api.post(`admin/create-rol`, {
+			idrol: 0,
+			...content,
+			idusuarioregistra: this._storage.getUserId()
+		});
 	}
 }

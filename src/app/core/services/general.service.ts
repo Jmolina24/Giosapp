@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../api/api.service';
 import { Observable } from 'rxjs';
+import { StorageService } from '../helpers/storage.service';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class GeneralService {
-	constructor(private _api: ApiService) {}
+	constructor(private _api: ApiService, private _storage: StorageService) { }
 
 	/**
 	 * Función `getDeptos(options?: {
@@ -74,5 +75,56 @@ export class GeneralService {
 		return this._api.get<any[]>(
 			`option/list-ciudades?idciudad=${idciudad}&iddepartamento=${iddepartamento}&codigodane=${codigodane}`
 		);
+	}
+
+	public getTypesDocuments({
+		idtipodocumento = 0,
+		sigla = 0
+	}: {
+		idtipodocumento?: string | number;
+		sigla?: 'T' | number;
+	} = {}): Observable<any[]> {
+		return this._api.get<any[]>(
+			`option/list-tipodocumentos?tipodocumento=${idtipodocumento}&sigla=${sigla}`
+		);
+	}
+
+	public getMeasuringUnits({
+		idunidad_medida = 0,
+		estado = 0
+	}: {
+		idunidad_medida?: string | number;
+		estado?: 'T' | number;
+	} = {}): Observable<any[]> {
+		return this._api.get<any[]>(
+			`option/list-unidad-medidas?idunidad_medida=${idunidad_medida}&estado=${estado}`
+		);
+	}
+
+	public createMeasurementUnit(content: {
+		nombre: string;
+		prefijo: string;
+	}): Observable<any> {
+
+		if (content.nombre || content.prefijo) {
+			return;
+		}
+
+		return this._api.post(`admin/create-unidad-medidas`, {
+			...content,
+			idunidad: '0',
+			idusuarioregistra: this._storage.getUserId()
+		});
+	}
+
+	public changeStatusMeasurementUni(idunidad = '0', status: string = 'A'): Observable<any> {
+		if (idunidad) {
+			return;
+		}
+
+		return this._api.post(`admin/unidad-medida-status/` + status, {
+			idunidad,
+			idusuarioregistra: this._storage.getUserId()
+		});
 	}
 }

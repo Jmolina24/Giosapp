@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../api/api.service';
 import { Observable } from 'rxjs';
+import { StorageService } from '../helpers/storage.service';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class ClientsService {
-	constructor(private _api: ApiService) {}
+	constructor(private _api: ApiService, private _storage: StorageService) { }
 
 	/**
 	 * Función `get(options?: {
@@ -73,5 +74,46 @@ export class ClientsService {
 		return this._api.get<any[]>(
 			`option/list-clientes-sedes?idclientesede=${idclientesede}&idcliente=${idcliente}&idciudad=${idciudad}`
 		);
+	}
+
+	public create(content: {
+		idtipodocumento: string,
+		razonsocial: string,
+		numerodocumento: string,
+	}): Observable<any> {
+
+		if (Object.keys(content).some((element) => !element)) {
+			return;
+		}
+
+		return this._api.post(`admin/create-customer`, {
+			...content,
+			idcliente: '0',
+			idusuarioregistra: this._storage.getUserId()
+		});
+	}
+
+	public createSede(content: {
+		idcliente: string,
+		idtiposede: string,
+		idciudad: string,
+		nombre: string,
+		codigocosto: string,
+		direccion: string,
+		telefono: string,
+		email: string,
+		contacto: string,
+		barrio: string,
+	}): Observable<any> {
+
+		if (Object.keys(content).some((element) => !element)) {
+			return;
+		}
+
+		return this._api.post(`admin/create-customer-sede`, {
+			...content,
+			idclientesede: "0",
+			idusuarioregistra: this._storage.getUserId()
+		});
 	}
 }
