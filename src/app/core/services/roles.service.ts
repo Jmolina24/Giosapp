@@ -42,9 +42,10 @@ export class RolesService {
 	}
 
 	public changeStatus(idrol = '0', status: string = 'A'): Observable<any> {
-		if (idrol) {
+		if (!idrol) {
 			return;
 		}
+
 
 		return this._api.post('admin/role-status/' + status, {
 			idrol,

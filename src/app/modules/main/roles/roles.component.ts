@@ -109,10 +109,10 @@ export class RolesComponent implements OnInit {
 		this.data = data;
 	}
 
-	changeStatus({ idrol }): void {
+	changeStatus({ idrol }, status: 'A' | 'I'): void {
 		this._alert.loading();
 
-		this._service.changeStatus(idrol).subscribe(
+		this._service.changeStatus(idrol, status).subscribe(
 			(response) => {
 				this._alert.closeAlert();
 				if (response.codigo !== 0) {
@@ -127,6 +127,8 @@ export class RolesComponent implements OnInit {
 					title: response.titulo,
 					text: response.mensaje,
 				});
+
+				this.get();
 			},
 			(error) => {
 				this._alert.error({
