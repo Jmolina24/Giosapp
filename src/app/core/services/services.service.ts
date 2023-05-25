@@ -4,11 +4,10 @@ import { Observable } from 'rxjs';
 import { StorageService } from '../helpers/storage.service';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
 export class ServicesService {
-
-	constructor(private _api: ApiService, private _storage: StorageService) { }
+	constructor(private _api: ApiService, private _storage: StorageService) {}
 
 	public get({
 		idservicio = 0,
@@ -34,34 +33,35 @@ export class ServicesService {
 		);
 	}
 
-
 	public create(content: {
-		idtiposervicio: string,
-		idunidad: string,
-		codigo: string,
-		nombre: string,
-		descripcion: string,
-   }): Observable<any> {
-
-		if (Object.keys(content).some((element) => !element)) {
+		idservicio: string;
+		idtiposervicio: string;
+		idunidad: string;
+		codigo: string;
+		nombre: string;
+		descripcion: string;
+	}): Observable<any> {
+		if (Object.keys(content).some(element => !element)) {
 			return;
 		}
 
-		return this._api.post(`admin/create-servicio`, {
+		return this._api.post('admin/create-servicio', {
 			...content,
-			idservicio: "0",
-			idusuarioregistra: this._storage.getUserId()
+			idusuarioregistra: this._storage.getUserId(),
 		});
 	}
 
-	public changeStatus(idservicio = '0', status: string = 'A'): Observable<any> {
-		if (idservicio) {
+	public changeStatus(
+		idservicio = '0',
+		status: string = 'A'
+	): Observable<any> {
+		if (!idservicio) {
 			return;
 		}
 
-		return this._api.post(`admin/servicio-status/` + status, {
+		return this._api.post('admin/servicio-status/' + status, {
 			idservicio,
-			idusuarioregistra: this._storage.getUserId()
+			idusuarioregistra: this._storage.getUserId(),
 		});
 	}
 }

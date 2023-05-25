@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core';
 import { ApiService } from '../api/api.service';
 import { Observable } from 'rxjs';
@@ -7,7 +8,7 @@ import { StorageService } from '../helpers/storage.service';
 	providedIn: 'root',
 })
 export class GeneralService {
-	constructor(private _api: ApiService, private _storage: StorageService) { }
+	constructor(private _api: ApiService, private _storage: StorageService) {}
 
 	/**
 	 * Función `getDeptos(options?: {
@@ -79,19 +80,19 @@ export class GeneralService {
 
 	public getTypesDocuments({
 		idtipodocumento = 0,
-		sigla = 0
+		sigla = 'T',
 	}: {
 		idtipodocumento?: string | number;
 		sigla?: 'T' | number;
 	} = {}): Observable<any[]> {
 		return this._api.get<any[]>(
-			`option/list-tipodocumentos?tipodocumento=${idtipodocumento}&sigla=${sigla}`
+			`option/list-tipodocumentos?idtipodocumento=${idtipodocumento}&sigla=${sigla}`
 		);
 	}
 
 	public getMeasuringUnits({
 		idunidad_medida = 0,
-		estado = 0
+		estado = 'T',
 	}: {
 		idunidad_medida?: string | number;
 		estado?: 'T' | number;
@@ -105,26 +106,28 @@ export class GeneralService {
 		nombre: string;
 		prefijo: string;
 	}): Observable<any> {
-
 		if (content.nombre || content.prefijo) {
 			return;
 		}
 
-		return this._api.post(`admin/create-unidad-medidas`, {
+		return this._api.post('admin/create-unidad-medidas', {
 			...content,
 			idunidad: '0',
-			idusuarioregistra: this._storage.getUserId()
+			idusuarioregistra: this._storage.getUserId(),
 		});
 	}
 
-	public changeStatusMeasurementUni(idunidad = '0', status: string = 'A'): Observable<any> {
+	public changeStatusMeasurementUni(
+		idunidad = '0',
+		status: string = 'A'
+	): Observable<any> {
 		if (idunidad) {
 			return;
 		}
 
-		return this._api.post(`admin/unidad-medida-status/` + status, {
+		return this._api.post('admin/unidad-medida-status/' + status, {
 			idunidad,
-			idusuarioregistra: this._storage.getUserId()
+			idusuarioregistra: this._storage.getUserId(),
 		});
 	}
 }

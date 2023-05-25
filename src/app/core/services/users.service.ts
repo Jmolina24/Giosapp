@@ -7,7 +7,7 @@ import { StorageService } from '../helpers/storage.service';
 	providedIn: 'root',
 })
 export class UsersService {
-	constructor(private _api: ApiService, private _storage: StorageService) { }
+	constructor(private _api: ApiService, private _storage: StorageService) {}
 
 	/**
 	 * Función `get(options?: {
@@ -51,39 +51,41 @@ export class UsersService {
 	}
 
 	public createAdmin(content: {
-		idclientesede: string,
-		idtercero: string,
-		idtipodocumento: string,
-		documento: string,
-		apellidos: string,
-		nombre: string,
-		direccion: string,
-		telefono: string,
-		email: string,
-		login: string,
-		clave: string,
+		idclientesede: string;
+		idtercero: string;
+		idtipodocumento: string;
+		documento: string;
+		apellidos: string;
+		nombre: string;
+		direccion: string;
+		telefono: string;
+		email: string;
+		login: string;
+		clave: string;
 	}): Observable<any> {
-
-		if (Object.keys(content).some((element) => !element)) {
+		if (Object.keys(content).some(element => !element)) {
 			return;
 		}
 
-		return this._api.post(`admin/create-admin`, {
+		return this._api.post('admin/create-admin', {
 			...content,
-			idusuario: "0",
-			idrol: "1",
-			idusuarioregistra: this._storage.getUserId()
+			idusuario: '0',
+			idrol: '1',
+			idusuarioregistra: this._storage.getUserId(),
 		});
 	}
 
-	public changeStatus(idusuario: string, status: string = 'A'): Observable<any> {
-		if (idusuario) {
+	public changeStatus(
+		idusuario: string,
+		status: string = 'A'
+	): Observable<any> {
+		if (!idusuario) {
 			return;
 		}
 
-		return this._api.post(`admin/user-status/` + status, {
+		return this._api.post('admin/user-status/' + status, {
 			idusuario,
-			idusuarioregistra: this._storage.getUserId()
+			idusuarioregistra: this._storage.getUserId(),
 		});
 	}
 }

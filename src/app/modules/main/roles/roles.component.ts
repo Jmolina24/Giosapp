@@ -62,7 +62,7 @@ export class RolesComponent implements OnInit {
 	update(): void {
 		this._alert.loading();
 
-		this._service.create({ idrol: '0', ...this.data }).subscribe(
+		this._service.create(this.data).subscribe(
 			(response) => {
 				this._alert.closeAlert();
 				if (response.codigo !== 0) {
