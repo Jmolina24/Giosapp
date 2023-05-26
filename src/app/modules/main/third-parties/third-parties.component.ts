@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { GeneralService } from 'app/core/services/general.service';
 import { ThirdPartiesService } from 'app/core/services/third-parties.service';
+import { Subject } from 'rxjs';
 
 @Component({
 	selector: 'app-third-parties',
@@ -10,6 +11,7 @@ import { ThirdPartiesService } from 'app/core/services/third-parties.service';
 })
 export class ThirdPartiesComponent implements OnInit {
 	list: any[] = [];
+	listCopy: any[] = [];
 
 	data: any = null;
 
@@ -18,6 +20,8 @@ export class ThirdPartiesComponent implements OnInit {
 	listTypesDocuments: any[] = [];
 	listDeptos: any[] = [];
 	listCities: any[] = [];
+
+	searchTerm$ = new Subject<string>();
 
 	constructor(
 		private _service: ThirdPartiesService,
@@ -28,6 +32,7 @@ export class ThirdPartiesComponent implements OnInit {
 	ngOnInit(): void {
 		this.get();
 		this.getSelects();
+		this.search();
 	}
 
 	get(): void {
@@ -37,6 +42,7 @@ export class ThirdPartiesComponent implements OnInit {
 			}
 
 			this.list = response;
+			this.listCopy = JSON.parse(JSON.stringify(response));
 		});
 	}
 
@@ -63,8 +69,9 @@ export class ThirdPartiesComponent implements OnInit {
 				});
 
 				this.get();
+				this.showSection(null);
 			},
-			(error) => {
+			({ error }) => {
 				this._alert.error({
 					title: error.titulo || 'Error',
 					text: error.mensaje || 'Error al procesar la solicitud.',
@@ -77,7 +84,7 @@ export class ThirdPartiesComponent implements OnInit {
 		this._alert.loading();
 
 		this.data['documento'] = this.data.numerodocumento;
-		this.data['nombre'] = this.data.tercero;
+		// this.data['nombre'] = this.data.tercero;
 
 		this._service.create(this.data).subscribe(
 			(response) => {
@@ -95,8 +102,9 @@ export class ThirdPartiesComponent implements OnInit {
 					text: response.mensaje,
 				});
 				this.get();
+				this.showSection(null);
 			},
-			(error) => {
+			({ error }) => {
 				this._alert.error({
 					title: error.titulo || 'Error',
 					text: error.mensaje || 'Error al procesar la solicitud.',
@@ -126,7 +134,7 @@ export class ThirdPartiesComponent implements OnInit {
 
 				this.get();
 			},
-			(error) => {
+			({ error }) => {
 				this._alert.error({
 					title: error.titulo || 'Error',
 					text: error.mensaje || 'Error al procesar la solicitud.',
@@ -147,7 +155,7 @@ export class ThirdPartiesComponent implements OnInit {
 				nombre: '',
 				direccion: '',
 				telefono: '',
-				email: ''
+				email: '',
 			};
 			return;
 		}
@@ -174,5 +182,14 @@ export class ThirdPartiesComponent implements OnInit {
 			.subscribe((response: any) => {
 				this.listCities = response;
 			});
+	}
+
+	search(): void {
+		this.searchTerm$.subscribe((term) => {
+			this.list = this.listCopy.filter(
+				(item: any) =>
+					item.tercero.toLowerCase().indexOf(term.toLowerCase()) >= 0
+			);
+		});
 	}
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { ClientsService } from 'app/core/services/clients.service';
 import { GeneralService } from 'app/core/services/general.service';
+import { Subject } from 'rxjs';
 
 @Component({
 	selector: 'app-clients',
@@ -10,12 +11,15 @@ import { GeneralService } from 'app/core/services/general.service';
 })
 export class ClientsComponent implements OnInit {
 	list: any[] = [];
+	listCopy: any[] = [];
 
 	data: any = null;
 
 	section: 'add' | 'edit' | null;
 
 	listTypesDocuments: any[] = [];
+
+	searchTerm$ = new Subject<string>();
 
 	constructor(
 		private _service: ClientsService,
@@ -26,6 +30,7 @@ export class ClientsComponent implements OnInit {
 	ngOnInit(): void {
 		this.get();
 		this.getSelects();
+		this.search();
 	}
 
 	get(): void {
@@ -35,6 +40,7 @@ export class ClientsComponent implements OnInit {
 			}
 
 			this.list = response;
+			this.listCopy = JSON.parse(JSON.stringify(response));
 		});
 	}
 
@@ -51,7 +57,7 @@ export class ClientsComponent implements OnInit {
 	create(): void {
 		this._alert.loading();
 
-		this._service.create({ idcliente: '0', ...this.data}).subscribe(
+		this._service.create({ idcliente: '0', ...this.data }).subscribe(
 			(response) => {
 				this._alert.closeAlert();
 				if (response.codigo !== 0) {
@@ -68,8 +74,9 @@ export class ClientsComponent implements OnInit {
 				});
 
 				this.get();
+				this.showSection(null);
 			},
-			(error) => {
+			({ error }) => {
 				this._alert.error({
 					title: error.titulo || 'Error',
 					text: error.mensaje || 'Error al procesar la solicitud.',
@@ -97,8 +104,9 @@ export class ClientsComponent implements OnInit {
 					text: response.mensaje,
 				});
 				this.get();
+				this.showSection(null);
 			},
-			(error) => {
+			({ error }) => {
 				this._alert.error({
 					title: error.titulo || 'Error',
 					text: error.mensaje || 'Error al procesar la solicitud.',
@@ -119,6 +127,15 @@ export class ClientsComponent implements OnInit {
 			return;
 		}
 
-		this.data = data;
+		this.data = JSON.parse(JSON.stringify(data));
+	}
+
+	search(): void {
+		this.searchTerm$.subscribe((term) => {
+			this.list = this.listCopy.filter(
+				(item: any) =>
+					item.razonsocial.toLowerCase().indexOf(term.toLowerCase()) >= 0
+			);
+		});
 	}
 }

@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { ClientsService } from 'app/core/services/clients.service';
 import { GeneralService } from 'app/core/services/general.service';
+import { Subject } from 'rxjs';
 
 @Component({
 	selector: 'app-detail-site',
@@ -13,6 +14,7 @@ export class DetailSiteComponent implements OnInit {
 	info: any = {};
 
 	list: any[] = [];
+	listCopy: any[] = [];
 
 	listDeptos: any[] = [];
 	listCities: any[] = [];
@@ -27,6 +29,8 @@ export class DetailSiteComponent implements OnInit {
 	section: 'add' | 'edit' | null;
 
 	listClients: any[] = [];
+
+	searchTerm$ = new Subject<string>();
 
 	constructor(
 		private _service: ClientsService,
@@ -49,6 +53,8 @@ export class DetailSiteComponent implements OnInit {
 			this.getDeptos();
 
 			this.getAll();
+
+			this.search();
 		});
 	}
 
@@ -67,6 +73,7 @@ export class DetailSiteComponent implements OnInit {
 			.bySite({ idcliente, idciudad })
 			.subscribe((response: any) => {
 				this.list = response;
+				this.listCopy = JSON.parse(JSON.stringify(response));
 			});
 	}
 
@@ -87,6 +94,10 @@ export class DetailSiteComponent implements OnInit {
 	}
 
 	getCities(iddepartamento: string): void {
+		if (iddepartamento === '0') {
+			this.getBySite(this.idcliente, '0');
+			return;
+		}
 		this._general
 			.getCities({ iddepartamento })
 			.subscribe((response: any) => {
@@ -118,8 +129,9 @@ export class DetailSiteComponent implements OnInit {
 					});
 
 					this.getBySite(this.idcliente);
+					this.showSection(null);
 				},
-				(error) => {
+				({ error }) => {
 					this._alert.error({
 						title: error.titulo || 'Error',
 						text:
@@ -150,8 +162,9 @@ export class DetailSiteComponent implements OnInit {
 					text: response.mensaje,
 				});
 				this.getBySite(this.idcliente);
+				this.showSection(null);
 			},
-			(error) => {
+			({ error }) => {
 				this._alert.error({
 					title: error.titulo || 'Error',
 					text: error.mensaje || 'Error al procesar la solicitud.',
@@ -165,7 +178,7 @@ export class DetailSiteComponent implements OnInit {
 
 		if (!data) {
 			this.data = {
-				idcliente: '',
+				idcliente: Number(this.idcliente),
 				idtiposede: '',
 				idciudad: '',
 				nombre: '',
@@ -179,7 +192,17 @@ export class DetailSiteComponent implements OnInit {
 			return;
 		}
 
-		this.data = data;
-		console.log(data);
+		this.data = JSON.parse(JSON.stringify(data));
+
+		this.getCities(this.data.iddepartamento);
+	}
+
+	search(): void {
+		this.searchTerm$.subscribe((term) => {
+			this.list = this.listCopy.filter(
+				(item: any) =>
+					item.cliensede.toLowerCase().indexOf(term.toLowerCase()) >= 0
+			);
+		});
 	}
 }

@@ -31,10 +31,11 @@
 			<div class="flex items-center justify-between pb-4 px-4">
 				<div>
 					<mat-form-field class="fuse-mat-dense flex-auto mr-2">
-						<mat-label class="text-lg font-medium mb-1">Departamentos</mat-label>
+						<mat-label class="text-lg font-medium mb-1">Departamento</mat-label>
 						<mat-select [value]="''" name="deptos" [(ngModel)]="iddepartamento"
 							(selectionChange)="getCities(iddepartamento)">
 							<mat-option value="" disabled>Seleccione una opción</mat-option>
+							<mat-option value="0" >TODOS</mat-option>
 							<mat-option [value]="item.iddepartamento" *ngFor="let item of listDeptos">{{ item.nombre
 								}}</mat-option>
 						</mat-select>
@@ -111,7 +112,8 @@
 					</div>
 					<input type="text" id="table-search"
 						class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-						placeholder="Buscar">
+						placeholder="Buscar"
+						(keyup)="searchTerm$.next($event.target.value)">
 				</div>
 			</div>
 			<div class="overflow-y-auto max-h-100">
@@ -126,16 +128,22 @@
 								</div>
 							</th>
 							<th scope="col" class="px-6 py-3 text-center">
+								#
+							</th>
+							<th scope="col" class="px-6 py-3 text-center">
 								Cliente Sede
 							</th>
 							<th scope="col" class="px-6 py-3 text-center">
 								Ciudad
 							</th>
-							<th scope="col" class="px-6 py-3 text-center">
+							<!-- <th scope="col" class="px-6 py-3 text-center">
 								Razón Social
-							</th>
+							</th> -->
 							<th scope="col" class="px-6 py-3 text-center">
 								Estado
+							</th>
+							<th scope="col" class="px-6 py-3 text-center">
+								Fecha Registro
 							</th>
 							<th scope="col" class="px-6 py-3 text-center">
 								Usuario Creador
@@ -157,6 +165,9 @@
 											<label for="checkbox-table-search-1" class="sr-only">checkbox</label>
 										</div>
 									</td>
+									<td class="px-6 py-4 text-center">
+										{{ item.idclientesede }}
+									</td>
 									<td scope="row"
 										class="px-6 py-4 text-left font-medium text-gray-900 whitespace-nowrap dark:text-white">
 										{{ item.cliensede }}
@@ -164,11 +175,14 @@
 									<td class="px-6 py-4 text-center">
 										{{ item.ciudad }}
 									</td>
-									<td class="px-6 py-4 text-center">
+									<!-- <td class="px-6 py-4 text-center">
 										{{ item.razonsocial }}
-									</td>
+									</td> -->
 									<td class="px-6 py-4 text-center">
 										{{ item.estado }}
+									</td>
+									<td class="px-6 py-4 text-center">
+										{{ item.fecharegistro | date }}
 									</td>
 									<td class="px-6 py-4 text-center">
 										{{ item.usuarioregistra }}
@@ -206,8 +220,8 @@
 			<div class="flex justify-between">
 				<mat-form-field class="fuse-mat-dense flex-auto mr-1 w-6/12">
 					<mat-label class="text-lg font-medium mb-1">Cliente</mat-label>
-					<mat-select [value]="''" name="client" [(ngModel)]="data.idcliente" name="type">
-						<mat-option value="" disabled>Seleccione una opción</mat-option>
+					<mat-select name="client" [(ngModel)]="data.idcliente" name="type" [disabled]="data.idcliente">
+						<!-- <mat-option value="" disabled>Seleccione una opción</mat-option> -->
 						<mat-option [value]="item.idcliente" *ngFor="let item of listClients">{{ item.razonsocial
 							}}</mat-option>
 					</mat-select>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { UsersService } from 'app/core/services/users.service';
+import { Subject } from 'rxjs';
 
 @Component({
 	selector: 'app-users',
@@ -9,10 +10,13 @@ import { UsersService } from 'app/core/services/users.service';
 })
 export class UsersComponent implements OnInit {
 	list: any[] = [];
+	listCopy: any[] = [];
 
 	data: any = null;
 
 	section: 'add' | 'edit' | null;
+
+	searchTerm$ = new Subject<string>();
 
 	constructor(
 		private _service: UsersService,
@@ -21,6 +25,7 @@ export class UsersComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.get();
+		this.search();
 	}
 
 	get(): void {
@@ -30,6 +35,7 @@ export class UsersComponent implements OnInit {
 			}
 
 			this.list = response;
+			this.listCopy = JSON.parse(JSON.stringify(response));
 		});
 	}
 
@@ -54,7 +60,7 @@ export class UsersComponent implements OnInit {
 
 				this.get();
 			},
-			(error) => {
+			({ error }) => {
 				this._alert.error({
 					title: error.titulo || 'Error',
 					text: error.mensaje || 'Error al procesar la solicitud.',
@@ -80,4 +86,13 @@ export class UsersComponent implements OnInit {
 
 	// 	this.data = data;
 	// }
+
+	search(): void {
+		this.searchTerm$.subscribe((term) => {
+			this.list = this.listCopy.filter(
+				(item: any) =>
+					item.nombre.toLowerCase().indexOf(term.toLowerCase()) >= 0
+			);
+		});
+	}
 }

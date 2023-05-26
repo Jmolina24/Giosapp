@@ -62,7 +62,7 @@ export class ServicesComponent implements OnInit {
 
 				this.get();
 			},
-			(error) => {
+			({ error }) => {
 				this._alert.error({
 					title: error.titulo || 'Error',
 					text: error.mensaje || 'Error al procesar la solicitud.',
@@ -92,7 +92,7 @@ export class ServicesComponent implements OnInit {
 				});
 				this.get();
 			},
-			(error) => {
+			({ error }) => {
 				this._alert.error({
 					title: error.titulo || 'Error',
 					text: error.mensaje || 'Error al procesar la solicitud.',
@@ -122,7 +122,7 @@ export class ServicesComponent implements OnInit {
 
 				this.get();
 			},
-			(error) => {
+			({ error }) => {
 				this._alert.error({
 					title: error.titulo || 'Error',
 					text: error.mensaje || 'Error al procesar la solicitud.',

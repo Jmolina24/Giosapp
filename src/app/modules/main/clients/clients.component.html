@@ -122,7 +122,8 @@
 					</div>
 					<input type="text" id="table-search"
 						class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-						placeholder="Buscar">
+						placeholder="Buscar"
+						(keyup)="searchTerm$.next($event.target.value)">
 				</div>
 			</div>
 			<div class="overflow-y-auto max-h-100">
@@ -138,6 +139,9 @@
 								</div>
 							</th>
 							<th scope="col" class="px-6 py-3 text-center">
+								#
+							</th>
+							<th scope="col" class="px-6 py-3 text-center">
 								Razón Social
 							</th>
 							<th scope="col" class="px-6 py-3 text-center">
@@ -145,6 +149,9 @@
 							</th>
 							<th scope="col" class="px-6 py-3 text-center">
 								Estado
+							</th>
+							<th scope="col" class="px-6 py-3 text-center">
+								Fecha Registro
 							</th>
 							<th scope="col" class="px-6 py-3 text-center">
 								Usuario Creador
@@ -166,6 +173,9 @@
 											<label for="checkbox-table-search-1" class="sr-only">checkbox</label>
 										</div>
 									</td>
+									<td class="px-6 py-4 text-center">
+										{{ item.idcliente }}
+									</td>
 									<td scope="row"
 										class="px-6 py-4 text-center font-medium text-gray-900 whitespace-nowrap dark:text-white">
 										{{ item.razonsocial }}
@@ -175,6 +185,9 @@
 									</td>
 									<td class="px-6 py-4 text-center">
 										{{ item.estado }}
+									</td>
+									<td class="px-6 py-4 text-center">
+										{{ item.fecharegistro | date }}
 									</td>
 									<td class="px-6 py-4 text-center">
 										{{ item.usuariocreado }}

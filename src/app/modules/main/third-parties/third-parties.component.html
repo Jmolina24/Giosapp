@@ -85,7 +85,8 @@
 					</div>
 					<input type="text" id="table-search"
 						class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-						placeholder="Buscar">
+						placeholder="Buscar"
+						(keyup)="searchTerm$.next($event.target.value)">
 				</div>
 			</div>
 			<div class="overflow-y-auto max-h-100">
@@ -99,6 +100,9 @@
 										class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
 									<label for="checkbox-all-search" class="sr-only">checkbox</label>
 								</div>
+							</th>
+							<th scope="col" class="px-6 py-3 text-center">
+								#
 							</th>
 							<th scope="col" class="px-6 py-3 text-center">
 								Nombre
@@ -126,6 +130,9 @@
 												class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
 											<label for="checkbox-table-search-1" class="sr-only">checkbox</label>
 										</div>
+									</td>
+									<td class="px-6 py-4 text-center">
+										{{ item.idtercero }}
 									</td>
 									<td scope="row"
 										class="px-6 py-4 text-left font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -209,7 +216,7 @@
 
 			<div class="w-full flex justify-between">
 				<mat-form-field class="fuse-mat-dense flex-auto w-full mr-2">
-					<mat-label class="text-lg font-medium mb-1">Departamentos</mat-label>
+					<mat-label class="text-lg font-medium mb-1">Departamento</mat-label>
 					<mat-select [value]="''" name="deptos" [(ngModel)]="data.iddepartamento"
 						(selectionChange)="getCities(data.iddepartamento)">
 						<mat-option value="" disabled>Seleccione una opción</mat-option>
