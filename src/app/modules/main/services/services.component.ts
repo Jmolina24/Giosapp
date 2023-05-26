@@ -154,7 +154,7 @@ export class ServicesComponent implements OnInit {
 			return;
 		}
 
-		this.data = data;
+		this.data = JSON.parse(JSON.stringify(data));
 	}
 
 	getSelects(): void {

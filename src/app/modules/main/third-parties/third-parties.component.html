@@ -186,9 +186,8 @@
 				<mat-label class="text-lg font-medium mb-1">Tipo de Tercero</mat-label>
 				<mat-select [value]="''" name="type" [(ngModel)]="data.idtipotercero" name="type">
 					<mat-option value="" disabled>Seleccione una opción</mat-option>
-					<mat-option value="1">Opción uno</mat-option>
-					<!-- <mat-option [value]="item.idtipodocumento" *ngFor="let item of listTypesDocuments"> ({{
-						item.sigla }}) {{ item.nombre }}</mat-option> -->
+					<mat-option [value]="item.idtipotercero" *ngFor="let item of listTypes"> ({{
+						item.codigo }}) {{ item.nombre }}</mat-option>
 				</mat-select>
 			</mat-form-field>
 

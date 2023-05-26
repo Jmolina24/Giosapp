@@ -114,4 +114,16 @@ export class ClientsService {
 			idusuarioregistra: this._storage.getUserId(),
 		});
 	}
+
+	public getTypesSedes({
+		idtiposede = 0,
+		estado = 'T',
+	}: {
+		idtiposede?: string | number;
+		estado?: 'T' | string;
+	} = {}): Observable<any[]> {
+		return this._api.get<any[]>(
+			`option/list-tipo-sedes?idtiposede=${idtiposede}&estado=${estado}`
+		);
+	}
 }

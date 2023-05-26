@@ -56,6 +56,7 @@ export class RolesComponent implements OnInit {
 				});
 
 				this.get();
+				this.showSection(null);
 			},
 			({ error }) => {
 				this._alert.error({
@@ -85,6 +86,7 @@ export class RolesComponent implements OnInit {
 					text: response.mensaje,
 				});
 				this.get();
+				this.showSection(null);
 			},
 			({ error }) => {
 				this._alert.error({

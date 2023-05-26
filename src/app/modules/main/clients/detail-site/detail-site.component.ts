@@ -18,6 +18,7 @@ export class DetailSiteComponent implements OnInit {
 
 	listDeptos: any[] = [];
 	listCities: any[] = [];
+	listTypes: any[] = [];
 
 	iddepartamento: string = '';
 	idCiudad: string = '';
@@ -55,6 +56,8 @@ export class DetailSiteComponent implements OnInit {
 			this.getAll();
 
 			this.search();
+
+			this.getTypes();
 		});
 	}
 
@@ -84,6 +87,12 @@ export class DetailSiteComponent implements OnInit {
 			}
 
 			this.listClients = response;
+		});
+	}
+
+	getTypes(): void {
+		this._service.getTypesSedes().subscribe((response: any) => {
+			this.listTypes = response;
 		});
 	}
 
@@ -189,6 +198,8 @@ export class DetailSiteComponent implements OnInit {
 				contacto: '',
 				barrio: '',
 			};
+
+			console.log(this.data, this.idcliente);
 			return;
 		}
 

@@ -57,4 +57,16 @@ export class ThirdPartiesService {
 			idusuarioregistra: this._storage.getUserId(),
 		});
 	}
+
+	public getTypes({
+		idtipotercero = 0,
+		estado = 'T',
+	}: {
+		idtipotercero?: string | number;
+		estado?: 'T' | string;
+	} = {}): Observable<any[]> {
+		return this._api.get<any[]>(
+			`option/list-tipo-terceros?idtipotercero=${idtipotercero}&estado=${estado}`
+		);
+	}
 }

@@ -20,6 +20,7 @@ export class ThirdPartiesComponent implements OnInit {
 	listTypesDocuments: any[] = [];
 	listDeptos: any[] = [];
 	listCities: any[] = [];
+	listTypes: any[] = [];
 
 	searchTerm$ = new Subject<string>();
 
@@ -174,6 +175,10 @@ export class ThirdPartiesComponent implements OnInit {
 		});
 		this._general.getDeptos().subscribe((response: any) => {
 			this.listDeptos = response;
+		});
+
+		this._service.getTypes().subscribe((response: any) => {
+			this.listTypes = response;
 		});
 	}
 

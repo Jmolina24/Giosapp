@@ -220,19 +220,18 @@
 			<div class="flex justify-between">
 				<mat-form-field class="fuse-mat-dense flex-auto mr-1 w-6/12">
 					<mat-label class="text-lg font-medium mb-1">Cliente</mat-label>
-					<mat-select name="client" [(ngModel)]="data.idcliente" name="type" [disabled]="data.idcliente">
+					<mat-select name="client" value="''" [(ngModel)]="data.idcliente" name="cliente" disabled>
 						<!-- <mat-option value="" disabled>Seleccione una opción</mat-option> -->
-						<mat-option [value]="item.idcliente" *ngFor="let item of listClients">{{ item.razonsocial
-							}}</mat-option>
+						<mat-option [value]="item.idcliente" *ngFor="let item of listClients">{{ item.razonsocial }}</mat-option>
 					</mat-select>
 				</mat-form-field>
 
 				<mat-form-field class="fuse-mat-dense flex-auto w-5/12">
 					<mat-label class="text-lg font-medium mb-1">Tipo Sede</mat-label>
-					<mat-select [value]="'1'" name="type_sede" [(ngModel)]="data.idtiposede" name="type">
-						<mat-option value="" disabled>Seleccione una opción</mat-option>
-						<mat-option value="1">Opción uno</mat-option>
-						<!-- <mat-option [value]="item.idcliente" *ngFor="let item of listClients">{{ item.nombre }}</mat-option> -->
+					<mat-select [value]="''" name="type_sede" [(ngModel)]="data.idtiposede" name="type">
+						<mat-option value="''" disabled>Seleccione una opción</mat-option>
+						<!-- <mat-option value="1">Opción uno</mat-option> -->
+						<mat-option [value]="item.idtiposede" *ngFor="let item of listTypes">{{ item.nombre }}</mat-option>
 					</mat-select>
 				</mat-form-field>
 			</div>

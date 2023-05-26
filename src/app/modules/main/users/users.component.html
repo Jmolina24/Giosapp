@@ -122,8 +122,7 @@
 					</div>
 					<input type="text" id="table-search"
 						class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-						placeholder="Buscar"
-						(keyup)="searchTerm$.next($event.target.value)">
+						placeholder="Buscar" (keyup)="searchTerm$.next($event.target.value)">
 				</div>
 			</div>
 			<div class="overflow-y-auto max-h-100">
@@ -219,25 +218,92 @@
 		</div>
 
 		<form class="mt-8">
-			<mat-form-field class="w-full">
-				<mat-label class="text-lg font-medium mb-1">Razón Social</mat-label>
-				<input id="razon_social" matInput placeholder="Razón Social" name="razon_social"
-					[(ngModel)]="data.razonsocial">
-			</mat-form-field>
 
-			<mat-form-field class="w-full">
-				<mat-label class="text-lg font-medium mb-1">Tipo de documento</mat-label>
-				<mat-select [value]="''" name="type" [(ngModel)]="data.idtipodocumento" name="type">
-					<mat-option value="" disabled>Seleccione una opción</mat-option>
-					<mat-option [value]="item.idtipodocumento" *ngFor="let item of listTypesDocuments"> ({{
-						item.sigla }}) {{ item.nombre }}</mat-option>
+			<mat-form-field class="fuse-mat-dense flex-auto mr-1 w-full">
+				<mat-label class="text-lg font-medium mb-1">Rol</mat-label>
+				<mat-select name="rol" [(ngModel)]="data.idrol">
+					<mat-option value="0" disabled>Seleccione una opción</mat-option>
+					<mat-option [value]="item.idrol" *ngFor="let item of listRoles">{{ item.nombre }}</mat-option>
 				</mat-select>
 			</mat-form-field>
 
-			<mat-form-field class="w-full">
-				<mat-label class="text-lg font-medium mb-1">Número de documento</mat-label>
-				<input id="n_document" matInput placeholder="Número de documento" name="n_document"
-					[(ngModel)]="data.numerodocumento">
+			<div class="flex justify-between">
+				<mat-form-field class="fuse-mat-dense flex-auto mr-1 w-full">
+					<mat-label class="text-lg font-medium mb-1">Cliente</mat-label>
+					<mat-select name="client" [(ngModel)]="data.idcliente"
+						(selectionChange)="getSedes(data.idcliente)">
+						<mat-option value="0" disabled>Seleccione una opción</mat-option>
+						<mat-option [value]="item.idcliente" *ngFor="let item of listCustomers">{{ item.razonsocial }}</mat-option>
+					</mat-select>
+				</mat-form-field>
+
+				<mat-form-field class="fuse-mat-dense flex-auto w-full">
+					<mat-label class="text-lg font-medium mb-1">Sede</mat-label>
+					<mat-select name="type_sede" [(ngModel)]="data.idclientesede" [disabled]="data.idcliente === '0'">
+						<mat-option value="0" disabled>Seleccione una opción</mat-option>
+						<mat-option [value]="item.idclientesede" *ngFor="let item of listSites">{{ item.razonsocial }}</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</div>
+
+			<mat-form-field class="fuse-mat-dense flex-auto w-full">
+				<mat-label class="text-lg font-medium mb-1">Terceros</mat-label>
+				<mat-select name="thrids_parties" [(ngModel)]="data.idtercero">
+					<mat-option value="0" disabled>Seleccione una opción</mat-option>
+					<mat-option [value]="item.idtercero" *ngFor="let item of listThirdsParties">{{ item.tercero }}</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<div class="flex justify-between">
+				<mat-form-field class="fuse-mat-dense flex-auto w-full mr-1">
+					<mat-label class="text-lg font-medium mb-1">Tipo de documento</mat-label>
+					<mat-select name="type_document" [(ngModel)]="data.idtipodocumento">
+						<mat-option value="0" disabled>Seleccione una opción</mat-option>
+						<mat-option [value]="item.idtipodocumento" *ngFor="let item of listDocumentsTypes"> ({{
+							item.sigla }}) {{ item.nombre }}</mat-option>
+					</mat-select>
+				</mat-form-field>
+
+				<mat-form-field class="fuse-mat-dense flex-auto w-full">
+					<mat-label class="text-lg font-medium mb-1">Número de documento</mat-label>
+					<input id="n_document" matInput placeholder="Número de documento" name="n_document"
+						[(ngModel)]="data.numerodocumento">
+				</mat-form-field>
+			</div>
+
+			<div class="flex justify-between">
+				<mat-form-field class="fuse-mat-dense flex-auto w-full mr-1">
+					<mat-label class="text-lg font-medium mb-1">Nombre</mat-label>
+					<input id="name" matInput placeholder="Nombre" name="name" [(ngModel)]="data.nombre">
+				</mat-form-field>
+
+				<mat-form-field class="fuse-mat-dense flex-auto w-full">
+					<mat-label class="text-lg font-medium mb-1">Apellidos</mat-label>
+					<input id="lastName" matInput placeholder="Apellidos" name="lastName" [(ngModel)]="data.apellidos">
+				</mat-form-field>
+			</div>
+
+			<div class="flex justify-between">
+				<mat-form-field class="fuse-mat-dense flex-auto w-full mr-1">
+					<mat-label class="text-lg font-medium mb-1">Dirección</mat-label>
+					<input id="direccion" matInput placeholder="Dirección" name="direccion"
+						[(ngModel)]="data.direccion">
+				</mat-form-field>
+
+				<mat-form-field class="fuse-mat-dense flex-auto w-full">
+					<mat-label class="text-lg font-medium mb-1">Telefono</mat-label>
+					<input id="phone" matInput placeholder="Telefono" name="phone" [(ngModel)]="data.telefono">
+				</mat-form-field>
+			</div>
+
+			<mat-form-field class="fuse-mat-dense flex-auto w-full">
+				<mat-label class="text-lg font-medium mb-1">Correo Electronico</mat-label>
+				<input id="email" matInput type="email" placeholder="Correo Electronico" name="email" [(ngModel)]="data.email">
+			</mat-form-field>
+
+			<mat-form-field class="fuse-mat-dense flex-auto w-full">
+				<mat-label class="text-lg font-medium mb-1">Contraseña</mat-label>
+				<input id="password" matInput type="password" placeholder="Contraseña" name="password" [(ngModel)]="data.clave">
 			</mat-form-field>
 
 			<div class="w-full flex justify-between">
