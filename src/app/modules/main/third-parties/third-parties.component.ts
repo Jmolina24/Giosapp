@@ -43,6 +43,9 @@ export class ThirdPartiesComponent implements OnInit {
 	create(): void {
 		this._alert.loading();
 
+		this.data['documento'] = this.data.numerodocumento;
+		this.data['nombre'] = this.data.tercero;
+
 		this._service.create({ idtercero: '0', ...this.data }).subscribe(
 			(response) => {
 				this._alert.closeAlert();
@@ -72,6 +75,9 @@ export class ThirdPartiesComponent implements OnInit {
 
 	update(): void {
 		this._alert.loading();
+
+		this.data['documento'] = this.data.numerodocumento;
+		this.data['nombre'] = this.data.tercero;
 
 		this._service.create(this.data).subscribe(
 			(response) => {
@@ -134,9 +140,14 @@ export class ThirdPartiesComponent implements OnInit {
 
 		if (!data) {
 			this.data = {
+				idtipotercero: '',
+				idciudad: '',
 				idtipodocumento: '',
-				razonsocial: '',
-				numerodocumento: '',
+				documento: '',
+				nombre: '',
+				direccion: '',
+				telefono: '',
+				email: ''
 			};
 			return;
 		}
