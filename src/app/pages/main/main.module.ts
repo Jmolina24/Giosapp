@@ -10,6 +10,7 @@ import { OrdersComponent } from 'app/modules/main/orders/orders.component';
 import { ServicesComponent } from 'app/modules/main/services/services.component';
 import { ThirdPartiesComponent } from 'app/modules/main/third-parties/third-parties.component';
 import { RolesComponent } from 'app/modules/main/roles/roles.component';
+import { ParameterSettingComponent } from 'app/modules/main/parameter-setting/parameter-setting.component';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -21,21 +22,31 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
-	declarations: [HomeComponent, UsersComponent, ClientsComponent, DetailSiteComponent, OrdersComponent, ServicesComponent, ThirdPartiesComponent, RolesComponent],
+	declarations: [
+		HomeComponent,
+		UsersComponent,
+		ClientsComponent,
+		DetailSiteComponent,
+		OrdersComponent,
+		ServicesComponent,
+		ThirdPartiesComponent,
+		RolesComponent,
+		ParameterSettingComponent,
+	],
 	imports: [
 		CommonModule,
 		MainRoutingModule,
 		MatFormFieldModule,
 		MatSelectModule,
 		MatIconModule,
-        MatButtonModule,
-        MatDividerModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatInputModule,
-        MatMenuModule,
-        MatSelectModule,
-        SharedModule
-	]
+		MatButtonModule,
+		MatDividerModule,
+		MatFormFieldModule,
+		MatIconModule,
+		MatInputModule,
+		MatMenuModule,
+		MatSelectModule,
+		SharedModule,
+	],
 })
-export class MainModule { }
+export class MainModule {}

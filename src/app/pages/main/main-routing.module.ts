@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ClientsComponent } from 'app/modules/main/clients/clients.component';
 import { HomeComponent } from 'app/modules/main/home/home.component';
 import { OrdersComponent } from 'app/modules/main/orders/orders.component';
+import { ParameterSettingComponent } from 'app/modules/main/parameter-setting/parameter-setting.component';
 import { RolesComponent } from 'app/modules/main/roles/roles.component';
 import { ServicesComponent } from 'app/modules/main/services/services.component';
 import { ThirdPartiesComponent } from 'app/modules/main/third-parties/third-parties.component';
@@ -41,6 +42,10 @@ const routes: Routes = [
 	{
 		path: 'third-parties',
 		component: ThirdPartiesComponent
+	},
+	{
+		path: 'parameter-setting',
+		component: ParameterSettingComponent
 	}
 ];
 

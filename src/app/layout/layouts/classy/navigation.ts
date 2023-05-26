@@ -13,6 +13,13 @@ const navigation = [
 				icon: 'heroicons_outline:home',
 				link: '/dashboard/home',
 			},
+			{
+				id: 'menu.settings',
+				title: 'Parametrización',
+				type: 'basic',
+				icon: 'heroicons_outline:cog',
+				link: '/dashboard/parameter-setting',
+			}
 		],
 	},
 	{
@@ -71,7 +78,7 @@ const navigation = [
 				id: 'menu.services',
 				title: 'Servicios',
 				type: 'basic',
-				icon: 'heroicons_outline:cog',
+				icon: 'heroicons_outline:view-list',
 				link: '/dashboard/services',
 			},
 		]

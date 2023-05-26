@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { GeneralService } from 'app/core/services/general.service';
 import { ServicesService } from 'app/core/services/services.service';
+import { Subject } from 'rxjs';
 
 @Component({
 	selector: 'app-services',
@@ -11,6 +12,7 @@ import { ServicesService } from 'app/core/services/services.service';
 })
 export class ServicesComponent implements OnInit {
 	list: any[] = [];
+	listCopy: any[] = [];
 
 	data: any = null;
 
@@ -18,6 +20,8 @@ export class ServicesComponent implements OnInit {
 
 	listUnits: any[] = [];
 	listTypesServices: any[] = [];
+
+	searchTerm$ = new Subject<string>();
 
 	constructor(
 		private _service: ServicesService,
@@ -28,6 +32,7 @@ export class ServicesComponent implements OnInit {
 	ngOnInit(): void {
 		this.get();
 		this.getSelects();
+		this.search();
 	}
 
 	get(): void {
@@ -37,6 +42,7 @@ export class ServicesComponent implements OnInit {
 			}
 
 			this.list = response;
+			this.listCopy = JSON.parse(JSON.stringify(response));
 		});
 	}
 
@@ -61,6 +67,7 @@ export class ServicesComponent implements OnInit {
 				});
 
 				this.get();
+				this.showSection(null);
 			},
 			({ error }) => {
 				this._alert.error({
@@ -91,6 +98,7 @@ export class ServicesComponent implements OnInit {
 					text: response.mensaje,
 				});
 				this.get();
+				this.showSection(null);
 			},
 			({ error }) => {
 				this._alert.error({
@@ -164,6 +172,15 @@ export class ServicesComponent implements OnInit {
 			}
 
 			this.listTypesServices = response;
+		});
+	}
+
+	search(): void {
+		this.searchTerm$.subscribe((term) => {
+			this.list = this.listCopy.filter(
+				(item: any) =>
+					item.nombre.toLowerCase().indexOf(term.toLowerCase()) >= 0
+			);
 		});
 	}
 }
