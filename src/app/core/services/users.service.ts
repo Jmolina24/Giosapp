@@ -50,7 +50,7 @@ export class UsersService {
 		);
 	}
 
-	public createAdmin(content: {
+	public create(content: {
 		idclientesede: string;
 		idtercero: string;
 		idtipodocumento: string;
@@ -69,7 +69,6 @@ export class UsersService {
 
 		return this._api.post('admin/create-admin', {
 			...content,
-			idusuario: '0',
 			idrol: '1',
 			idusuarioregistra: this._storage.getUserId(),
 		});

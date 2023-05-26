@@ -160,7 +160,8 @@ export class ThirdPartiesComponent implements OnInit {
 			return;
 		}
 
-		this.data = data;
+		this.data = JSON.parse(JSON.stringify(data));
+		this.getCities(this.data.iddepartamento);
 	}
 
 	getSelects(): void {

@@ -113,7 +113,7 @@ export class RolesComponent implements OnInit {
 			return;
 		}
 
-		this.data = data;
+		this.data = JSON.parse(JSON.stringify(data));
 	}
 
 	changeStatus({ idrol }, status: 'A' | 'I'): void {
