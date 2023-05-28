@@ -103,25 +103,25 @@ export class GeneralService {
 	}
 
 	public createMeasurementUnit(content: {
+		idunidad: string;
 		nombre: string;
 		prefijo: string;
 	}): Observable<any> {
-		if (content.nombre || content.prefijo) {
+		if (!content.nombre || !content.prefijo) {
 			return;
 		}
 
-		return this._api.post('admin/create-unidad-medidas', {
+		return this._api.post('admin/create-unidad-medida', {
 			...content,
-			idunidad: '0',
 			idusuarioregistra: this._storage.getUserId(),
 		});
 	}
 
-	public changeStatusMeasurementUni(
+	public changeStatusMeasurementUnits(
 		idunidad = '0',
 		status: string = 'A'
 	): Observable<any> {
-		if (idunidad) {
+		if (!idunidad) {
 			return;
 		}
 

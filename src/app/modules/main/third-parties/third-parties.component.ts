@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FilesService } from 'app/core/helpers/files.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { GeneralService } from 'app/core/services/general.service';
 import { ThirdPartiesService } from 'app/core/services/third-parties.service';
@@ -24,10 +25,25 @@ export class ThirdPartiesComponent implements OnInit {
 
 	searchTerm$ = new Subject<string>();
 
+	contentPagination: {
+		current: number;
+		pages: { page: number; data: any[] }[];
+		countForPages: number;
+		totalPages: number;
+		range?: number;
+	} = {
+		current: 0,
+		pages: [{ data: [], page: 0 }],
+		countForPages: 5,
+		totalPages: 0,
+		range: 3,
+	};
+
 	constructor(
 		private _service: ThirdPartiesService,
 		private _alert: SweetAlertService,
-		private _general: GeneralService
+		private _general: GeneralService,
+		private _files: FilesService
 	) {}
 
 	ngOnInit(): void {
@@ -44,6 +60,8 @@ export class ThirdPartiesComponent implements OnInit {
 
 			this.list = response;
 			this.listCopy = JSON.parse(JSON.stringify(response));
+
+			this.fnPagination();
 		});
 	}
 
@@ -195,8 +213,60 @@ export class ThirdPartiesComponent implements OnInit {
 		this.searchTerm$.subscribe((term) => {
 			this.list = this.listCopy.filter(
 				(item: any) =>
-					item.tercero.toLowerCase().indexOf(term.toLowerCase()) >= 0
+					item.nombre.toLowerCase().indexOf(term.toLowerCase()) >= 0
 			);
+
+			this.fnPagination();
 		});
+	}
+
+	fnPagination(): void {
+		this.contentPagination.pages = [];
+		this.contentPagination.totalPages = Math.ceil(
+			this.list.length / this.contentPagination.countForPages
+		);
+		for (let index = 0; index < this.contentPagination.totalPages; index++) {
+			this.contentPagination.pages.push({
+				data: this.list.slice(
+					this.contentPagination.countForPages * index,
+					this.contentPagination.countForPages * (index + 1)
+				),
+				page: index,
+			});
+		}
+		this.contentPagination.current = 0;
+	}
+
+	fnBtnChangePage(action: string): void {
+		const { current, pages, range } = this.contentPagination;
+		switch (action) {
+			case "next":
+				this.contentPagination.current = pages[current + range]?.page || 0;
+				break;
+			case "previus":
+				this.contentPagination.current = pages[current - range]?.page || 0;
+				break;
+			default:
+				this.contentPagination.current = Number(action);
+				break;
+		}
+	}
+
+	fnDisabledBtn(action: string): boolean | any {
+		const { current, pages, range } = this.contentPagination;
+		switch (action) {
+			case "next":
+				return pages[current + range] || 0;
+			case "previus":
+				return pages[current - range] || 0;
+		}
+	}
+
+	getLengthStatus(key: string): number {
+		return this.list.filter((element) => element.estado == key).length;
+	}
+
+	generateExcel(): void {
+		this._files.exportAsExcelFile(this.list, 'terceros');
 	}
 }

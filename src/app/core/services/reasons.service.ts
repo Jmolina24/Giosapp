@@ -30,7 +30,7 @@ export class ReasonsService {
 		nombre: string;
 	}): Observable<any> {
 
-		if (nombre) {
+		if (!nombre) {
 			return;
 		}
 
@@ -42,7 +42,7 @@ export class ReasonsService {
 	}
 
 	changeStatus(idmotivorechazo = '0', status: string = 'A'): Observable<any> {
-		if (idmotivorechazo) {
+		if (!idmotivorechazo) {
 			return;
 		}
 

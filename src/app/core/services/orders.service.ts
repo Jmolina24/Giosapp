@@ -21,14 +21,16 @@ export class OrdersService {
 		);
 	}
 
-	public createType(nombre: string): Observable<any> {
-		if (nombre) {
+	public createType(content: {
+		idtipoorden: string;
+		nombre: string;
+	}): Observable<any> {
+		if (!content.nombre) {
 			return;
 		}
 
 		return this._api.post('admin/create-tipo-orden', {
-			idtipoorden: '0',
-			nombre,
+			...content,
 			idusuarioregistra: this._storage.getUserId(),
 		});
 	}
@@ -37,7 +39,7 @@ export class OrdersService {
 		idtipoorden = '0',
 		status: string = 'A'
 	): Observable<any> {
-		if (idtipoorden) {
+		if (!idtipoorden) {
 			return;
 		}
 
