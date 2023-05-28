@@ -57,6 +57,7 @@ export class UsersComponent implements OnInit {
 	create(): void {
 		this._alert.loading();
 
+		this.data['documento'] = this.data.numerodocumento;
 		this._service.create({ idusuario: '0', ...this.data }).subscribe(
 			(response) => {
 				this._alert.closeAlert();
@@ -88,6 +89,7 @@ export class UsersComponent implements OnInit {
 	update(): void {
 		this._alert.loading();
 
+		this.data['documento'] = this.data.numerodocumento;
 		this._service.create(this.data).subscribe(
 			(response) => {
 				this._alert.closeAlert();
@@ -117,8 +119,6 @@ export class UsersComponent implements OnInit {
 
 	changeStatus({ idusuario }, status: 'A' | 'I'): void {
 		this._alert.loading();
-
-		this.data['documento'] = this.data.numerodocumento;
 
 		this._service.changeStatus(idusuario, status).subscribe(
 			(response) => {
@@ -169,12 +169,14 @@ export class UsersComponent implements OnInit {
 			return;
 		}
 
-		this.data = data;
-		this.data['idcliente'] = String(this.data['idcliente']);
-		this.data['idtercero'] = String(this.data['idtercero']);
+		this.data = JSON.parse(JSON.stringify(data));
 
+		this.data['idcliente'] = String(this.data['idcliente']);
+		// this.data['idtercero'] = String(this.data['idtercero']);
+
+		console.log(this.data);
 		// this.getSelects();
-		this.getSedes(this.data.idclientesede);
+		this.getSedes(this.data.idcliente);
 	}
 
 	search(): void {
@@ -208,5 +210,11 @@ export class UsersComponent implements OnInit {
 		this._clients.bySite({ idcliente}).subscribe((response) => {
 			this.listSites = response;
 		});
+	}
+
+	comparePassword(password: string): boolean {
+		if (password) {
+			return this.data.clave !== password;
+		}
 	}
 }

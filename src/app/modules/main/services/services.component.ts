@@ -49,7 +49,7 @@ export class ServicesComponent implements OnInit {
 	create(): void {
 		this._alert.loading();
 
-		this.data['idunidad'] = this.data.cliensede;
+		this.data['idunidad'] = this.data.idunidad_medida;
 		this._service.create({ idservicio: '0', ...this.data }).subscribe(
 			(response) => {
 				this._alert.closeAlert();

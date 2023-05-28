@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { catchError, retry } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ErrorService } from '../errors/error.service';
 
@@ -32,13 +32,11 @@ export class ApiService {
 	 *
 	 * 1. La URL se construye concatenando la URL base `apiUrl` con la URL proporcionada como parámetro.
 	 * 2. Se realiza la solicitud POST utilizando el método `post` del servicio `http` con la URL y los datos proporcionados.
-	 * 3. El operador `retry(3)` se aplica para reintentar la solicitud hasta tres veces en caso de que falle.
 	 * 4. El operador `catchError` se utiliza para capturar cualquier error que ocurra durante la solicitud y delegarlo al manejador de errores `error.handleError()`.
 	 */
 	public post<R, T>(url: string, data?: T | any): Observable<R | any> {
 		url = this.apiUrl + url;
 		return this.http.post<R | any>(url, data).pipe(
-			retry(3),
 			catchError(error => this.error.handleError(error))
 		);
 	}
@@ -58,13 +56,11 @@ export class ApiService {
 	 *
 	 * 1. La URL se construye concatenando la URL base `apiUrl` con la URL proporcionada como parámetro.
 	 * 2. Se realiza la solicitud GET utilizando el método `get` del servicio `http` con la URL.
-	 * 3. El operador `retry(3)` se aplica para reintentar la solicitud hasta tres veces en caso de que falle.
 	 * 4. El operador `catchError` se utiliza para capturar cualquier error que ocurra durante la solicitud y delegarlo al manejador de errores `error.handleError()`.
 	 */
 	public get<T>(url: string): Observable<T | any> {
 		url = this.apiUrl + url;
 		return this.http.get<T | any>(url).pipe(
-			retry(3),
 			catchError(error => this.error.handleError(error))
 		);
 	}
@@ -85,13 +81,11 @@ export class ApiService {
 	 *
 	 * 1. La URL se construye concatenando la URL base `apiUrl` con la URL proporcionada como parámetro.
 	 * 2. Se realiza la solicitud PUT utilizando el método `put` del servicio `http` con la URL y los datos proporcionados.
-	 * 3. El operador `retry(3)` se aplica para reintentar la solicitud hasta tres veces en caso de que falle.
 	 * 4. El operador `catchError` se utiliza para capturar cualquier error que ocurra durante la solicitud y delegarlo al manejador de errores `error.handleError()`.
 	 */
 	public put<R, T>(url: string, data?: T | any): Observable<R | any> {
 		url = this.apiUrl + url;
 		return this.http.put<R | any>(url, data).pipe(
-			retry(3),
 			catchError(error => this.error.handleError(error))
 		);
 	}
@@ -111,13 +105,11 @@ export class ApiService {
 	 *
 	 * 1. La URL se construye concatenando la URL base `apiUrl` con la URL proporcionada como parámetro.
 	 * 2. Se realiza la solicitud DELETE utilizando el método `delete` del servicio `http` con la URL.
-	 * 3. El operador `retry(3)` se aplica para reintentar la solicitud hasta tres veces en caso de que falle.
 	 * 4. El operador `catchError` se utiliza para capturar cualquier error que ocurra durante la solicitud y delegarlo al manejador de errores `error.handleError()`.
 	 */
 	public delete<T>(url: string): Observable<T | any> {
 		url = this.apiUrl + url;
 		return this.http.delete<T | any>(url).pipe(
-			retry(3),
 			catchError(error => this.error.handleError(error))
 		);
 	}

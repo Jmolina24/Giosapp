@@ -85,7 +85,7 @@ export class ThirdPartiesComponent implements OnInit {
 		this._alert.loading();
 
 		this.data['documento'] = this.data.numerodocumento;
-		// this.data['nombre'] = this.data.tercero;
+		this.data['nombre'] = this.data.tercero;
 
 		this._service.create(this.data).subscribe(
 			(response) => {
@@ -150,6 +150,7 @@ export class ThirdPartiesComponent implements OnInit {
 		if (!data) {
 			this.data = {
 				idtipotercero: '',
+				iddepartamento: '',
 				idciudad: '',
 				idtipodocumento: '',
 				documento: '',
