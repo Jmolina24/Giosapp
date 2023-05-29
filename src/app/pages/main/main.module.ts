@@ -31,7 +31,7 @@ import { MatMenuModule } from '@angular/material/menu';
 		ServicesComponent,
 		ThirdPartiesComponent,
 		RolesComponent,
-		ParameterSettingComponent,
+		ParameterSettingComponent
 	],
 	imports: [
 		CommonModule,
@@ -46,7 +46,7 @@ import { MatMenuModule } from '@angular/material/menu';
 		MatInputModule,
 		MatMenuModule,
 		MatSelectModule,
-		SharedModule,
+		SharedModule
 	],
 })
 export class MainModule {}
