@@ -36,12 +36,12 @@ export class UsersComponent implements OnInit {
 		totalPages: number;
 		range?: number;
 	} = {
-			current: 0,
-			pages: [{ data: [], page: 0 }],
-			countForPages: 5,
-			totalPages: 0,
-			range: 3,
-		};
+		current: 0,
+		pages: [{ data: [], page: 0 }],
+		countForPages: 5,
+		totalPages: 0,
+		range: 3,
+	};
 
 	constructor(
 		private _service: UsersService,
@@ -51,7 +51,7 @@ export class UsersComponent implements OnInit {
 		private _roles: RolesService,
 		private _clients: ClientsService,
 		private _files: FilesService
-	) { }
+	) {}
 
 	ngOnInit(): void {
 		this.get();
@@ -235,13 +235,16 @@ export class UsersComponent implements OnInit {
 		}
 	}
 
-
 	fnPagination(): void {
 		this.contentPagination.pages = [];
 		this.contentPagination.totalPages = Math.ceil(
 			this.list.length / this.contentPagination.countForPages
 		);
-		for (let index = 0; index < this.contentPagination.totalPages; index++) {
+		for (
+			let index = 0;
+			index < this.contentPagination.totalPages;
+			index++
+		) {
 			this.contentPagination.pages.push({
 				data: this.list.slice(
 					this.contentPagination.countForPages * index,
@@ -256,11 +259,13 @@ export class UsersComponent implements OnInit {
 	fnBtnChangePage(action: string): void {
 		const { current, pages, range } = this.contentPagination;
 		switch (action) {
-			case "next":
-				this.contentPagination.current = pages[current + range]?.page || 0;
+			case 'next':
+				this.contentPagination.current =
+					pages[current + range]?.page || 0;
 				break;
-			case "previus":
-				this.contentPagination.current = pages[current - range]?.page || 0;
+			case 'previus':
+				this.contentPagination.current =
+					pages[current - range]?.page || 0;
 				break;
 			default:
 				this.contentPagination.current = Number(action);
@@ -271,15 +276,15 @@ export class UsersComponent implements OnInit {
 	fnDisabledBtn(action: string): boolean | any {
 		const { current, pages, range } = this.contentPagination;
 		switch (action) {
-			case "next":
+			case 'next':
 				return pages[current + range] || 0;
-			case "previus":
+			case 'previus':
 				return pages[current - range] || 0;
 		}
 	}
 
 	getLengthStatus(key: string): number {
-		return this.list.filter((element) => element.estado == key).length;
+		return this.list.filter(element => element.estado === key).length;
 	}
 
 	generateExcel(): void {

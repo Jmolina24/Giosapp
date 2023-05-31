@@ -14,7 +14,7 @@
 					</div>
 
 
-					<div class="flex flex-row justify-between">
+					<!-- <div class="flex flex-row justify-between">
 						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
 							<div class="flex flex-col items-center">
 								<div class="text-4xl font-bold tracking-tight leading-none text-blue-500">{{ list.length
@@ -38,7 +38,7 @@
 								<div class="text-sm font-medium text-red-600">Inactivos</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 
 					<div>
 						<button type="button" class="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4
@@ -158,9 +158,6 @@
 							<th scope="col" class="px-6 py-3 text-center">
 								Tipo Orden
 							</th>
-							<th scope="col" class="px-6 py-3 text-center">
-								Estado
-							</th>
 							<th scope="col" class="px-6 py-3 text-center"></th>
 						</tr>
 					</thead>
@@ -180,7 +177,7 @@
 										{{ item.idorden }}
 									</td>
 									<td class="px-6 py-4 text-center">
-										{{ item.fecha | date }}
+										{{ item.fecha | date:'short' }}
 									</td>
 									<td scope="row"
 										class="px-6 py-4 text-center font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -190,14 +187,9 @@
 										{{ item.tipoorden }}
 									</td>
 									<td class="px-6 py-4 text-center">
-										{{ item.estado }}
-									</td>
-									<td class="px-6 py-4 text-center">
-										<a (click)="changeStatus(item, item.estado === 'ACTIVO' ? 'I' : 'A')"
-											class="font-medium hover:underline cursor-pointer mx-3"
-											[ngClass]="{'text-green-700': item.estado === 'INACTIVO', 'text-red-700': item.estado === 'ACTIVO'}">
-											{{ item.estado === 'ACTIVO' ? 'INACTIVAR' : 'ACTIVAR' }}
-										</a>
+										<a [routerLink]="['detail/' + item.idorden ]" href="#"
+											class="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-3">Ver
+											Detalles</a>
 										<a (click)="showSection('edit', item)"
 											class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">Editar</a>
 									</td>
@@ -251,7 +243,7 @@
 						<mat-form-field class="fuse-mat-dense flex-auto w-full">
 							<mat-label class="text-lg font-medium mb-1">Sede</mat-label>
 							<mat-select name="type_sede" [(ngModel)]="data.idclientesede"
-								[disabled]="listSites.length == 0">
+								[disabled]="listSites.length === 0">
 								<mat-option value="0" disabled>Seleccione una opción</mat-option>
 								<mat-option [value]="item.idclientesede" *ngFor="let item of listSites">{{
 									item.cliensede }}</mat-option>
@@ -262,7 +254,8 @@
 					<div class="flex justify-between">
 						<mat-form-field class="fuse-mat-dense flex-auto w-full mr-1">
 							<mat-label class="text-lg font-medium mb-1">Fecha de entrega</mat-label>
-							<input id="delivery_date" matInput datepicker type="date" placeholder="Fecha de entrega" name="delivery_date" [(ngModel)]="data.fechaentrega">
+							<input id="delivery_date" matInput datepicker type="date" placeholder="Fecha de entrega"
+								name="delivery_date" [(ngModel)]="data.fechaentrega">
 						</mat-form-field>
 
 						<mat-form-field class="fuse-mat-dense flex-auto w-full mr-1">

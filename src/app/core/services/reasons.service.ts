@@ -4,15 +4,14 @@ import { ApiService } from '../api/api.service';
 import { StorageService } from '../helpers/storage.service';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
 export class ReasonsService {
-
-	constructor(private _api: ApiService, private _storage: StorageService) { }
+	constructor(private _api: ApiService, private _storage: StorageService) {}
 
 	public get({
 		idmotivorechazo = 0,
-		estado = 'T'
+		estado = 'T',
 	}: {
 		idmotivorechazo?: string | number;
 		estado?: 'T' | number;
@@ -24,20 +23,19 @@ export class ReasonsService {
 
 	public create({
 		idmotivorechazo = '0',
-		nombre
+		nombre,
 	}: {
 		idmotivorechazo?: string;
 		nombre: string;
 	}): Observable<any> {
-
 		if (!nombre) {
 			return;
 		}
 
-		return this._api.post(`admin/create-motivo-rechazo`, {
+		return this._api.post('admin/create-motivo-rechazo', {
 			idmotivorechazo,
 			nombre,
-			idusuarioregistra: this._storage.getUserId()
+			idusuarioregistra: this._storage.getUserId(),
 		});
 	}
 
@@ -46,9 +44,9 @@ export class ReasonsService {
 			return;
 		}
 
-		return this._api.post(`admin/motivo-rechazo-status/` + status, {
+		return this._api.post('admin/motivo-rechazo-status/' + status, {
 			idmotivorechazo,
-			idusuarioregistra: this._storage.getUserId()
+			idusuarioregistra: this._storage.getUserId(),
 		});
 	}
 }

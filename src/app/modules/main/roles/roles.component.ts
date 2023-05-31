@@ -190,7 +190,11 @@ export class RolesComponent implements OnInit {
 		this.contentPagination.totalPages = Math.ceil(
 			this.list.length / this.contentPagination.countForPages
 		);
-		for (let index = 0; index < this.contentPagination.totalPages; index++) {
+		for (
+			let index = 0;
+			index < this.contentPagination.totalPages;
+			index++
+		) {
 			this.contentPagination.pages.push({
 				data: this.list.slice(
 					this.contentPagination.countForPages * index,
@@ -205,11 +209,13 @@ export class RolesComponent implements OnInit {
 	fnBtnChangePage(action: string): void {
 		const { current, pages, range } = this.contentPagination;
 		switch (action) {
-			case "next":
-				this.contentPagination.current = pages[current + range]?.page || 0;
+			case 'next':
+				this.contentPagination.current =
+					pages[current + range]?.page || 0;
 				break;
-			case "previus":
-				this.contentPagination.current = pages[current - range]?.page || 0;
+			case 'previus':
+				this.contentPagination.current =
+					pages[current - range]?.page || 0;
 				break;
 			default:
 				this.contentPagination.current = Number(action);
@@ -220,15 +226,15 @@ export class RolesComponent implements OnInit {
 	fnDisabledBtn(action: string): boolean | any {
 		const { current, pages, range } = this.contentPagination;
 		switch (action) {
-			case "next":
+			case 'next':
 				return pages[current + range] || 0;
-			case "previus":
+			case 'previus':
 				return pages[current - range] || 0;
 		}
 	}
 
 	getLengthStatus(key: string): number {
-		return this.list.filter((element) => element.estado == key).length;
+		return this.list.filter(element => element.estado === key).length;
 	}
 
 	generateExcel(): void {

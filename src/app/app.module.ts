@@ -12,10 +12,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ApiInterceptor } from './core/interceptors/api.interceptor';
-import { DetailsComponent } from './modules/main/orders/details/details.component';
 
 @NgModule({
-	declarations: [AppComponent, DetailsComponent],
+	declarations: [AppComponent],
 	imports: [
 		BrowserModule,
 		BrowserAnimationsModule,

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnInit } from '@angular/core';
 import { FilesService } from 'app/core/helpers/files.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
@@ -8,7 +9,7 @@ import { ServicesService } from 'app/core/services/services.service';
 import { Subject } from 'rxjs';
 
 interface Section {
-	section: 'M' | 'U' | 'O' | 'S',
+	section: 'M' | 'U' | 'O' | 'S';
 	title?: string;
 	data?: any;
 	callback?: () => void;
@@ -20,7 +21,6 @@ interface Section {
 	styleUrls: ['./parameter-setting.component.scss'],
 })
 export class ParameterSettingComponent implements OnInit {
-
 	section!: Section;
 	sectionModal: 'add' | 'edit' | null;
 
@@ -29,42 +29,42 @@ export class ParameterSettingComponent implements OnInit {
 			section: 'M',
 			title: 'Motivos de rechazo',
 			data: {
-				list: []
+				list: [],
 			},
-			callback: () => {
+			callback: (): void => {
 				this.getSeasons();
-			}
+			},
 		},
 		{
 			section: 'U',
 			title: 'Unidades de medida',
 			data: {
-				list: []
+				list: [],
 			},
-			callback: () => {
+			callback: (): void => {
 				this.getMeasuringUnits();
-			}
+			},
 		},
 		{
 			section: 'O',
 			title: 'Tipos de ordenes',
 			data: {
-				list: []
+				list: [],
 			},
-			callback: () => {
+			callback: (): void => {
 				this.getTypesOrders();
-			}
+			},
 		},
 		{
 			section: 'S',
 			title: 'Tipos de servicios',
 			data: {
-				list: []
+				list: [],
 			},
-			callback: () => {
+			callback: (): void => {
 				this.getTypesServices();
-			}
-		}
+			},
+		},
 	];
 
 	searchTerm$ = new Subject<string>();
@@ -76,29 +76,41 @@ export class ParameterSettingComponent implements OnInit {
 		totalPages: number;
 		range?: number;
 	} = {
-			current: 0,
-			pages: [{ data: [], page: 0 }],
-			countForPages: 5,
-			totalPages: 0,
-			range: 3,
-		};
+		current: 0,
+		pages: [{ data: [], page: 0 }],
+		countForPages: 5,
+		totalPages: 0,
+		range: 3,
+	};
 
-	constructor(private _general: GeneralService, private _reason: ReasonsService, private _order: OrdersService, private _service: ServicesService, private _alert: SweetAlertService,
-		private _files: FilesService) { }
+	constructor(
+		private _general: GeneralService,
+		private _reason: ReasonsService,
+		private _order: OrdersService,
+		private _service: ServicesService,
+		private _alert: SweetAlertService,
+		private _files: FilesService
+	) {}
 
 	ngOnInit(): void {
 		this.changeSection({ section: 'M' });
-		this.search()
+		this.search();
 	}
 
 	changeSection({ section, data, callback }: Section): void {
-		this.section = this.listSection.find((r) => r.section === section);
+		this.section = this.listSection.find(r => r.section === section);
 
-		if (data) this.section.data = data;
+		if (data) {
+			this.section.data = data;
+		}
 
-		if (callback) this.section.callback = callback;
+		if (callback) {
+			this.section.callback = callback;
+		}
 
-		if (this.sectionModal) this.sectionModal = null;
+		if (this.sectionModal) {
+			this.sectionModal = null;
+		}
 
 		this.section.callback();
 	}
@@ -109,7 +121,7 @@ export class ParameterSettingComponent implements OnInit {
 			this.section.data.listCopy = JSON.parse(JSON.stringify(response));
 
 			this.fnPagination();
-		})
+		});
 	}
 
 	getMeasuringUnits(): void {
@@ -118,7 +130,7 @@ export class ParameterSettingComponent implements OnInit {
 			this.section.data.listCopy = JSON.parse(JSON.stringify(response));
 
 			this.fnPagination();
-		})
+		});
 	}
 
 	getTypesOrders(): void {
@@ -127,7 +139,7 @@ export class ParameterSettingComponent implements OnInit {
 			this.section.data.listCopy = JSON.parse(JSON.stringify(response));
 
 			this.fnPagination();
-		})
+		});
 	}
 
 	getTypesServices(): void {
@@ -136,15 +148,19 @@ export class ParameterSettingComponent implements OnInit {
 			this.section.data.listCopy = JSON.parse(JSON.stringify(response));
 
 			this.fnPagination();
-		})
+		});
 	}
 
 	search(): void {
 		this.searchTerm$.subscribe((term) => {
 			this.section.data.list = this.section.data.listCopy
 				// .map((r: any) => Object.values(r))
-				.filter((item: any) => item.nombre.toLowerCase().indexOf(term.toLowerCase()) >= 0);
-				this.fnPagination();
+				.filter(
+					(item: any) =>
+						item.nombre.toLowerCase().indexOf(term.toLowerCase()) >=
+						0
+				);
+			this.fnPagination();
 		});
 	}
 
@@ -154,7 +170,7 @@ export class ParameterSettingComponent implements OnInit {
 		if (!data) {
 			this.section.data.data = {
 				nombre: '',
-				prefijo: ''
+				prefijo: '',
 			};
 			return;
 		}
@@ -227,32 +243,38 @@ export class ParameterSettingComponent implements OnInit {
 	createReason(): void {
 		this._alert.loading();
 
-		this._reason.create({ idmotivorechazo: '0', nombre: this.section.data.data['nombre'] }).subscribe(
-			(response) => {
-				this._alert.closeAlert();
-				if (response.codigo !== 0) {
-					this._alert.error({
+		this._reason
+			.create({
+				idmotivorechazo: '0',
+				nombre: this.section.data.data['nombre'],
+			})
+			.subscribe(
+				(response) => {
+					this._alert.closeAlert();
+					if (response.codigo !== 0) {
+						this._alert.error({
+							title: response.titulo,
+							text: response.mensaje,
+						});
+						return;
+					}
+
+					this._alert.success({
 						title: response.titulo,
 						text: response.mensaje,
 					});
-					return;
+
+					this.getSeasons();
+					this.showSection(null);
+				},
+				({ error }) => {
+					this._alert.error({
+						title: error.titulo || 'Error',
+						text:
+							error.mensaje || 'Error al procesar la solicitud.',
+					});
 				}
-
-				this._alert.success({
-					title: response.titulo,
-					text: response.mensaje,
-				});
-
-				this.getSeasons();
-				this.showSection(null);
-			},
-			({ error }) => {
-				this._alert.error({
-					title: error.titulo || 'Error',
-					text: error.mensaje || 'Error al procesar la solicitud.',
-				});
-			}
-		);
+			);
 	}
 
 	updateReason(): void {
@@ -289,94 +311,104 @@ export class ParameterSettingComponent implements OnInit {
 	measurementUnitsChangeStatus({ idunidad_medida }, status: 'A' | 'I'): void {
 		this._alert.loading();
 
-		this._general.changeStatusMeasurementUnits(idunidad_medida, status).subscribe(
-			(response) => {
-				this._alert.closeAlert();
-				if (response.codigo !== 0) {
-					this._alert.error({
+		this._general
+			.changeStatusMeasurementUnits(idunidad_medida, status)
+			.subscribe(
+				(response) => {
+					this._alert.closeAlert();
+					if (response.codigo !== 0) {
+						this._alert.error({
+							title: response.titulo,
+							text: response.mensaje,
+						});
+						return;
+					}
+
+					this._alert.success({
 						title: response.titulo,
 						text: response.mensaje,
 					});
-					return;
+
+					this.getMeasuringUnits();
+				},
+				({ error }) => {
+					this._alert.error({
+						title: error.titulo || 'Error',
+						text:
+							error.mensaje || 'Error al procesar la solicitud.',
+					});
 				}
-
-				this._alert.success({
-					title: response.titulo,
-					text: response.mensaje,
-				});
-
-				this.getMeasuringUnits();
-			},
-			({ error }) => {
-				this._alert.error({
-					title: error.titulo || 'Error',
-					text: error.mensaje || 'Error al procesar la solicitud.',
-				});
-			}
-		);
+			);
 	}
 
 	createMeasurementUnit(): void {
 		this._alert.loading();
 
-		this._general.createMeasurementUnit({ idunidad: 0, ...this.section.data.data }).subscribe(
-			(response) => {
-				this._alert.closeAlert();
-				if (response.codigo !== 0) {
-					this._alert.error({
+		this._general
+			.createMeasurementUnit({ idunidad: 0, ...this.section.data.data })
+			.subscribe(
+				(response) => {
+					this._alert.closeAlert();
+					if (response.codigo !== 0) {
+						this._alert.error({
+							title: response.titulo,
+							text: response.mensaje,
+						});
+						return;
+					}
+
+					this._alert.success({
 						title: response.titulo,
 						text: response.mensaje,
 					});
-					return;
+
+					this.getMeasuringUnits();
+					this.showSection(null);
+				},
+				({ error }) => {
+					this._alert.error({
+						title: error.titulo || 'Error',
+						text:
+							error.mensaje || 'Error al procesar la solicitud.',
+					});
 				}
-
-				this._alert.success({
-					title: response.titulo,
-					text: response.mensaje,
-				});
-
-				this.getMeasuringUnits();
-				this.showSection(null);
-			},
-			({ error }) => {
-				this._alert.error({
-					title: error.titulo || 'Error',
-					text: error.mensaje || 'Error al procesar la solicitud.',
-				});
-			}
-		);
+			);
 	}
 
 	updateMeasurementUnit(): void {
 		this._alert.loading();
 
-		this.section.data.data['idunidad'] = this.section.data.data['idunidad_medida'];
-		this._general.createMeasurementUnit({ ...this.section.data.data }).subscribe(
-			(response) => {
-				this._alert.closeAlert();
-				if (response.codigo !== 0) {
-					this._alert.error({
+		this.section.data.data['idunidad'] =
+			this.section.data.data['idunidad_medida'];
+		this._general
+			.createMeasurementUnit({ ...this.section.data.data })
+			.subscribe(
+				(response) => {
+					this._alert.closeAlert();
+					if (response.codigo !== 0) {
+						this._alert.error({
+							title: response.titulo,
+							text: response.mensaje,
+						});
+						return;
+					}
+
+					this._alert.success({
 						title: response.titulo,
 						text: response.mensaje,
 					});
-					return;
+
+					this.getMeasuringUnits();
+					this.showSection(null);
+				},
+				({ error }) => {
+					this._alert.error({
+						title: error.titulo || 'Error',
+						text:
+							error.mensaje || 'Error al procesar la solicitud.',
+					});
 				}
-
-				this._alert.success({
-					title: response.titulo,
-					text: response.mensaje,
-				});
-
-				this.getMeasuringUnits();
-				this.showSection(null);
-			},
-			({ error }) => {
-				this._alert.error({
-					title: error.titulo || 'Error',
-					text: error.mensaje || 'Error al procesar la solicitud.',
-				});
-			}
-		);
+			);
 	}
 
 	typeOrderChangeStatus({ idtipoorden }, status: 'A' | 'I'): void {
@@ -412,32 +444,35 @@ export class ParameterSettingComponent implements OnInit {
 	createTypeOrder(): void {
 		this._alert.loading();
 
-		this._order.createType({ idtipoorden: '0', ...this.section.data.data }).subscribe(
-			(response) => {
-				this._alert.closeAlert();
-				if (response.codigo !== 0) {
-					this._alert.error({
+		this._order
+			.createType({ idtipoorden: '0', ...this.section.data.data })
+			.subscribe(
+				(response) => {
+					this._alert.closeAlert();
+					if (response.codigo !== 0) {
+						this._alert.error({
+							title: response.titulo,
+							text: response.mensaje,
+						});
+						return;
+					}
+
+					this._alert.success({
 						title: response.titulo,
 						text: response.mensaje,
 					});
-					return;
+
+					this.getTypesOrders();
+					this.showSection(null);
+				},
+				({ error }) => {
+					this._alert.error({
+						title: error.titulo || 'Error',
+						text:
+							error.mensaje || 'Error al procesar la solicitud.',
+					});
 				}
-
-				this._alert.success({
-					title: response.titulo,
-					text: response.mensaje,
-				});
-
-				this.getTypesOrders();
-				this.showSection(null);
-			},
-			({ error }) => {
-				this._alert.error({
-					title: error.titulo || 'Error',
-					text: error.mensaje || 'Error al procesar la solicitud.',
-				});
-			}
-		);
+			);
 	}
 
 	updateTypeOrder(): void {
@@ -507,7 +542,11 @@ export class ParameterSettingComponent implements OnInit {
 		this.contentPagination.totalPages = Math.ceil(
 			this.section.data.list.length / this.contentPagination.countForPages
 		);
-		for (let index = 0; index < this.contentPagination.totalPages; index++) {
+		for (
+			let index = 0;
+			index < this.contentPagination.totalPages;
+			index++
+		) {
 			this.contentPagination.pages.push({
 				data: this.section.data.list.slice(
 					this.contentPagination.countForPages * index,
@@ -522,11 +561,13 @@ export class ParameterSettingComponent implements OnInit {
 	fnBtnChangePage(action: string): void {
 		const { current, pages, range } = this.contentPagination;
 		switch (action) {
-			case "next":
-				this.contentPagination.current = pages[current + range]?.page || 0;
+			case 'next':
+				this.contentPagination.current =
+					pages[current + range]?.page || 0;
 				break;
-			case "previus":
-				this.contentPagination.current = pages[current - range]?.page || 0;
+			case 'previus':
+				this.contentPagination.current =
+					pages[current - range]?.page || 0;
 				break;
 			default:
 				this.contentPagination.current = Number(action);
@@ -537,18 +578,22 @@ export class ParameterSettingComponent implements OnInit {
 	fnDisabledBtn(action: string): boolean | any {
 		const { current, pages, range } = this.contentPagination;
 		switch (action) {
-			case "next":
+			case 'next':
 				return pages[current + range] || 0;
-			case "previus":
+			case 'previus':
 				return pages[current - range] || 0;
 		}
 	}
 
 	getLengthStatus(key: string): number {
-		return this.section.data.list.filter((element) => element.estado == key).length;
+		return this.section.data.list.filter(element => element.estado === key)
+			.length;
 	}
 
 	generateExcel(): void {
-		this._files.exportAsExcelFile(this.section.data.list, this.section.title.split(' ').join('_').toLowerCase());
+		this._files.exportAsExcelFile(
+			this.section.data.list,
+			this.section.title.split(' ').join('_').toLowerCase()
+		);
 	}
 }

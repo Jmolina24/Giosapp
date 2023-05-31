@@ -20,6 +20,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatMenuModule } from '@angular/material/menu';
+import { DetailsComponent } from 'app/modules/main/orders/details/details.component';
 
 @NgModule({
 	declarations: [
@@ -28,6 +29,7 @@ import { MatMenuModule } from '@angular/material/menu';
 		ClientsComponent,
 		DetailSiteComponent,
 		OrdersComponent,
+		DetailsComponent,
 		ServicesComponent,
 		ThirdPartiesComponent,
 		RolesComponent,

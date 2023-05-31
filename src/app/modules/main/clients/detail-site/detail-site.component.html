@@ -121,7 +121,7 @@
 					<mat-form-field class="fuse-mat-dense flex-auto">
 						<mat-label class="text-lg font-medium mb-1">Ciudad</mat-label>
 						<mat-select [value]="''" name="cities" [(ngModel)]="idCiudad"
-							[disabled]="listCities.length == 0" (selectionChange)="getBySite(idcliente, idCiudad)">
+							[disabled]="listCities.length === 0" (selectionChange)="getBySite(idcliente, idCiudad)">
 							<mat-option value="" disabled>Seleccione una opción</mat-option>
 							<mat-option [value]="item.idciudad" *ngFor="let item of listCities">{{ item.nombre
 								}}</mat-option>
@@ -215,7 +215,7 @@
 										{{ item.estado }}
 									</td>
 									<td class="px-6 py-4 text-center">
-										{{ item.fecharegistro | date }}
+										{{ item.fecharegistro | date: 'short' }}
 									</td>
 									<td class="px-6 py-4 text-center">
 										{{ item.usuarioregistra }}
@@ -287,7 +287,7 @@
 						<mat-form-field class="fuse-mat-dense flex-auto">
 							<mat-label class="text-lg font-medium mb-1">Ciudad</mat-label>
 							<mat-select [value]="''" name="cities" [(ngModel)]="data.idciudad"
-								[disabled]="listCities.length == 0">
+								[disabled]="listCities.length === 0">
 								<mat-option value="" disabled>Seleccione una opción</mat-option>
 								<mat-option [value]="item.idciudad" *ngFor="let item of listCities">{{ item.nombre
 									}}</mat-option>

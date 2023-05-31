@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Injectable } from '@angular/core';
 import { ApiService } from '../api/api.service';
 import { Observable } from 'rxjs';
@@ -7,7 +8,7 @@ import { StorageService } from '../helpers/storage.service';
 	providedIn: 'root',
 })
 export class OrdersService {
-	constructor(private _api: ApiService, private _storage: StorageService) { }
+	constructor(private _api: ApiService, private _storage: StorageService) {}
 
 	public get({
 		idorden = 0,
@@ -26,12 +27,12 @@ export class OrdersService {
 	}
 
 	public create(content: {
-		idorden: string,
-		idtipoorden: string,
-		idclientesede: string,
-		fechaentrega: string,
-		horaentrega: string,
-		observacion: string
+		idorden: string;
+		idtipoorden: string;
+		idclientesede: string;
+		fechaentrega: string;
+		horaentrega: string;
+		observacion: string;
 	}): Observable<any> {
 		if (!content) {
 			return;
@@ -43,10 +44,7 @@ export class OrdersService {
 		});
 	}
 
-	public changeStatus(
-		idorden = '0',
-		status: string = 'A'
-	): Observable<any> {
+	public changeStatus(idorden = '0', status: string = 'A'): Observable<any> {
 		if (!idorden) {
 			return;
 		}
@@ -73,18 +71,18 @@ export class OrdersService {
 		estado?: 'T' | string;
 	} = {}): Observable<any[]> {
 		return this._api.get<any[]>(
-			`option/list-ordenes?iddetalleorden=${iddetalleorden}&idorden=${idorden}&idcliente=${idcliente}&idclientesede=${idclientesede}&idtercero${idtercero}&estado=${estado}`
+			`option/list-ordenes-detalles?iddetalleorden=${iddetalleorden}&idorden=${idorden}&idcliente=${idcliente}&idclientesede=${idclientesede}&idtercero=${idtercero}&estado=${estado}`
 		);
 	}
 
 	public createDetail(content: {
-		iddetalleorden: string,
-		idorden: string,
-		idservicio: string,
-		cantidad: string,
-		referencia: string,
-		observacion: string
-   }): Observable<any> {
+		iddetalleorden: string;
+		idorden: string;
+		idservicio: string;
+		cantidad: string;
+		referencia: string;
+		observacion: string;
+	}): Observable<any> {
 		if (!content) {
 			return;
 		}
@@ -147,5 +145,19 @@ export class OrdersService {
 			idtipoorden,
 			idusuarioregistra: this._storage.getUserId(),
 		});
+	}
+
+	public getSupports({
+		iddetalleordensoporte = 0,
+		iddetalleorden = 0,
+		estado = 'T',
+	}: {
+		iddetalleordensoporte?: string | number;
+		iddetalleorden?: string | number;
+		estado?: 'T' | string;
+	} = {}): Observable<any[]> {
+		return this._api.get<any[]>(
+			`option/list-detalles-soportes?iddetalleordensoporte=${iddetalleordensoporte}&iddetalleorden=${iddetalleorden}&estado=${estado}`
+		);
 	}
 }

@@ -8,10 +8,9 @@ import { Subject } from 'rxjs';
 @Component({
 	selector: 'app-orders',
 	templateUrl: './orders.component.html',
-	styleUrls: ['./orders.component.scss']
+	styleUrls: ['./orders.component.scss'],
 })
 export class OrdersComponent implements OnInit {
-
 	list: any[] = [];
 	listCopy: any[] = [];
 
@@ -32,14 +31,19 @@ export class OrdersComponent implements OnInit {
 		totalPages: number;
 		range?: number;
 	} = {
-			current: 0,
-			pages: [{ data: [], page: 0 }],
-			countForPages: 5,
-			totalPages: 0,
-			range: 3,
-		};
+		current: 0,
+		pages: [{ data: [], page: 0 }],
+		countForPages: 5,
+		totalPages: 0,
+		range: 3,
+	};
 
-	constructor(private _orders: OrdersService, private _files: FilesService, private _clients: ClientsService, private _alert: SweetAlertService) { }
+	constructor(
+		private _orders: OrdersService,
+		private _files: FilesService,
+		private _clients: ClientsService,
+		private _alert: SweetAlertService
+	) {}
 
 	ngOnInit(): void {
 		this.get();
@@ -54,9 +58,12 @@ export class OrdersComponent implements OnInit {
 				return;
 			}
 			response.map((element: any) => {
-				element.fechaentrega = element.fechaentrega.split('/').reverse().join('-')
+				element.fechaentrega = element.fechaentrega
+					.split('/')
+					.reverse()
+					.join('-');
 				return element;
-			})
+			});
 
 			this.list = response;
 			this.listCopy = JSON.parse(JSON.stringify(response));
@@ -171,19 +178,19 @@ export class OrdersComponent implements OnInit {
 
 		if (!data) {
 			this.data = {
-				idorden: "",
-				idtipoorden: "0",
-				idclientesede: "0",
-				fechaentrega: "",
-				horaentrega: "",
-				observacion: "",
-				idcliente: "0",
+				idorden: '',
+				idtipoorden: '0',
+				idclientesede: '0',
+				fechaentrega: '',
+				horaentrega: '',
+				observacion: '',
+				idcliente: '0',
 			};
 			return;
 		}
 
 		this.data = JSON.parse(JSON.stringify(data));
-		this.data['idcliente'] = "1";
+		this.data['idcliente'] = '1';
 
 		console.log(this.data);
 
@@ -218,7 +225,11 @@ export class OrdersComponent implements OnInit {
 		this.contentPagination.totalPages = Math.ceil(
 			this.list.length / this.contentPagination.countForPages
 		);
-		for (let index = 0; index < this.contentPagination.totalPages; index++) {
+		for (
+			let index = 0;
+			index < this.contentPagination.totalPages;
+			index++
+		) {
 			this.contentPagination.pages.push({
 				data: this.list.slice(
 					this.contentPagination.countForPages * index,
@@ -233,11 +244,13 @@ export class OrdersComponent implements OnInit {
 	fnBtnChangePage(action: string): void {
 		const { current, pages, range } = this.contentPagination;
 		switch (action) {
-			case "next":
-				this.contentPagination.current = pages[current + range]?.page || 0;
+			case 'next':
+				this.contentPagination.current =
+					pages[current + range]?.page || 0;
 				break;
-			case "previus":
-				this.contentPagination.current = pages[current - range]?.page || 0;
+			case 'previus':
+				this.contentPagination.current =
+					pages[current - range]?.page || 0;
 				break;
 			default:
 				this.contentPagination.current = Number(action);
@@ -248,15 +261,15 @@ export class OrdersComponent implements OnInit {
 	fnDisabledBtn(action: string): boolean | any {
 		const { current, pages, range } = this.contentPagination;
 		switch (action) {
-			case "next":
+			case 'next':
 				return pages[current + range] || 0;
-			case "previus":
+			case 'previus':
 				return pages[current - range] || 0;
 		}
 	}
 
 	getLengthStatus(key: string): number {
-		return this.list.filter((element) => element.estado == key).length;
+		return this.list.filter(element => element.estado === key).length;
 	}
 
 	generateExcel(): void {

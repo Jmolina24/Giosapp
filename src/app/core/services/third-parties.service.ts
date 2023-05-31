@@ -34,7 +34,7 @@ export class ThirdPartiesService {
 		telefono: string;
 		email: string;
 	}): Observable<any> {
-		if (Object.keys(content).some(element =>  !element)) {
+		if (Object.keys(content).some(element => !element)) {
 			return;
 		}
 
