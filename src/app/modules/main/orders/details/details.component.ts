@@ -4,6 +4,7 @@ import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { GeneralService } from 'app/core/services/general.service';
 import { OrdersService } from 'app/core/services/orders.service';
 import { ServicesService } from 'app/core/services/services.service';
+import { ThirdPartiesService } from 'app/core/services/third-parties.service';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -21,6 +22,7 @@ export class DetailsComponent implements OnInit {
 	listCopy: any[] = [];
 
 	listServices: any[] = [];
+	listThirds: any[] = [];
 
 	data: any = null;
 
@@ -44,6 +46,7 @@ export class DetailsComponent implements OnInit {
 
 	constructor(private _service: OrdersService,
 		private _services: ServicesService,
+		private _thirds: ThirdPartiesService,
 		private route: ActivatedRoute,
 		private _alert: SweetAlertService) {}
 
@@ -61,6 +64,8 @@ export class DetailsComponent implements OnInit {
 			this.search();
 
 			this.getServices();
+
+			this.getThirds();
 		});
 	}
 
@@ -88,6 +93,12 @@ export class DetailsComponent implements OnInit {
 	getServices(): void {
 		this._services.get().subscribe((response) => {
 			this.listServices = response;
+		});
+	}
+
+	getThirds(): void {
+		this._thirds.get().subscribe((response) => {
+			this.listThirds = response;
 		});
 	}
 

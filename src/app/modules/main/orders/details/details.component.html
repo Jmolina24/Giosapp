@@ -142,6 +142,9 @@
 							<th scope="col" class="px-6 py-3 text-center">
 								Estado
 							</th>
+							<th scope="col" class="px-6 py-3 text-center">
+								Asignar
+							</th>
 							<th scope="col" class="px-6 py-3 text-center"></th>
 						</tr>
 					</thead>
@@ -179,6 +182,14 @@
 									<td class="px-6 py-4 text-center">
 										{{ item.estado }}
 									</td>
+									<div class="px-6 py-4 text-center">
+										<mat-form-field class="fuse-mat-dense flex-auto w-full">
+											<mat-select [value]="''" name="type" name="services">
+												<mat-option value="" disabled>Seleccione una opción</mat-option>
+												<mat-option [value]="item.idtercero" *ngFor="let item of listThirds">{{ item.tercero }}</mat-option>
+											</mat-select>
+										</mat-form-field>
+									</div>
 									<td class="px-6 py-4 text-center">
 										<a (click)="showSection('edit', item)"
 											class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">Editar</a>
