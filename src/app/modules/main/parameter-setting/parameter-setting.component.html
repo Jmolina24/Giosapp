@@ -37,7 +37,6 @@
 
 					<div>
 						<button
-						*ngIf="section.section != 'S'"
 						type="button" class="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4
 							focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
 							(click)="showSection('add')">Crear</button>
@@ -424,13 +423,13 @@
 													{{ item.estado }}
 												</td>
 												<td class="px-6 py-4 text-center">
-													<!-- <a (click)="typeServicesChangeStatus(item, item.estado === 'ACTIVO' ? 'I' : 'A')"
+													<a (click)="typeServicesChangeStatus(item, item.estado === 'ACTIVO' ? 'I' : 'A')"
 														class="font-medium hover:underline cursor-pointer mx-3"
 														[ngClass]="{'text-green-700': item.estado === 'INACTIVO', 'text-red-700': item.estado === 'ACTIVO'}">
 														{{ item.estado === 'ACTIVO' ? 'INACTIVAR' : 'ACTIVAR' }}
-													</a> -->
-													<!-- <a (click)="showSection('edit', item)"
-														class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">Editar</a> -->
+													</a>
+													<a (click)="showSection('edit', item)"
+														class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">Editar</a>
 												</td>
 											</tr>
 										</ng-container>
@@ -500,7 +499,20 @@
 						<input id="name" matInput placeholder="Nombre" name="name" [(ngModel)]="section.data.data.nombre">
 					</mat-form-field>
 				</ng-container>
-				<ng-container *ngSwitchCase="'S'"></ng-container>
+				<ng-container *ngSwitchCase="'S'">
+					<div class="flex justify-between">
+						<mat-form-field class="fuse-mat-dense flex-auto mr-1 w-full">
+							<mat-label class="text-lg font-medium mb-1">Codigo</mat-label>
+							<input id="prefijo" matInput placeholder="Codigo" name="codigo"
+								[(ngModel)]="section.data.data.codigo">
+						</mat-form-field>
+
+						<mat-form-field class="fuse-mat-dense flex-auto w-full">
+							<mat-label class="text-lg font-medium mb-1">Nombre</mat-label>
+							<input id="name" matInput placeholder="Nombre" name="name" [(ngModel)]="section.data.data.nombre">
+						</mat-form-field>
+					</div>
+				</ng-container>
 			</ng-container>
 
 			<div class="w-full flex justify-between">

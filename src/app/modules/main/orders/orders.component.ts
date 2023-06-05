@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FilesService } from 'app/core/helpers/files.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { ClientsService } from 'app/core/services/clients.service';
 import { OrdersService } from 'app/core/services/orders.service';
-import { Subject } from 'rxjs';
+import { ServicesService } from 'app/core/services/services.service';
+import { Observable, Subject, of } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-orders',
@@ -17,6 +19,7 @@ export class OrdersComponent implements OnInit {
 	listCustomers: any[] = [];
 	listSites: any[] = [];
 	listTypes: any[] = [];
+	listServices: any[] = [];
 
 	data: any = null;
 
@@ -31,25 +34,27 @@ export class OrdersComponent implements OnInit {
 		totalPages: number;
 		range?: number;
 	} = {
-		current: 0,
-		pages: [{ data: [], page: 0 }],
-		countForPages: 5,
-		totalPages: 0,
-		range: 3,
-	};
+			current: 0,
+			pages: [{ data: [], page: 0 }],
+			countForPages: 5,
+			totalPages: 0,
+			range: 3,
+		};
 
 	constructor(
 		private _orders: OrdersService,
 		private _files: FilesService,
 		private _clients: ClientsService,
-		private _alert: SweetAlertService
-	) {}
+		private _alert: SweetAlertService,
+		private _services: ServicesService
+	) { }
 
 	ngOnInit(): void {
 		this.get();
 		this.search();
 		this.getTypes();
 		this.getClients();
+		this.getServices();
 	}
 
 	get(): void {
@@ -82,35 +87,55 @@ export class OrdersComponent implements OnInit {
 		});
 	}
 
-	create(): void {
+	getServices(): void {
+		this._services.get().subscribe((response) => {
+			this.listServices = response;
+		});
+	}
+
+	create(): Observable<any> {
+		return this._orders.create({ idorden: '0', ...this.data });
+	}
+
+	fnCreate(): void {
 		this._alert.loading();
-
-		this._orders.create({ idorden: '0', ...this.data }).subscribe(
-			(response) => {
-				this._alert.closeAlert();
-				if (response.codigo !== 0) {
-					this._alert.error({
-						title: response.titulo,
-						text: response.mensaje,
-					});
-					return;
-				}
-
-				this._alert.success({
+		this.create().pipe(switchMap(r => this.createDetail(r))).subscribe((response) => {
+			this._alert.closeAlert();
+			if (response.codigo !== 0) {
+				this._alert.error({
 					title: response.titulo,
 					text: response.mensaje,
 				});
-
-				this.get();
-				this.showSection(null);
-			},
-			({ error }) => {
-				this._alert.error({
-					title: error.titulo || 'Error',
-					text: error.mensaje || 'Error al procesar la solicitud.',
-				});
+				return;
 			}
-		);
+
+			this._alert.success({
+				title: response.titulo,
+				text: 'Orden y Detalle de Orden Creados Correctamente...',
+			});
+
+			this.get();
+			this.showSection(null);
+
+		}, ({ error }) => {
+			this._alert.error({
+				title: error.titulo || 'Error',
+				text: error.mensaje || 'Error al procesar la solicitud.',
+			});
+		})
+	}
+
+	createDetail(response: any): Observable<any> {
+		if (response.codigo !== 0) {
+			this._alert.error({
+				title: response.titulo || 'Error',
+				text: response.mensaje || 'Error al procesar la solicitud.',
+			});
+			return;
+		}
+
+		return this._orders
+			.createDetail({ ...this.data, idorden: response.idorden, iddetalleorden: '0' });
 	}
 
 	update(): void {

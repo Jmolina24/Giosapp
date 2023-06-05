@@ -191,6 +191,10 @@ export class ParameterSettingComponent implements OnInit {
 			case 'U':
 				this.createMeasurementUnit();
 				break;
+
+			case 'S':
+				this.createTypeService();
+				break;
 		}
 	}
 
@@ -206,6 +210,9 @@ export class ParameterSettingComponent implements OnInit {
 
 			case 'U':
 				this.updateMeasurementUnit();
+				break;
+			case 'S':
+				this.createTypeService();
 				break;
 		}
 	}
@@ -506,8 +513,72 @@ export class ParameterSettingComponent implements OnInit {
 		);
 	}
 
+	createTypeService(): void {
+		this._alert.loading();
+
+		this._service
+			.createType({ idtiposervicio: '0', ...this.section.data.data })
+			.subscribe(
+				(response) => {
+					this._alert.closeAlert();
+					if (response.codigo !== 0) {
+						this._alert.error({
+							title: response.titulo,
+							text: response.mensaje,
+						});
+						return;
+					}
+
+					this._alert.success({
+						title: response.titulo,
+						text: response.mensaje,
+					});
+
+					this.getTypesServices();
+					this.showSection(null);
+				},
+				({ error }) => {
+					this._alert.error({
+						title: error.titulo || 'Error',
+						text:
+							error.mensaje || 'Error al procesar la solicitud.',
+					});
+				}
+			);
+	}
+
+	updateTypeService(): void {
+		this._alert.loading();
+
+		this._service.createType({ ...this.section.data.data }).subscribe(
+			(response) => {
+				this._alert.closeAlert();
+				if (response.codigo !== 0) {
+					this._alert.error({
+						title: response.titulo,
+						text: response.mensaje,
+					});
+					return;
+				}
+
+				this._alert.success({
+					title: response.titulo,
+					text: response.mensaje,
+				});
+
+				this.getTypesServices();
+				this.showSection(null);
+			},
+			({ error }) => {
+				this._alert.error({
+					title: error.titulo || 'Error',
+					text: error.mensaje || 'Error al procesar la solicitud.',
+				});
+			}
+		);
+	}
+
 	typeServicesChangeStatus({ idtiposervicio }, status: 'A' | 'I'): void {
-		return;
 		this._alert.loading();
 
 		this._service.changeStatus(idtiposervicio, status).subscribe(

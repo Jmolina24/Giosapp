@@ -21,6 +21,21 @@ export class ServicesService {
 		);
 	}
 
+	public createType(content: {
+		idtiposervicio: string,
+		codigo: string,
+		nombre: string,
+   }): Observable<any> {
+		if (Object.keys(content).some(element => !element)) {
+			return;
+		}
+
+		return this._api.post('admin/create-tipo-servicio', {
+			...content,
+			idusuarioregistra: this._storage.getUserId(),
+		});
+	}
+
 	public getTypes({
 		idtiposervicio = 0,
 		estado = 'T',

@@ -77,12 +77,13 @@ export class OrdersService {
 
 	public createDetail(content: {
 		iddetalleorden: string;
-		idorden: string;
+		idorden: string | number;
 		idservicio: string;
 		cantidad: string;
 		referencia: string;
 		observacion: string;
 	}): Observable<any> {
+		console.log(content);
 		if (!content) {
 			return;
 		}

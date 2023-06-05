@@ -85,6 +85,7 @@ export class DetailsComponent implements OnInit {
 			.subscribe((response: any) => {
 				this.list = response;
 				this.listCopy = JSON.parse(JSON.stringify(response));
+				console.log(response);
 
 				this.fnPagination();
 			});
@@ -191,7 +192,7 @@ export class DetailsComponent implements OnInit {
 		this.searchTerm$.subscribe((term) => {
 			this.list = this.listCopy.filter(
 				(item: any) =>
-					item.cliensede.toLowerCase().indexOf(term.toLowerCase()) >=
+					item.servicio.toLowerCase().indexOf(term.toLowerCase()) >=
 					0
 			);
 
