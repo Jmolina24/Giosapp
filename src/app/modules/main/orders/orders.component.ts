@@ -4,7 +4,7 @@ import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { ClientsService } from 'app/core/services/clients.service';
 import { OrdersService } from 'app/core/services/orders.service';
 import { ServicesService } from 'app/core/services/services.service';
-import { Observable, Subject, of } from 'rxjs';
+import { Observable, Subject, forkJoin, of } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -23,7 +23,12 @@ export class OrdersComponent implements OnInit {
 
 	data: any = null;
 
+	dataDetail: any = null;
+
 	section: 'add' | 'edit' | null;
+
+	addDetails: boolean = false;
+	listDetails: any[] = [];
 
 	searchTerm$ = new Subject<string>();
 
@@ -34,12 +39,12 @@ export class OrdersComponent implements OnInit {
 		totalPages: number;
 		range?: number;
 	} = {
-			current: 0,
-			pages: [{ data: [], page: 0 }],
-			countForPages: 5,
-			totalPages: 0,
-			range: 3,
-		};
+		current: 0,
+		pages: [{ data: [], page: 0 }],
+		countForPages: 5,
+		totalPages: 0,
+		range: 3,
+	};
 
 	constructor(
 		private _orders: OrdersService,
@@ -47,7 +52,7 @@ export class OrdersComponent implements OnInit {
 		private _clients: ClientsService,
 		private _alert: SweetAlertService,
 		private _services: ServicesService
-	) { }
+	) {}
 
 	ngOnInit(): void {
 		this.get();
@@ -99,33 +104,53 @@ export class OrdersComponent implements OnInit {
 
 	fnCreate(): void {
 		this._alert.loading();
-		this.create().pipe(switchMap(r => this.createDetail(r))).subscribe((response) => {
-			this._alert.closeAlert();
-			if (response.codigo !== 0) {
-				this._alert.error({
-					title: response.titulo,
-					text: response.mensaje,
-				});
-				return;
-			}
+		this.create()
+			// .pipe(switchMap((r: any) => this.createDetail(r)))
+			.subscribe(
+				(response) => {
+					if (response.codigo !== 0) {
+						this._alert.error({
+							title: response.titulo,
+							text: response.mensaje,
+						});
+						return;
+					}
+					forkJoin(this.listDetails.map(e => this.createDetail(response, e))).subscribe((r: any[]) => {
+						this._alert.closeAlert();
+						this.get();
+						this.showSection(null);
+						const i = r.filter(element => element.codigo !== 0);
+						if (i.length > 0) {
+							this._alert.error({
+								title: 'Error',
+								text: i.join(', '),
+							});
+							return;
+						}
 
-			this._alert.success({
-				title: response.titulo,
-				text: 'Orden y Detalle de Orden Creados Correctamente...',
-			});
-
-			this.get();
-			this.showSection(null);
-
-		}, ({ error }) => {
-			this._alert.error({
-				title: error.titulo || 'Error',
-				text: error.mensaje || 'Error al procesar la solicitud.',
-			});
-		})
+						this._alert.success({
+							title: response.titulo,
+							text: 'Orden y Detalle(s) de Orden Creados Correctamente...',
+						});
+					}, ({ error }) => {
+						this._alert.error({
+							title: error.titulo || 'Error',
+							text:
+								error.mensaje || 'Error al procesar la solicitud.',
+						});
+					});
+				},
+				({ error }) => {
+					this._alert.error({
+						title: error.titulo || 'Error',
+						text:
+							error.mensaje || 'Error al procesar la solicitud.',
+					});
+				}
+			);
 	}
 
-	createDetail(response: any): Observable<any> {
+	createDetail(response: any, data): Observable<any> {
 		if (response.codigo !== 0) {
 			this._alert.error({
 				title: response.titulo || 'Error',
@@ -134,8 +159,11 @@ export class OrdersComponent implements OnInit {
 			return;
 		}
 
-		return this._orders
-			.createDetail({ ...this.data, idorden: response.idorden, iddetalleorden: '0' });
+		return this._orders.createDetail({
+			...data,
+			idorden: response.idorden,
+			iddetalleorden: '0',
+		});
 	}
 
 	update(): void {
@@ -211,13 +239,20 @@ export class OrdersComponent implements OnInit {
 				observacion: '',
 				idcliente: '0',
 			};
+
+			this.dataDetail = {
+				idservicio: '0',
+				cantidad: '0',
+				referencia: '',
+				observacion: '',
+			};
+
+			this.listDetails = [];
 			return;
 		}
 
 		this.data = JSON.parse(JSON.stringify(data));
 		this.data['idcliente'] = '1';
-
-		console.log(this.data);
 
 		this.getSites(this.data.idorden);
 	}
@@ -299,5 +334,24 @@ export class OrdersComponent implements OnInit {
 
 	generateExcel(): void {
 		this._files.exportAsExcelFile(this.list, 'ordenes');
+	}
+
+	fnAddDetails(): void {
+		this.listDetails.push(this.dataDetail);
+
+		this.dataDetail = {
+			idservicio: '0',
+			cantidad: '0',
+			referencia: '',
+			observacion: '',
+		};
+	}
+
+	getNameService(id: number): string {
+		return this.listServices.find(r => r.idservicio === id).nombre;
+	}
+
+	removeDetail(id: number): void {
+		this.listDetails = this.listDetails.filter(e => e.idservicio !== id);
 	}
 }

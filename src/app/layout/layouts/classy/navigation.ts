@@ -46,14 +46,7 @@ const navigation = [
 				type: 'basic',
 				icon: 'heroicons_outline:users',
 				link: '/dashboard/users',
-			},
-			{
-				id: 'menu.third-parties',
-				title: 'Terceros',
-				type: 'basic',
-				icon: 'heroicons_outline:user',
-				link: '/dashboard/third-parties',
-			},
+			}
 		]
 	},
 	{
@@ -81,6 +74,20 @@ const navigation = [
 				icon: 'heroicons_outline:view-list',
 				link: '/dashboard/services',
 			},
+			{
+				id: 'menu.third-parties',
+				title: 'Terceros',
+				type: 'basic',
+				icon: 'heroicons_outline:user',
+				link: '/dashboard/third-parties',
+			},
+			{
+				id: 'menu.rates',
+				title: 'Tarifario',
+				type: 'basic',
+				icon: 'mat_outline:library_books',
+				link: '/dashboard/rates',
+			},
 		]
 	},
 	{
@@ -96,6 +103,13 @@ const navigation = [
 				type: 'basic',
 				icon: 'heroicons_outline:clipboard-list',
 				link: '/dashboard/orders',
+			},
+			{
+				id: 'menu.assigned-services',
+				title: 'Servicios asignados',
+				type: 'basic',
+				icon: 'mat_outline:ballot',
+				link: '/dashboard/assigned-services',
 			},
 		]
 	}

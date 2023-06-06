@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { ApiService } from '../api/api.service';
+import { Observable } from 'rxjs';
 
 const EXCEL_TYPE =
 	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
@@ -11,7 +13,8 @@ const EXCEL_EXTENSION = '.xlsx';
 	providedIn: 'root',
 })
 export class FilesService {
-	constructor() {}
+
+	constructor(private _api: ApiService) {}
 
 	public exportAsExcelFile(
 		data: any[],
@@ -28,5 +31,9 @@ export class FilesService {
 			workbook,
 			excelFileName + '_exporte_' + new Date().getTime() + EXCEL_EXTENSION
 		);
+	}
+
+	upload(bodyContent: FormData): Observable<any> {
+		return this._api.postFile('upload/files', bodyContent);
 	}
 }

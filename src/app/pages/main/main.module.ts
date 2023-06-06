@@ -21,6 +21,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatMenuModule } from '@angular/material/menu';
 import { DetailsComponent } from 'app/modules/main/orders/details/details.component';
+import { AssignedServicesComponent } from 'app/modules/main/assigned-services/assigned-services.component';
+import { FileDragNDropDirective } from 'app/core/directives/file-drag-n-drop.directive';
 
 @NgModule({
 	declarations: [
@@ -33,7 +35,9 @@ import { DetailsComponent } from 'app/modules/main/orders/details/details.compon
 		ServicesComponent,
 		ThirdPartiesComponent,
 		RolesComponent,
-		ParameterSettingComponent
+		ParameterSettingComponent,
+		AssignedServicesComponent,
+		FileDragNDropDirective
 	],
 	imports: [
 		CommonModule,

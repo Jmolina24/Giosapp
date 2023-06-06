@@ -113,4 +113,11 @@ export class ApiService {
 			catchError(error => this.error.handleError(error))
 		);
 	}
+
+	public postFile<T>(url: string, content: FormData): Observable<T | any> {
+		url = this.apiUrl + url;
+		return this.http.post(url, content).pipe(
+			catchError(error => this.error.handleError(error))
+			);
+	}
 }

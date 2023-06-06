@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AssignedServicesComponent } from 'app/modules/main/assigned-services/assigned-services.component';
 import { HomeComponent } from 'app/modules/main/home/home.component';
 import { ParameterSettingComponent } from 'app/modules/main/parameter-setting/parameter-setting.component';
 import { RolesComponent } from 'app/modules/main/roles/roles.component';
@@ -49,6 +50,10 @@ const routes: Routes = [
 	{
 		path: 'parameter-setting',
 		component: ParameterSettingComponent
+	},
+	{
+		path: 'assigned-services',
+		component: AssignedServicesComponent
 	}
 ];
 

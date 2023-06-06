@@ -161,4 +161,19 @@ export class OrdersService {
 			`option/list-detalles-soportes?iddetalleordensoporte=${iddetalleordensoporte}&iddetalleorden=${iddetalleorden}&estado=${estado}`
 		);
 	}
+
+	public uploadSupport(
+		iddetalleordensoporte: string,
+		soporte: string
+	): Observable<any> {
+		if (!iddetalleordensoporte || !soporte) {
+			return;
+		}
+
+		return this._api.post('upload/soporteOrden', {
+			iddetalleordensoporte,
+			soporte,
+			idusuarioregistra: this._storage.getUserId(),
+		});
+	}
 }
