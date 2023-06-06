@@ -14,7 +14,7 @@
 					</div>
 
 
-					<!-- <div class="flex flex-row justify-between">
+					<div class="flex flex-row justify-between">
 						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
 							<div class="flex flex-col items-center">
 								<div class="text-4xl font-bold tracking-tight leading-none text-blue-500">{{ list.length
@@ -38,7 +38,7 @@
 								<div class="text-sm font-medium text-red-600">Inactivos</div>
 							</div>
 						</div>
-					</div> -->
+					</div>
 
 					<div>
 						<button type="button" class="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4
@@ -63,7 +63,7 @@
 							(contentPagination.current + 1) }} </span> de <span
 							class="font-semibold text-gray-900 dark:text-white">{{ list.length }}</span> elementos -->
 						Mostrando <span class="font-semibold text-gray-900 dark:text-white">{{
-							contentPagination.pages[contentPagination.current].data.length }}</span> de <span
+							contentPagination.pages[contentPagination.current]?.data.length }}</span> de <span
 							class="font-semibold text-gray-900 dark:text-white">{{ list.length }}</span> elementos
 					</span>
 					<div class="inline-flex xs:mt-0">
@@ -228,7 +228,7 @@
 
 						<ng-template #noContent>
 							<tr>
-								<td colspan="6" class="px-6 py-4 text-center">Sin información</td>
+								<td colspan="10" class="px-6 py-4 text-center">Sin información</td>
 							</tr>
 						</ng-template>
 					</tbody>

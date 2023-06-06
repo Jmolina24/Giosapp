@@ -109,13 +109,12 @@
 						[ngClass]="{'border-2 border-primary-500': item.showInfo}">
 						<div class="">
 							<div class="flex justify-between">
-								<h2 class="font-medium text-base md:text-lg text-gray-800 line-clamp-1"
-									title="{{ item.unidadmedida }} - {{ item.servicio }}({{ item.tipoorden }})">
-									#{{ item.iddetalleorden }} {{ item.unidadmedida }} - {{ item.servicio }}({{
-									item.tipoorden }}) - {{ item.cantidad }}
+								<h2 class="font-medium text-base md:text-lg text-gray-800 line-clamp-1 h-12"
+									title="">
+									Servicio #{{ item.iddetalleorden }} {{ item.servicio }}({{ item.tipoorden }}) - Cantidad {{ item.cantidad }} - Unidad de medida {{ item.unidadmedida }} - Orden #{{ item.idorden }}
 								</h2>
 								<span
-									class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{{
+									class="bg-blue-100 text-blue-800 text-xs font-medium my-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{{
 									item.estado }}</span>
 							</div>
 							<p class="text-sm text-gray-800 line-clamp-1 mt-2"

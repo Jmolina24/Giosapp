@@ -23,6 +23,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { DetailsComponent } from 'app/modules/main/orders/details/details.component';
 import { AssignedServicesComponent } from 'app/modules/main/assigned-services/assigned-services.component';
 import { FileDragNDropDirective } from 'app/core/directives/file-drag-n-drop.directive';
+import { RatesComponent } from 'app/modules/main/rates/rates.component';
 
 @NgModule({
 	declarations: [
@@ -37,7 +38,8 @@ import { FileDragNDropDirective } from 'app/core/directives/file-drag-n-drop.dir
 		RolesComponent,
 		ParameterSettingComponent,
 		AssignedServicesComponent,
-		FileDragNDropDirective
+		FileDragNDropDirective,
+		RatesComponent
 	],
 	imports: [
 		CommonModule,

@@ -21,6 +21,9 @@ export class OrdersService {
 		idclientesede?: string;
 		estado?: 'T' | string;
 	} = {}): Observable<any[]> {
+		idcliente = String(this._storage.getRolID() !== 1 ? this._storage.getUser().idcliente || '0': '0');
+		idclientesede = String(this._storage.getRolID() !== 1 ? this._storage.getUser().idclientesede || '0': '0');
+
 		return this._api.get<any[]>(
 			`option/list-ordenes?idorden=${idorden}&idcliente=${idcliente}&idclientesede=${idclientesede}&estado=${estado}`
 		);
@@ -70,6 +73,9 @@ export class OrdersService {
 		idtercero?: string;
 		estado?: 'T' | string;
 	} = {}): Observable<any[]> {
+		idcliente = String(this._storage.getRolID() !== 1 ? this._storage.getUser().idcliente || '0': '0');
+		idclientesede = String(this._storage.getRolID() !== 1 ? this._storage.getUser().idclientesede || '0': '0');
+
 		return this._api.get<any[]>(
 			`option/list-ordenes-detalles?iddetalleorden=${iddetalleorden}&idorden=${idorden}&idcliente=${idcliente}&idclientesede=${idclientesede}&idtercero=${idtercero}&estado=${estado}`
 		);

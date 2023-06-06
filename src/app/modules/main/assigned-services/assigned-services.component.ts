@@ -8,8 +8,8 @@ import { StorageService } from 'app/core/helpers/storage.service';
 })
 export class AssignedServicesComponent implements OnInit {
 
-	idtercero: string = String(0);
-	// idtercero: string = String(this._storage.getUser().idtercero);
+	// idtercero: string = String(0);
+	idtercero: string = String(this._storage.getUser().idtercero);
 
 	constructor(private _storage: StorageService) {}
 

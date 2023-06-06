@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -75,8 +76,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
 	 */
 	toggleNavigation(name: string): void {
 		// Get the navigation
-		const navigation =
-			this._fuseNavigationService.getComponent<FuseVerticalNavigationComponent>(
+		const navigation = this._fuseNavigationService.getComponent<FuseVerticalNavigationComponent>(
 				name
 			);
 

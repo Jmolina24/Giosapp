@@ -4,8 +4,7 @@ import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { ClientsService } from 'app/core/services/clients.service';
 import { OrdersService } from 'app/core/services/orders.service';
 import { ServicesService } from 'app/core/services/services.service';
-import { Observable, Subject, forkJoin, of } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { Observable, Subject, forkJoin } from 'rxjs';
 
 @Component({
 	selector: 'app-orders',
@@ -63,23 +62,25 @@ export class OrdersComponent implements OnInit {
 	}
 
 	get(): void {
-		this._orders.get().subscribe((response: any) => {
-			if (!response) {
-				return;
-			}
-			response.map((element: any) => {
-				element.fechaentrega = element.fechaentrega
-					.split('/')
-					.reverse()
-					.join('-');
-				return element;
+		this._orders
+			.get()
+			.subscribe((response: any) => {
+				if (!response) {
+					return;
+				}
+				response.map((element: any) => {
+					element.fechaentrega = element.fechaentrega
+						.split('/')
+						.reverse()
+						.join('-');
+					return element;
+				});
+
+				this.list = response;
+				this.listCopy = JSON.parse(JSON.stringify(response));
+
+				this.fnPagination();
 			});
-
-			this.list = response;
-			this.listCopy = JSON.parse(JSON.stringify(response));
-
-			this.fnPagination();
-		});
 	}
 
 	getTypes(): void {
@@ -115,30 +116,40 @@ export class OrdersComponent implements OnInit {
 						});
 						return;
 					}
-					forkJoin(this.listDetails.map(e => this.createDetail(response, e))).subscribe((r: any[]) => {
-						this._alert.closeAlert();
-						this.get();
-						this.showSection(null);
-						const i = r.filter(element => element.codigo !== 0);
-						if (i.length > 0) {
-							this._alert.error({
-								title: 'Error',
-								text: i.join(', '),
-							});
-							return;
-						}
+					forkJoin(
+						this.listDetails.map(e =>
+							this.createDetail(response, e)
+						)
+					).subscribe(
+						(r: any[]) => {
+							this._alert.closeAlert();
+							this.get();
+							this.showSection(null);
+							const i = r.filter(
+								element => element.codigo !== 0
+							);
+							if (i.length > 0) {
+								this._alert.error({
+									title: 'Error',
+									text: i.join(', '),
+								});
+								return;
+							}
 
-						this._alert.success({
-							title: response.titulo,
-							text: 'Orden y Detalle(s) de Orden Creados Correctamente...',
-						});
-					}, ({ error }) => {
-						this._alert.error({
-							title: error.titulo || 'Error',
-							text:
-								error.mensaje || 'Error al procesar la solicitud.',
-						});
-					});
+							this._alert.success({
+								title: response.titulo,
+								text: 'Orden y Detalle(s) de Orden Creados Correctamente...',
+							});
+						},
+						({ error }) => {
+							this._alert.error({
+								title: error.titulo || 'Error',
+								text:
+									error.mensaje ||
+									'Error al procesar la solicitud.',
+							});
+						}
+					);
 				},
 				({ error }) => {
 					this._alert.error({
