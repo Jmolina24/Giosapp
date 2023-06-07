@@ -406,10 +406,10 @@
 										<mat-icon svgIcon="heroicons_outline:currency-dollar" class="mr-2"></mat-icon>
 										Valor:
 									</span>
-									<span class="mt-2 xl:mt-0" *ngIf="infoThirdsServices.precio_venta">
+									<span class="mt-2 xl:mt-0" *ngIf="infoThirdsServices.valor">
 										{{ infoThirdsServices.valor | currency:"COP ":"symbol" }}
 									</span>
-									<span class="mt-2 xl:mt-0" *ngIf="!infoThirdsServices.precio_venta">
+									<span class="mt-2 xl:mt-0" *ngIf="!infoThirdsServices.valor">
 										Sin valor asignado
 									</span>
 								</p>

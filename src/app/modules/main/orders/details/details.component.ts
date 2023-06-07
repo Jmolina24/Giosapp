@@ -268,8 +268,6 @@ export class DetailsComponent implements OnInit {
 				idterceroservicio: '',
 				valor: '',
 		   };
-
-		   console.log(this.data);
 		   this.getThirdsServices(data.idservicio, data.idciudadservicio);
 		}
 	}

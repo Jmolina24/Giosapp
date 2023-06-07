@@ -61,8 +61,6 @@ export class RatesComponent implements OnInit {
 			this.list = response;
 			this.listCopy = JSON.parse(JSON.stringify(response));
 
-			console.log(response);
-
 			this.fnPagination();
 		});
 	}

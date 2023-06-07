@@ -31,12 +31,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
 		private _fuseNavigationService: FuseNavigationService,
 		private _storage: StorageService,
 		private _menu: MenuService
-	) {
-		this.navigation = this._menu.getMenuByRole();
-
-		console.log(
-			_menu.getMenuByRole());
-	}
+	) {}
 
 	// -----------------------------------------------------------------------------------------------------
 	// @ Accessors
@@ -58,6 +53,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
 	 */
 	ngOnInit(): void {
 		this.user = this._storage.getUser();
+		this.navigation = this._menu.getMenuByRole();
 	}
 
 	/**

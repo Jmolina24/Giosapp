@@ -217,7 +217,6 @@ export class DetailSiteComponent implements OnInit {
 				barrio: '',
 			};
 
-			console.log(this.data, this.idcliente);
 			return;
 		}
 

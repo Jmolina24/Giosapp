@@ -32,6 +32,9 @@ export class OrdersComponent implements OnInit {
 
 	searchTerm$ = new Subject<string>();
 
+	idcliente =  String(this._storage.getUser().idcliente);
+	idclientesede =  this._storage.getUser().idclientesede;
+
 	contentPagination: {
 		current: number;
 		pages: { page: number; data: any[] }[];
@@ -246,11 +249,11 @@ export class OrdersComponent implements OnInit {
 			this.data = {
 				idorden: '',
 				idtipoorden: '0',
-				idclientesede: '0',
 				fechaentrega: '',
 				horaentrega: '',
 				observacion: '',
-				idcliente: '0',
+				idcliente: this.idcliente,
+				idclientesede: this.idclientesede
 			};
 
 			this.dataDetail = {
@@ -261,13 +264,14 @@ export class OrdersComponent implements OnInit {
 			};
 
 			this.listDetails = [];
+			this.getSites(this.data.idcliente);
 			return;
 		}
 
-		this.data = JSON.parse(JSON.stringify(data));
-		this.data['idcliente'] = '1';
+		this.data = {...JSON.parse(JSON.stringify(data)), idcliente: this.idcliente, idclientesede: this.idclientesede };
 
-		this.getSites(this.data.idorden);
+		this.getSites(this.data.idcliente);
+
 	}
 
 	search(): void {

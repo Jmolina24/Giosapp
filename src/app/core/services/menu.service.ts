@@ -103,10 +103,7 @@ export class MenuService {
 	}
 
 	getMenuByRole(): any[] {
-		const seccionesPermitidas: Menu = this.roleAccesMenu.find(e =>
-			e.id.includes(this.idrole)
-		);
-		console.log(seccionesPermitidas);
+		const seccionesPermitidas: Menu = this.roleAccesMenu.find(e => e.id.includes(this.idrole));
 
 		if (seccionesPermitidas.access.find(e => e.includes('*'))) {
 			return this.menu;

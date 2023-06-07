@@ -26,7 +26,7 @@ export class ClientsService {
 		idcliente = 0,
 		idciudad = '0',
 	}: {
-		idclientesede?: number;
+		idclientesede?: string | number;
 		idcliente?: string | number;
 		idciudad?: string;
 	} = {}): Observable<any[]> {

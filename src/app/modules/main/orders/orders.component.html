@@ -265,7 +265,7 @@
 						<mat-form-field class="fuse-mat-dense flex-auto mr-1 w-full">
 							<mat-label class="text-lg font-medium mb-1">Cliente</mat-label>
 							<mat-select name="client" [(ngModel)]="data.idcliente"
-								(selectionChange)="getSites(data.idcliente)">
+								(selectionChange)="getSites(data.idcliente)" [disabled]="idcliente !== '0'">
 								<mat-option value="0" disabled>Seleccione una opción</mat-option>
 								<mat-option value="{{item.idcliente}}" *ngFor="let item of listCustomers">{{
 									item.razonsocial }}</mat-option>
@@ -275,7 +275,7 @@
 						<mat-form-field class="fuse-mat-dense flex-auto w-full">
 							<mat-label class="text-lg font-medium mb-1">Sede</mat-label>
 							<mat-select name="type_sede" [(ngModel)]="data.idclientesede"
-								[disabled]="listSites.length === 0">
+								[disabled]="listSites.length === 0 || idcliente !== '0'">
 								<mat-option value="0" disabled>Seleccione una opción</mat-option>
 								<mat-option [value]="item.idclientesede" *ngFor="let item of listSites">{{
 									item.cliensede }}</mat-option>
