@@ -1,6 +1,6 @@
 const navigation = [
 	{
-		id: 'admin',
+		id: 'menu',
 		title: 'Menú',
 		subtitle: '',
 		type: 'collapsable',
@@ -19,13 +19,9 @@ const navigation = [
 				type: 'basic',
 				icon: 'heroicons_outline:cog',
 				link: '/dashboard/parameter-setting',
-			}
+			},
 		],
 	},
-	// {
-	// 	id: 'divider-2',
-	// 	type: 'divider',
-	// },
 	{
 		id: 'access',
 		title: 'Acceso',
@@ -34,25 +30,21 @@ const navigation = [
 		icon: 'heroicons_outline:key',
 		children: [
 			{
-				id: 'menu.roles',
+				id: 'access.roles',
 				title: 'Roles',
 				type: 'basic',
 				icon: 'heroicons_outline:key',
 				link: '/dashboard/roles',
 			},
 			{
-				id: 'menu.users',
+				id: 'access.users',
 				title: 'Usuarios',
 				type: 'basic',
 				icon: 'heroicons_outline:users',
 				link: '/dashboard/users',
-			}
-		]
+			},
+		],
 	},
-	// {
-	// 	id: 'divider-2',
-	// 	type: 'divider',
-	// },
 	{
 		id: 'administration',
 		title: 'Administración',
@@ -61,34 +53,34 @@ const navigation = [
 		icon: 'mat_outline:dashboard',
 		children: [
 			{
-				id: 'admin.clients',
+				id: 'administration.clients',
 				title: 'Clientes',
 				type: 'basic',
 				icon: 'heroicons_outline:document-report',
 				link: '/dashboard/clients',
 			},
 			{
-				id: 'menu.services',
+				id: 'administration.services',
 				title: 'Servicios',
 				type: 'basic',
 				icon: 'heroicons_outline:view-list',
 				link: '/dashboard/services',
 			},
 			{
-				id: 'menu.third-parties',
+				id: 'administration.third-parties',
 				title: 'Terceros',
 				type: 'basic',
 				icon: 'heroicons_outline:user',
 				link: '/dashboard/third-parties',
 			},
 			{
-				id: 'menu.rates',
+				id: 'administration.rates',
 				title: 'Tarifario',
 				type: 'basic',
 				icon: 'mat_outline:library_books',
 				link: '/dashboard/rates',
 			},
-		]
+		],
 	},
 	{
 		id: 'process',
@@ -98,21 +90,21 @@ const navigation = [
 		icon: 'mat_outline:pie_chart_outline',
 		children: [
 			{
-				id: 'menu.orders',
+				id: 'process.orders',
 				title: 'Ordenes',
 				type: 'basic',
 				icon: 'heroicons_outline:clipboard-list',
 				link: '/dashboard/orders',
 			},
 			{
-				id: 'menu.assigned-services',
+				id: 'process.assigned-services',
 				title: 'Servicios asignados',
 				type: 'basic',
 				icon: 'mat_outline:ballot',
 				link: '/dashboard/assigned-services',
 			},
-		]
-	}
+		],
+	},
 ];
 
 export { navigation };

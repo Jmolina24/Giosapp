@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FilesService } from 'app/core/helpers/files.service';
+import { StorageService } from 'app/core/helpers/storage.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { ClientsService } from 'app/core/services/clients.service';
 import { OrdersService } from 'app/core/services/orders.service';
@@ -50,7 +51,8 @@ export class OrdersComponent implements OnInit {
 		private _files: FilesService,
 		private _clients: ClientsService,
 		private _alert: SweetAlertService,
-		private _services: ServicesService
+		private _services: ServicesService,
+		private _storage: StorageService
 	) {}
 
 	ngOnInit(): void {

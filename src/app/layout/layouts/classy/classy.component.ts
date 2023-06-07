@@ -4,12 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { navigation } from './navigation';
 import {
 	FuseNavigationService,
 	FuseVerticalNavigationComponent,
 } from '@fuse/components/navigation';
 import { StorageService } from 'app/core/helpers/storage.service';
+import { MenuService } from 'app/core/services/menu.service';
 
 @Component({
 	selector: 'classy-layout',
@@ -29,9 +29,13 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
 		private _activatedRoute: ActivatedRoute,
 		private _fuseMediaWatcherService: FuseMediaWatcherService,
 		private _fuseNavigationService: FuseNavigationService,
-		private _storage: StorageService
+		private _storage: StorageService,
+		private _menu: MenuService
 	) {
-		this.navigation = navigation;
+		this.navigation = this._menu.getMenuByRole();
+
+		console.log(
+			_menu.getMenuByRole());
 	}
 
 	// -----------------------------------------------------------------------------------------------------
