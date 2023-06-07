@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -35,12 +36,10 @@ export class DetailsComponent implements OnInit {
 	listServices: any[] = [];
 	listThirds: any[] = [];
 	listThirdsServices: any[] = [];
+	infoThirdsServices: any = null;
 
 	data: any = null;
-
-	addThirds: boolean = false;
-
-	section: 'add' | 'edit' | null;
+	section: 'add' | 'edit' | 'assign' | null;
 
 	searchTerm$ = new Subject<string>();
 
@@ -65,7 +64,8 @@ export class DetailsComponent implements OnInit {
 		private route: ActivatedRoute,
 		private _alert: SweetAlertService,
 		private _file: FilesService,
-		private _rates: RatesService
+		private _rates: RatesService,
+
 	) {}
 
 	ngOnInit(): void {
@@ -94,7 +94,7 @@ export class DetailsComponent implements OnInit {
 
 		this.getThirds();
 
-		this.getThirdsServices();
+		this.getThirdsServices('0', '0');
 	}
 
 	get(idorden: string = '0'): void {
@@ -141,8 +141,8 @@ export class DetailsComponent implements OnInit {
 		});
 	}
 
-	getThirdsServices(): void {
-		this._rates.get().subscribe((response) => {
+	getThirdsServices(idservicio: string, idciudad: string): void {
+		this._rates.get({ idservicio, idciudad }).subscribe((response) => {
 			this.listThirdsServices = response;
 		});
 	}
@@ -216,10 +216,41 @@ export class DetailsComponent implements OnInit {
 		);
 	}
 
-	showSection(section: 'add' | 'edit', data = null): void {
+	assign(): void {
+		this._alert.loading();
+
+		this._service.assign({ ...this.data, valor: this.data.valor || '1' }).subscribe(
+			(response) => {
+				this._alert.closeAlert();
+				if (response.codigo !== 0) {
+					this._alert.error({
+						title: response.titulo,
+						text: response.mensaje,
+					});
+					return;
+				}
+
+				this._alert.success({
+					title: response.titulo,
+					text: response.mensaje,
+				});
+
+				this.getByOrden(this.idorden);
+				this.showSection(null);
+			},
+			({ error }) => {
+				this._alert.error({
+					title: error.titulo || 'Error',
+					text: error.mensaje || 'Error al procesar la solicitud.',
+				});
+			}
+		);
+	}
+
+	showSection(section: 'add' | 'edit' | 'assign', data = null): void {
 		this.section = section;
 
-		if (!data) {
+		if (!data && section === 'add' || section === 'edit') {
 			this.data = {
 				iddetalleorden: '',
 				idservicio: '',
@@ -229,8 +260,18 @@ export class DetailsComponent implements OnInit {
 			};
 			return;
 		}
-
 		this.data = JSON.parse(JSON.stringify(data));
+
+		if (data && section === 'assign') {
+			this.data = {
+				...this.data,
+				idterceroservicio: '',
+				valor: '',
+		   };
+
+		   console.log(this.data);
+		   this.getThirdsServices(data.idservicio, data.idciudadservicio);
+		}
 	}
 
 	search(): void {
@@ -402,7 +443,7 @@ export class DetailsComponent implements OnInit {
 		return this._service.uploadSupport(iddetalleordensoporte, soporte);
 	}
 
-	getTerceroServicios(item: any): any[] {
-		return this.listThirds;
+	getInfoRates(): void {
+		this.infoThirdsServices = this.listThirdsServices.find(item => item.idterceroservicio === this.data.idterceroservicio);
 	}
 }

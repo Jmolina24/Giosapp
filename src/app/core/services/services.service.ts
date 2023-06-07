@@ -22,10 +22,10 @@ export class ServicesService {
 	}
 
 	public createType(content: {
-		idtiposervicio: string,
-		codigo: string,
-		nombre: string,
-   }): Observable<any> {
+		idtiposervicio: string;
+		codigo: string;
+		nombre: string;
+	}): Observable<any> {
 		if (Object.keys(content).some(element => !element)) {
 			return;
 		}

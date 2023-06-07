@@ -70,32 +70,35 @@ export class RatesComponent implements OnInit {
 	create(): void {
 		this._alert.loading();
 
-		this._service.create({ idrol: '0', ...this.data }).subscribe(
-			(response) => {
-				this._alert.closeAlert();
-				if (response.codigo !== 0) {
-					this._alert.error({
+		this._service
+			.create({ ...this.data, idterceroservicio: '0' })
+			.subscribe(
+				(response) => {
+					this._alert.closeAlert();
+					if (response.codigo !== 0) {
+						this._alert.error({
+							title: response.titulo,
+							text: response.mensaje,
+						});
+						return;
+					}
+
+					this._alert.success({
 						title: response.titulo,
 						text: response.mensaje,
 					});
-					return;
+
+					this.get();
+					this.showSection(null);
+				},
+				({ error }) => {
+					this._alert.error({
+						title: error.titulo || 'Error',
+						text:
+							error.mensaje || 'Error al procesar la solicitud.',
+					});
 				}
-
-				this._alert.success({
-					title: response.titulo,
-					text: response.mensaje,
-				});
-
-				this.get();
-				this.showSection(null);
-			},
-			({ error }) => {
-				this._alert.error({
-					title: error.titulo || 'Error',
-					text: error.mensaje || 'Error al procesar la solicitud.',
-				});
-			}
-		);
+			);
 	}
 
 	update(): void {
@@ -133,10 +136,9 @@ export class RatesComponent implements OnInit {
 
 		if (!data) {
 			this.data = {
-				nombre: '',
+				idterceroservicio: '',
 				idtercero: '',
 				idservicio: '',
-				iddepartamento: '',
 				idciudad: '',
 				valor: '',
 			};
