@@ -33,9 +33,17 @@
 
 						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
 							<div class="flex flex-col items-center">
+								<div class="text-4xl font-bold tracking-tight leading-none text-teal-500">{{
+									getLengthStatus('PROCESADO') }}</div>
+								<div class="text-sm font-medium text-teal-600">Procesadas</div>
+							</div>
+						</div>
+
+						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
+							<div class="flex flex-col items-center">
 								<div class="text-4xl font-bold tracking-tight leading-none text-red-500">{{
-									getLengthStatus('INACTIVO') }}</div>
-								<div class="text-sm font-medium text-red-600">Inactivos</div>
+									getLengthStatus('ANULADA') }}</div>
+								<div class="text-sm font-medium text-red-600">Anuladas</div>
 							</div>
 						</div>
 					</div>
@@ -214,11 +222,6 @@
 										<a [routerLink]="['detail/' + item.idorden ]" href="#"
 											class="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-3">Ver
 											Detalles</a>
-										<a (click)="changeStatus(item, item.estado === 'ACTIVO' ? 'I' : 'A')"
-											class="font-medium hover:underline cursor-pointer mx-3"
-											[ngClass]="{'text-green-700': item.estado === 'INACTIVO', 'text-red-700': item.estado === 'ACTIVO'}">
-											{{ item.estado === 'ACTIVO' ? 'INACTIVAR' : 'ACTIVAR' }}
-										</a>
 										<a (click)="showSection('edit', item)"
 											class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">Editar</a>
 									</td>

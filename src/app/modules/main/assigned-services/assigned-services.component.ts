@@ -8,10 +8,20 @@ import { StorageService } from 'app/core/helpers/storage.service';
 })
 export class AssignedServicesComponent implements OnInit {
 
-	// idtercero: string = String(0);
+	list: any[] = [];
+
 	idtercero: string = String(this._storage.getUser().idtercero);
+	// idtercero: string = String('0');
 
 	constructor(private _storage: StorageService) {}
 
 	ngOnInit(): void {}
+
+	loadContent(data): void {
+		this.list = data;
+	}
+
+	getLengthStatus(key: string): number {
+		return this.list.filter(element => element.estado === key).length;
+	}
 }

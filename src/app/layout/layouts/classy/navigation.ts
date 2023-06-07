@@ -3,8 +3,8 @@ const navigation = [
 		id: 'admin',
 		title: 'Menú',
 		subtitle: '',
-		type: 'group',
-		icon: 'heroicons_outline:user',
+		type: 'collapsable',
+		icon: 'heroicons_outline:home',
 		children: [
 			{
 				id: 'menu.home',
@@ -22,15 +22,15 @@ const navigation = [
 			}
 		],
 	},
-	{
-		id: 'divider-2',
-		type: 'divider',
-	},
+	// {
+	// 	id: 'divider-2',
+	// 	type: 'divider',
+	// },
 	{
 		id: 'access',
 		title: 'Acceso',
 		subtitle: '',
-		type: 'group',
+		type: 'collapsable',
 		icon: 'heroicons_outline:key',
 		children: [
 			{
@@ -49,16 +49,16 @@ const navigation = [
 			}
 		]
 	},
-	{
-		id: 'divider-2',
-		type: 'divider',
-	},
+	// {
+	// 	id: 'divider-2',
+	// 	type: 'divider',
+	// },
 	{
 		id: 'administration',
 		title: 'Administración',
 		subtitle: '',
-		type: 'group',
-		icon: 'heroicons_outline:key',
+		type: 'collapsable',
+		icon: 'mat_outline:dashboard',
 		children: [
 			{
 				id: 'admin.clients',
@@ -94,8 +94,8 @@ const navigation = [
 		id: 'process',
 		title: 'Procesos',
 		subtitle: '',
-		type: 'group',
-		icon: 'heroicons_outline:key',
+		type: 'collapsable',
+		icon: 'mat_outline:pie_chart_outline',
 		children: [
 			{
 				id: 'menu.orders',

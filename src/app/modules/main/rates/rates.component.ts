@@ -202,7 +202,7 @@ export class RatesComponent implements OnInit {
 		this.searchTerm$.subscribe((term) => {
 			this.list = this.listCopy.filter(
 				(item: any) =>
-					item.nombre.toLowerCase().indexOf(term.toLowerCase()) >= 0
+					item.servicio.toLowerCase().indexOf(term.toLowerCase()) >= 0
 			);
 
 			this.fnPagination();

@@ -57,7 +57,8 @@
 							</div>
 						</div>
 
-						<div class="my-4 border-b-2 border-gray-300" *ngIf="info?.motivorechazo && info?.idmotivorechazo">
+						<div class="my-4 border-b-2 border-gray-300"
+							*ngIf="info?.motivorechazo && info?.idmotivorechazo">
 							<div>
 								<span class="text-1xl whitespace-nowrap text-gray-500">
 									Motivo de rechazo: {{ info?.motivorechazo }}</span>
@@ -109,9 +110,9 @@
 						[ngClass]="{'border-2 border-primary-500': item.showInfo}">
 						<div class="">
 							<div class="flex justify-between">
-								<h2 class="font-medium text-base md:text-lg text-gray-800 line-clamp-1 h-12"
-									title="">
-									Servicio #{{ item.iddetalleorden }} {{ item.servicio }}({{ item.tipoorden }}) - Cantidad {{ item.cantidad }} - Unidad de medida {{ item.unidadmedida }} - Orden #{{ item.idorden }}
+								<h2 class="font-medium text-base md:text-lg text-gray-800 line-clamp-1 h-12" title="">
+									Servicio #{{ item.iddetalleorden }} {{ item.servicio }}({{ item.tipoorden }}) -
+									Cantidad {{ item.cantidad }} - {{ item.unidadmedida }} - Orden #{{ item.idorden }}
 								</h2>
 								<span
 									class="bg-blue-100 text-blue-800 text-xs font-medium my-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{{
@@ -203,19 +204,9 @@
 											<mat-icon svgIcon="heroicons_outline:user-group" class="mr-2"></mat-icon>
 											Tercero:
 										</span>
-										<ng-container *ngIf="viewInfoOrden && !item.tercero ; else noShow">
-											<mat-form-field class="fuse-mat-dense flex-auto w-full">
-												<mat-select [value]="''" name="type_tercero">
-													<mat-option value="" disabled>Seleccione una opción</mat-option>
-													<mat-option [value]="item.idtercero" *ngFor="let item of getTerceroServicios(item)">{{ item.tercero }}</mat-option>
-												</mat-select>
-											</mat-form-field>
-										</ng-container>
-										<ng-template #noShow>
-											<span class="mt-2 xl:mt-0">
-												{{ item.tercero || 'Sin tercero' }}
-											</span>
-										</ng-template>
+										<span class="mt-2 xl:mt-0">
+											{{ item.tercero || 'Sin tercero' }}
+										</span>
 									</p>
 									<p class="inline-flex flex-col xl:flex-row xl:items-center text-gray-800">
 										<span class="text-center items-center flex">
@@ -275,7 +266,16 @@
 										class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 										(click)="showSection('edit', item)">Editar</button>
 									<button type="button"
-										class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">Asignar</button>
+										class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+										(click)="addThirds = !addThirds">{{ addThirds ? 'Ocultar' : 'Asignar'}}</button>
+									<ng-container *ngIf="viewInfoOrden && !item.tercero && addThirds">
+										<mat-form-field class="fuse-mat-dense flex-auto w-full">
+											<mat-select [value]="''" name="servicio_tercero">
+												<mat-option value="" disabled>Seleccione una opción</mat-option>
+												<mat-option [value]="item.idtercero" *ngFor="let item of listThirdsServices">{{ item.tercero }}</mat-option>
+											</mat-select>
+										</mat-form-field>
+									</ng-container>
 								</div>
 							</ng-container>
 							<ng-container *ngIf="!viewInfoOrden">
@@ -283,9 +283,8 @@
 									<button type="button"
 										class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 										(click)="fnBtnModal(item)">Cargar soporte</button>
-										<button type="button"
-											class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-										>Finalizar</button>
+									<button type="button"
+										class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">Finalizar</button>
 								</div>
 							</ng-container>
 							<div>
@@ -438,8 +437,8 @@
 								<div class="h-full w-full text-center flex flex-col items-center justify-center">
 									<p class="pointer-none text-gray-500 "><span class="text-sm">Arrastrar y
 											soltar</span>
-										archivos aquí <br /> o <label
-											class="text-blue-600 hover:underline">seleccione un archivo</label> desde su
+										archivos aquí <br /> o <label class="text-blue-600 hover:underline">seleccione
+											un archivo</label> desde su
 										ordenador
 									</p>
 								</div>
@@ -483,8 +482,7 @@
 						<button type="submit"
 							class="my-5 w-full flex justify-center bg-blue-500 text-gray-100 p-4  rounded-full tracking-wide
 									font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
-							[disabled]="isLoading"
-							(click)="fnUpload()">
+							[disabled]="isLoading" (click)="fnUpload()">
 							<svg *ngIf="isLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" f
 								xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"

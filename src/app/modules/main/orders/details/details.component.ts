@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FilesService } from 'app/core/helpers/files.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { OrdersService } from 'app/core/services/orders.service';
+import { RatesService } from 'app/core/services/rates.service';
 import { ServicesService } from 'app/core/services/services.service';
 import { ThirdPartiesService } from 'app/core/services/third-parties.service';
 import { Observable, Subject, forkJoin } from 'rxjs';
@@ -15,7 +16,7 @@ import { Observable, Subject, forkJoin } from 'rxjs';
 })
 export class DetailsComponent implements OnInit {
 	@Input() viewInfoOrden: boolean = true;
-	@Input() idtercero: string = '0';
+	@Input() idtercero: string = null;
 
 	isLoading: boolean = false;
 
@@ -29,11 +30,15 @@ export class DetailsComponent implements OnInit {
 
 	list: any[] = [];
 	listCopy: any[] = [];
+	@Output() dataList = new EventEmitter();
 
 	listServices: any[] = [];
 	listThirds: any[] = [];
+	listThirdsServices: any[] = [];
 
 	data: any = null;
+
+	addThirds: boolean = false;
 
 	section: 'add' | 'edit' | null;
 
@@ -59,7 +64,8 @@ export class DetailsComponent implements OnInit {
 		private _thirds: ThirdPartiesService,
 		private route: ActivatedRoute,
 		private _alert: SweetAlertService,
-		private _file: FilesService
+		private _file: FilesService,
+		private _rates: RatesService
 	) {}
 
 	ngOnInit(): void {
@@ -87,6 +93,8 @@ export class DetailsComponent implements OnInit {
 		this.getServices();
 
 		this.getThirds();
+
+		this.getThirdsServices();
 	}
 
 	get(idorden: string = '0'): void {
@@ -116,7 +124,6 @@ export class DetailsComponent implements OnInit {
 			.subscribe((response: any) => {
 				this.list = response;
 				this.listCopy = JSON.parse(JSON.stringify(response));
-				console.log(response);
 
 				this.fnPagination();
 			});
@@ -131,6 +138,12 @@ export class DetailsComponent implements OnInit {
 	getThirds(): void {
 		this._thirds.get().subscribe((response) => {
 			this.listThirds = response;
+		});
+	}
+
+	getThirdsServices(): void {
+		this._rates.get().subscribe((response) => {
+			this.listThirdsServices = response;
 		});
 	}
 
@@ -232,6 +245,7 @@ export class DetailsComponent implements OnInit {
 	}
 
 	fnPagination(): void {
+		this.dataList.emit(this.list);
 		this.contentPagination.pages = [];
 		this.contentPagination.totalPages = Math.ceil(
 			this.list.length / this.contentPagination.countForPages
