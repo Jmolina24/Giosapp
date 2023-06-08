@@ -274,7 +274,10 @@
 								<div>
 									<button type="button"
 										class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-										(click)="fnBtnModal(item)">Cargar soporte</button>
+										(click)="fnBtnModal('upload', item)">Cargar soportes</button>
+									<button type="button"
+										class="text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+										(click)="fnBtnModal('view', item)">Visualizar soportes</button>
 									<button type="button"
 										class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 										(click)="changeStatusOrderDetail(item, 'F')">Finalizar</button>
@@ -394,7 +397,8 @@
 							</mat-select>
 						</mat-form-field>
 						<mat-form-field class="fuse-mat-dense flex-auto w-full">
-							<mat-select [value]="''" name="servicio_tercero" [(ngModel)]="data.idterceroservicio" (selectionChange)="getInfoRates()">
+							<mat-select [value]="''" name="servicio_tercero" [(ngModel)]="data.idterceroservicio"
+								(selectionChange)="getInfoRates()">
 								<mat-option value="" disabled>Seleccione una opción</mat-option>
 								<mat-option [value]="item.idterceroservicio" *ngFor="let item of listThirdsServices">{{
 									item.tercero }}</mat-option>
@@ -450,7 +454,8 @@
 										Ubicación:
 									</span>
 									<span class="mt-2 xl:mt-0">
-										{{ infoThirdsServices.ciudadcobertura }}({{ infoThirdsServices.departamentocobertura }})
+										{{ infoThirdsServices.ciudadcobertura }}({{
+										infoThirdsServices.departamentocobertura }})
 									</span>
 								</p>
 								<p class="inline-flex flex-col xl:flex-row xl:items-center text-gray-800">
@@ -498,93 +503,161 @@
 	<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 	<div class="fixed inset-0 overflow-y-auto">
 		<div class="relative min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-			<div class="sm:max-w-lg w-full p-10 bg-white rounded-xl z-10">
-				<div class="text-center">
-					<h2 class="mt-5 text-3xl font-bold text-gray-900">
-						Cargar Soporte: #{{ infoDetail?.iddetalleorden }} - {{ infoDetail?.servicio }}({{
-						infoDetail?.tipoorden }})
-					</h2>
-				</div>
-				<form class="mt-8 space-y-3" action="#" method="POST">
-
-					<ng-container *ngIf="infoDetail">
-						<mat-form-field class="w-full">
-							<mat-label class="text-lg font-medium mb-1">Soporte</mat-label>
-							<mat-select [value]="''" name="type" [(ngModel)]="infoDetail.iddetalleordensoporte" name="type">
-								<mat-option value="" disabled>Seleccione una opción</mat-option>
-								<mat-option [disabled]="item.soporte"  [value]="item.iddetalleordensoporte" *ngFor="let item of listSupport">{{ item.tiposoporte }}</mat-option>
-							</mat-select>
-						</mat-form-field>
-					</ng-container>
-
-					<div class="grid grid-cols-1 space-y-2">
-						<label class="text-sm font-bold text-gray-500 tracking-wide">Adjuntar documento</label>
-						<div class="flex items-center justify-center w-full">
-							<label
-								class="flex flex-col rounded-lg border-4 border-dashed w-full h-60 p-10 group text-center"
-								fileDragDrop (filesChangeEmiter)="onFileChange($event)" for="input_file">
-								<div class="h-full w-full text-center flex flex-col items-center justify-center">
-									<p class="pointer-none text-gray-500 "><span class="text-sm">Arrastrar y
-											soltar</span>
-										archivos aquí <br /> o <label class="text-blue-600 hover:underline">seleccione
-											un archivo</label> desde su
-										ordenador
-									</p>
-								</div>
-							</label>
-							<input id="input_file" type="file" class="hidden" [disabled]="isLoading">
+			<ng-container [ngSwitch]="action">
+				<ng-container *ngSwitchCase="'upload'">
+					<div class="sm:max-w-lg w-full p-10 bg-white rounded-xl z-10">
+						<div class="text-center">
+							<h2 class="mt-5 text-3xl font-bold text-gray-900">
+								Cargar Soporte: #{{ infoDetail?.iddetalleorden }} - {{ infoDetail?.servicio }}({{
+								infoDetail?.tipoorden }})
+							</h2>
 						</div>
-					</div>
-					<p class="text-sm text-gray-300">
-						<span>Tipo de archivo: doc, pdf, tipos de imágenes</span>
-					</p>
-					<ng-container *ngIf="files.length > 0">
-						<div class="max-h-30 overflow-y-auto">
-							<ng-container *ngFor="let item of files">
-								<div class="w-full">
-									<span id="badge-dismiss-default"
-										class="inline-flex items-center px-2 py-1 mr-2 text-sm font-medium text-blue-800 bg-blue-100 rounded dark:bg-blue-900 dark:text-blue-300 my-2">
-										{{ item.name }}
-										<button (click)="deleteFile(item)" type="button"
-											class="inline-flex items-center p-0.5 ml-2 text-sm text-blue-400 bg-transparent rounded-sm hover:bg-blue-200 hover:text-blue-900 dark:hover:bg-blue-800 dark:hover:text-blue-300"
-											data-dismiss-target="#badge-dismiss-default" aria-label="Remove">
-											<svg aria-hidden="true" class="w-3.5 h-3.5" fill="currentColor"
-												viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-												<path fill-rule="evenodd"
-													d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-													clip-rule="evenodd"></path>
-											</svg>
-											<span class="sr-only">Remove badge</span>
-										</button>
-									</span>
+						<form class="mt-8 space-y-3" action="#" method="POST">
+
+							<ng-container *ngIf="infoDetail">
+								<mat-form-field class="w-full">
+									<mat-label class="text-lg font-medium mb-1">Soporte</mat-label>
+									<mat-select [value]="''" name="upload_support"
+										[(ngModel)]="infoDetail.iddetalleordensoporte">
+										<mat-option value="" disabled>Seleccione una opción</mat-option>
+										<mat-option
+											[disabled]="item.soporte || getIfExitsIdDetailSoporte(item.iddetalleordensoporte)"
+											[value]="item.iddetalleordensoporte" *ngFor="let item of listSupport">{{
+											item.tiposoporte }}</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</ng-container>
+
+							<ng-container *ngIf="infoDetail?.iddetalleordensoporte">
+								<div class="grid grid-cols-1 space-y-2">
+									<label class="text-sm font-bold text-gray-500 tracking-wide">Adjuntar
+										documento</label>
+									<div class="flex items-center justify-center w-full">
+										<label
+											class="flex flex-col rounded-lg border-4 border-dashed w-full h-60 p-10 group text-center"
+											fileDragDrop (filesChangeEmiter)="onFileChange($event)" for="input_file">
+											<div
+												class="h-full w-full text-center flex flex-col items-center justify-center">
+												<p class="pointer-none text-gray-500 "><span class="text-sm">Arrastrar y
+														suelta</span>
+													archivos aquí <br /> o <label class="text-blue-600 hover:underline"
+														for="input_file">seleccione
+														un archivo</label> desde su
+													ordenador
+												</p>
+											</div>
+										</label>
+										<input id="input_file" type="file" class="hidden" [disabled]="isLoading"
+											(change)="onFileChange($event.target.files)">
+									</div>
+								</div>
+								<p class="text-sm text-gray-300">
+									<span>Tipo de archivo: doc, pdf, tipos de imágenes</span>
+								</p>
+							</ng-container>
+							<ng-container *ngIf="files.length > 0">
+								<div class="max-h-30 overflow-y-auto">
+									<ng-container *ngFor="let item of files">
+										<div class="w-full">
+											<span id="badge-dismiss-default"
+												class="inline-flex items-center px-2 py-1 mr-2 text-sm font-medium text-blue-800 bg-blue-100 rounded dark:bg-blue-900 dark:text-blue-300 my-2">
+												{{ item.file.name }} - {{
+												getNameDetailSoporte(item.iddetalleordensoporte) }}
+												<button (click)="deleteFile(item)" type="button"
+													class="inline-flex items-center p-0.5 ml-2 text-sm text-blue-400 bg-transparent rounded-sm hover:bg-blue-200 hover:text-blue-900 dark:hover:bg-blue-800 dark:hover:text-blue-300"
+													data-dismiss-target="#badge-dismiss-default" aria-label="Remove">
+													<svg aria-hidden="true" class="w-3.5 h-3.5" fill="currentColor"
+														viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+														<path fill-rule="evenodd"
+															d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+															clip-rule="evenodd"></path>
+													</svg>
+													<span class="sr-only">Remove badge</span>
+												</button>
+											</span>
+										</div>
+									</ng-container>
 								</div>
 							</ng-container>
-						</div>
-					</ng-container>
-					<div class="flex justify-between">
-						<button type="submit"
-							class="my-5 w-full flex justify-center bg-red-500 text-gray-100 p-4  rounded-full tracking-wide
-									font-semibold  focus:outline-none focus:shadow-outline hover:bg-red-600 shadow-lg cursor-pointer transition ease-in duration-300 mr-2"
-							[disabled]="isLoading" (click)="fnBtnModal(null)">
-							Cancelar
-						</button>
-						<button type="submit"
-							class="my-5 w-full flex justify-center bg-blue-500 text-gray-100 p-4  rounded-full tracking-wide
-									font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
-							[disabled]="isLoading" (click)="fnUpload()">
-							<svg *ngIf="isLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" f
-								xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-									stroke-width="4"></circle>
-								<path class="opacity-75" fill="currentColor"
-									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-								</path>
-							</svg>
-							{{ isLoading ? 'Cargando...' : 'Cargar'}}
-						</button>
+							<div class="flex justify-between">
+								<button type="submit"
+									class="my-5 w-full flex justify-center bg-red-500 text-gray-100 p-4  rounded-full tracking-wide
+											font-semibold  focus:outline-none focus:shadow-outline hover:bg-red-600 shadow-lg cursor-pointer transition ease-in duration-300 mr-2"
+									[disabled]="isLoading" (click)="fnBtnModal(null, null)">
+									Cancelar
+								</button>
+								<button type="submit"
+									class="my-5 w-full flex justify-center bg-blue-500 text-gray-100 p-4  rounded-full tracking-wide
+											font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
+									[disabled]="isLoading" (click)="fnUpload()">
+									<svg *ngIf="isLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" f
+										xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+										<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+											stroke-width="4"></circle>
+										<path class="opacity-75" fill="currentColor"
+											d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+										</path>
+									</svg>
+									{{ isLoading ? 'Cargando...' : 'Cargar'}}
+								</button>
+							</div>
+						</form>
 					</div>
-				</form>
-			</div>
+				</ng-container>
+				<ng-container *ngSwitchCase="'view'">
+					<div class="sm:max-w-2xl w-full p-10 bg-white rounded-xl z-10 ml-4">
+						<div class="text-center">
+							<h2 class="mt-5 text-3xl font-bold text-gray-900">
+								Soportes: #{{ infoDetail?.iddetalleorden }} - {{ infoDetail?.servicio }}({{
+								infoDetail?.tipoorden }})
+							</h2>
+						</div>
+						<div class="flex flex-wrap justify-center mt-2">
+							<ng-container *ngFor="let file of listSupport;">
+								<ng-container *ngIf="file.estado === 'CARGADO' && file.soporte">
+									<a class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
+										[routerLink]="['./details/', file.id]">
+										<div class="aspect-w-9 aspect-h-6">
+											<div class="flex items-center justify-center">
+												<!-- Icons -->
+												<div class="relative">
+													<mat-icon class="icon-size-14 text-hint"
+														[svgIcon]="'iconsmind:file'"></mat-icon>
+													<div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
+														[class.bg-red-600]="file?.tipo === 'PDF'"
+														[class.bg-blue-600]="file?.tipo === 'DOC'"
+														[class.bg-green-600]="file?.tipo === 'XLS'"
+														[class.bg-gray-600]="file?.tipo === 'TXT'"
+														[class.bg-amber-600]="file?.tipo === 'JPG' || file?.tipo === 'PNG' || file?.tipo === 'JPEG'">
+														{{ file?.tipo }}
+													</div>
+												</div>
+											</div>
+										</div>
+										<div
+											class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+											<div class="truncate" [matTooltip]="file.tiposoporte">{{file.tiposoporte}}
+											</div>
+											<ng-container *ngIf="file.iddetalleordensoporte">
+												<div class="text-secondary truncate"># {{file.iddetalleordensoporte}}
+												</div>
+											</ng-container>
+										</div>
+									</a>
+								</ng-container>
+							</ng-container>
+						</div>
+						<div class="flex justify-between">
+							<button type="submit"
+								class="my-5 w-full flex justify-center bg-red-500 text-gray-100 p-4  rounded-full tracking-wide
+										font-semibold  focus:outline-none focus:shadow-outline hover:bg-red-600 shadow-lg cursor-pointer transition ease-in duration-300 mr-2"
+								(click)="fnBtnModal(null, null)">
+								Cerrar
+							</button>
+						</div>
+					</div>
+				</ng-container>
+			</ng-container>
 		</div>
 	</div>
 </div>

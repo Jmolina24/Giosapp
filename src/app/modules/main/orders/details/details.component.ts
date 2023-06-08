@@ -1,6 +1,14 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+	Component,
+	EventEmitter,
+	Input,
+	OnChanges,
+	OnInit,
+	Output,
+	SimpleChanges,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FilesService } from 'app/core/helpers/files.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
@@ -33,7 +41,12 @@ export class DetailsComponent implements OnInit, OnChanges {
 	listCopy: any[] = [];
 	@Output() dataList = new EventEmitter();
 
-	private _option: 'REALIZADA' | 'ASIGNADA' | 'POR ASIGNAR' | 'ANULADA' | 'TOTAL' = 'ASIGNADA';
+	private _option:
+		| 'REALIZADA'
+		| 'ASIGNADA'
+		| 'POR ASIGNAR'
+		| 'ANULADA'
+		| 'TOTAL' = 'ASIGNADA';
 	// options$ = new Subject<string>(this.option);
 
 	@Input()
@@ -50,6 +63,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 
 	data: any = null;
 	section: 'add' | 'edit' | 'assign' | null;
+	action: 'view' | 'upload' | null = null;
 
 	searchTerm$ = new Subject<string>();
 
@@ -60,12 +74,12 @@ export class DetailsComponent implements OnInit, OnChanges {
 		totalPages: number;
 		range?: number;
 	} = {
-			current: 0,
-			pages: [{ data: [], page: 0 }],
-			countForPages: 5,
-			totalPages: 0,
-			range: 3,
-		};
+		current: 0,
+		pages: [{ data: [], page: 0 }],
+		countForPages: 5,
+		totalPages: 0,
+		range: 3,
+	};
 
 	constructor(
 		private _service: OrdersService,
@@ -74,9 +88,8 @@ export class DetailsComponent implements OnInit, OnChanges {
 		private route: ActivatedRoute,
 		private _alert: SweetAlertService,
 		private _file: FilesService,
-		private _rates: RatesService,
-
-	) { }
+		private _rates: RatesService
+	) {}
 
 	ngOnInit(): void {
 		if (this.idtercero) {
@@ -116,20 +129,24 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	get(idorden: string = '0'): void {
-		this._service
-			.get({ idorden })
-			.subscribe((response) => {
-				if (!response) {
-					return;
-				}
+		this._service.get({ idorden }).subscribe((response) => {
+			if (!response) {
+				return;
+			}
 
-				this.info = response[0];
-			});
+			this.info = response[0];
+		});
 	}
 
 	getDetailSupportSelect(iddetalleorden: string): void {
 		this._service.getSupports({ iddetalleorden }).subscribe((response) => {
-			this.listSupport = response;
+			this.listSupport = response.map((r) => {
+				if (r.estado === 'CARGADO' && r.soporte) {
+					const soporte = r.soporte.split('.');
+					r.tipo = soporte[soporte.length - 1].toUpperCase();
+				}
+				return r;
+			});
 		});
 	}
 
@@ -150,31 +167,34 @@ export class DetailsComponent implements OnInit, OnChanges {
 	changeStatusOrderDetail({ iddetalleorden }, status: 'F'): void {
 		this._alert.loading();
 
-		this._service.changeStatusOrderDatails(iddetalleorden, status).subscribe(
-			(response) => {
-				this._alert.closeAlert();
-				if (response.codigo !== 0) {
-					this._alert.error({
+		this._service
+			.changeStatusOrderDatails(iddetalleorden, status)
+			.subscribe(
+				(response) => {
+					this._alert.closeAlert();
+					if (response.codigo !== 0) {
+						this._alert.error({
+							title: response.titulo,
+							text: response.mensaje,
+						});
+						return;
+					}
+
+					this._alert.success({
 						title: response.titulo,
 						text: response.mensaje,
 					});
-					return;
+
+					this.getByOrden(this.idorden);
+				},
+				({ error }) => {
+					this._alert.error({
+						title: error.titulo || 'Error',
+						text:
+							error.mensaje || 'Error al procesar la solicitud.',
+					});
 				}
-
-				this._alert.success({
-					title: response.titulo,
-					text: response.mensaje,
-				});
-
-				this.getByOrden(this.idorden);
-			},
-			({ error }) => {
-				this._alert.error({
-					title: error.titulo || 'Error',
-					text: error.mensaje || 'Error al procesar la solicitud.',
-				});
-			}
-		);
+			);
 	}
 
 	getServices(): void {
@@ -267,38 +287,41 @@ export class DetailsComponent implements OnInit, OnChanges {
 	assign(): void {
 		this._alert.loading();
 
-		this._service.assign({ ...this.data, valor: this.data.valor || '1' }).subscribe(
-			(response) => {
-				this._alert.closeAlert();
-				if (response.codigo !== 0) {
-					this._alert.error({
+		this._service
+			.assign({ ...this.data, valor: this.data.valor || '1' })
+			.subscribe(
+				(response) => {
+					this._alert.closeAlert();
+					if (response.codigo !== 0) {
+						this._alert.error({
+							title: response.titulo,
+							text: response.mensaje,
+						});
+						return;
+					}
+
+					this._alert.success({
 						title: response.titulo,
 						text: response.mensaje,
 					});
-					return;
+
+					this.getByOrden(this.idorden);
+					this.showSection(null);
+				},
+				({ error }) => {
+					this._alert.error({
+						title: error.titulo || 'Error',
+						text:
+							error.mensaje || 'Error al procesar la solicitud.',
+					});
 				}
-
-				this._alert.success({
-					title: response.titulo,
-					text: response.mensaje,
-				});
-
-				this.getByOrden(this.idorden);
-				this.showSection(null);
-			},
-			({ error }) => {
-				this._alert.error({
-					title: error.titulo || 'Error',
-					text: error.mensaje || 'Error al procesar la solicitud.',
-				});
-			}
-		);
+			);
 	}
 
 	showSection(section: 'add' | 'edit' | 'assign', data = null): void {
 		this.section = section;
 
-		if (!data && section === 'add' || section === 'edit') {
+		if ((!data && section === 'add') || section === 'edit') {
 			this.data = {
 				iddetalleorden: '',
 				idservicio: '',
@@ -382,10 +405,12 @@ export class DetailsComponent implements OnInit, OnChanges {
 		}
 	}
 
-	fnBtnModal(item: any = null): void {
-		this.infoDetail = {...item, iddetalleordensoporte: ''};
+	fnBtnModal(action: 'upload' | 'view' | null, item: any = null): void {
+		this.action = action;
+
+		this.infoDetail = { ...item, iddetalleordensoporte: '' };
 		this.files.forEach((element) => {
-			this.formData.delete(element.name);
+			this.formData.delete(element.file.name);
 		});
 		this.files = [];
 
@@ -398,26 +423,53 @@ export class DetailsComponent implements OnInit, OnChanges {
 		modal.classList.toggle('hidden');
 	}
 
-	onFileChange(pFileList: File[]): void {
+	onFileChange(pFileList: File[] | FileList[]): void {
 		if (this.isLoading) {
 			return;
 		}
+
+		if (!this.infoDetail.iddetalleordensoporte) {
+			this._alert.error({
+				title: 'Error',
+				text: 'Seleccione un tipo de soporte',
+			});
+			return;
+		}
+
+		if (!Array.isArray(pFileList)) {
+			this.files.push({
+				file: pFileList[0],
+				iddetalleordensoporte: this.infoDetail.iddetalleordensoporte,
+			});
+			return;
+		}
 		pFileList.forEach((e) => {
-			this.files.push(e);
+			this.files.push({
+				file: e,
+				iddetalleordensoporte: this.infoDetail.iddetalleordensoporte,
+			});
 		});
+	}
+
+	getIfExitsIdDetailSoporte(id): boolean {
+		return this.files.find(e => e.iddetalleordensoporte === id);
+	}
+
+	getNameDetailSoporte(id: any): string {
+		return this.files.find(e => e.iddetalleordensoporte === id)
+			.tiposoporte;
 	}
 
 	deleteFile(f: any): void {
 		this.files = this.files.filter(w => w.name !== f.name);
 	}
 
-	fnUpload(): void {
-		this.isLoading = true;
-		this._alert.loading();
+	isIdRepeated(id: number): boolean {
+		return this.files.indexOf(id) !== this.files.lastIndexOf(id);
+	}
 
+	fnUpload(): void {
 		if (this.files.length === 0) {
-			this.isLoading = false;
-			this._alert.closeAlert();
 			this._alert.error({
 				title: 'Error',
 				text: 'Ingrese un archivo',
@@ -425,18 +477,19 @@ export class DetailsComponent implements OnInit, OnChanges {
 			return;
 		}
 
-		if (this.files.length !== 1) {
-			this.isLoading = false;
-			this._alert.closeAlert();
+		if (this.files.some(e => this.isIdRepeated(e.iddetalleordensoporte))) {
 			this._alert.error({
 				title: 'Error',
-				text: 'Solamente se permite un archivo',
+				text: 'Solamente se permite un archivo por tipo de soporte',
 			});
 			return;
 		}
 
+		this.isLoading = true;
+		this._alert.loading();
+
 		this.files.forEach((r) => {
-			this.formData.append('files', r);
+			this.formData.append('files', r.file);
 		});
 
 		this._file.upload(this.formData).subscribe(
@@ -453,7 +506,12 @@ export class DetailsComponent implements OnInit, OnChanges {
 				}
 
 				forkJoin(
-					response.rutas.map(e => this.uploadSupport(this.infoDetail.iddetalleordensoporte, e.path))
+					response.rutas.map((e, i) =>
+						this.uploadSupport(
+							this.files[i].iddetalleordensoporte,
+							e.path
+						)
+					)
 				).subscribe(
 					(r: any[]) => {
 						this._alert.loading();
@@ -502,14 +560,18 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	getInfoRates(): void {
-		this.infoThirdsServices = this.listThirdsServices.find(item => item.idterceroservicio === this.data.idterceroservicio);
+		this.infoThirdsServices = this.listThirdsServices.find(
+			item => item.idterceroservicio === this.data.idterceroservicio
+		);
 	}
 
 	private sort(): void {
 		if (this._option === 'TOTAL') {
 			this.list = this.listCopy;
 		} else {
-			this.list = this.listCopy.filter((item: any) => item.estado === this._option);
+			this.list = this.listCopy.filter(
+				(item: any) => item.estado === this._option
+			);
 		}
 
 		this.fnPagination();

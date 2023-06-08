@@ -106,5 +106,4 @@ const navigation = [
 		],
 	},
 ];
-
 export { navigation };

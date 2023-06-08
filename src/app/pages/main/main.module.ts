@@ -24,6 +24,7 @@ import { DetailsComponent } from 'app/modules/main/orders/details/details.compon
 import { AssignedServicesComponent } from 'app/modules/main/assigned-services/assigned-services.component';
 import { FileDragNDropDirective } from 'app/core/directives/file-drag-n-drop.directive';
 import { RatesComponent } from 'app/modules/main/rates/rates.component';
+import { DetailFileComponent } from 'app/modules/main/detail-file/detail-file.component';
 
 @NgModule({
 	declarations: [
@@ -39,7 +40,8 @@ import { RatesComponent } from 'app/modules/main/rates/rates.component';
 		ParameterSettingComponent,
 		AssignedServicesComponent,
 		FileDragNDropDirective,
-		RatesComponent
+		RatesComponent,
+		DetailFileComponent
 	],
 	imports: [
 		CommonModule,

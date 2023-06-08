@@ -42,7 +42,7 @@ interface Menu {
 	providedIn: 'root',
 })
 export class MenuService {
-	menu: any[] = navigation;
+	menu: any[] = JSON.parse(JSON.stringify(navigation));
 
 	private roleAccesMenu: Menu[] = [
 		{
@@ -94,25 +94,29 @@ export class MenuService {
 		},
 	];
 
-	constructor(private _storage: StorageService) { }
+	constructor(private _storage: StorageService) {}
 
 	getMenu(): any[] {
 		return this.menu;
 	}
 
 	getMenuByRole(idrole: Id): any[] {
-		const seccionesPermitidas: Menu = this.roleAccesMenu.find(e => e.id.includes(idrole));
+		let menu = [];
+		menu = JSON.parse(JSON.stringify(this.menu));
+
+		let roleAccesMenu = [];
+		roleAccesMenu = JSON.parse(JSON.stringify(this.roleAccesMenu));
+
+		const seccionesPermitidas: Menu = roleAccesMenu.find(e => e.id.includes(idrole));
 
 		if (seccionesPermitidas.access.find(e => e.includes('*'))) {
-			return this.menu;
+			return menu;
 		}
 
-		return this.menu
+		return menu
 			.filter((e: any) => seccionesPermitidas.access.includes(e.id))
 			.map((e) => {
-				e.children = e.children.filter(x =>
-					seccionesPermitidas.access.includes(x.id)
-				);
+				e.children = e.children.filter(x => seccionesPermitidas.access.includes(x.id));
 				return e;
 			});
 	}

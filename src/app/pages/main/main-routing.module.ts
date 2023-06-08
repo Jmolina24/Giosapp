@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AssignedServicesComponent } from 'app/modules/main/assigned-services/assigned-services.component';
+import { DetailFileComponent } from 'app/modules/main/detail-file/detail-file.component';
 import { HomeComponent } from 'app/modules/main/home/home.component';
 import { ParameterSettingComponent } from 'app/modules/main/parameter-setting/parameter-setting.component';
 import { RatesComponent } from 'app/modules/main/rates/rates.component';
@@ -59,6 +60,10 @@ const routes: Routes = [
 	{
 		path: 'rates',
 		component: RatesComponent
+	},
+	{
+		path: 'detail-file/:iddetalleorden/:iddetalleordensoporte',
+		component: DetailFileComponent
 	}
 ];
 
