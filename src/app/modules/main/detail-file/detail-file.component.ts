@@ -12,7 +12,7 @@ export class DetailFileComponent implements OnInit {
 	iddetalleorden: string = '0';
 	iddetalleordensoporte: string = '0';
 
-	listSupport: any[] = [];
+	support: any = null;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -24,18 +24,20 @@ export class DetailFileComponent implements OnInit {
 		this.route.params.subscribe((params) => {
 			const { iddetalleorden, iddetalleordensoporte } = params;
 
+			console.log(iddetalleorden, iddetalleordensoporte);
+
 			if (!iddetalleorden && !iddetalleordensoporte) {
 				this._alert.error({
 					title: 'Error',
-					text: 'Ingrese datos validos',
+					text: 'No son datos validos',
 				});
 				return;
 			}
 
-			if (!isNaN(iddetalleorden) && !isNaN(iddetalleordensoporte)) {
+			if (isNaN(iddetalleorden) && isNaN(iddetalleordensoporte)) {
 				this._alert.error({
 					title: 'Error',
-					text: 'Ingrese datos validos',
+					text: 'No son datos validos',
 				});
 				return;
 			}
@@ -55,23 +57,23 @@ export class DetailFileComponent implements OnInit {
 		this._service
 			.getSupports({ iddetalleorden, iddetalleordensoporte })
 			.subscribe(
-				(response: any) => {
+				(response: any[]) => {
 					this._alert.closeAlert();
-					if (response.codigo !== 0) {
+					if (response.length === 0) {
 						this._alert.error({
-							title: response.titulo,
-							text: response.mensaje,
+							title: 'Error',
+							text: 'Error al obtener los datos',
 						});
 						return;
 					}
 
-					this.listSupport = response.map((r) => {
+					this.support = response.map((r) => {
 						if (r.estado === 'CARGADO' && r.soporte) {
 							const soporte = r.soporte.split('.');
 							r.tipo = soporte[soporte.length - 1].toUpperCase();
 						}
 						return r;
-					});
+					})[0];
 				},
 				({ error }) => {
 					this._alert.error({
