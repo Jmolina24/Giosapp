@@ -54,6 +54,7 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.user = this._storage.getUser();
 		this.navigation = this._menu.getMenuByRole(this._storage.getRolID());
+		console.log(this._menu.getAccessByRole(this._storage.getRolID()));
 	}
 
 	/**

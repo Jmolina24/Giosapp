@@ -1,12 +1,11 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/member-ordering */
 import { Injectable } from '@angular/core';
 import { navigation } from 'app/layout/layouts/classy/navigation';
 import { StorageService } from '../helpers/storage.service';
 
-type Access =
-	| 'menu'
-	| 'menu.home'
-	| 'menu.settings'
+interface Access{
+	name: 'menu' | 'menu.home' | 'menu.settings'
 	| 'access'
 	| 'access.roles'
 	| 'access.users'
@@ -19,6 +18,8 @@ type Access =
 	| 'process.orders'
 	| 'process.assigned-services'
 	| '*';
+	actions?: Actions;
+}
 
 type Name =
 	| 'Administrador'
@@ -35,8 +36,22 @@ interface Menu {
 	id: Id[];
 	name: Name[];
 	access: Access[];
-	actions?: string[];
 }
+
+type Actions =
+	| {
+			create?: boolean;
+			edit?: boolean;
+			view?: boolean;
+			viewDetail?: boolean;
+			list?: boolean;
+			inactive?: boolean;
+			upload?: boolean;
+			changeStatus?: boolean;
+			assing?: boolean;
+			viewFn?: { name: string; view: boolean }[];
+	  }
+	| '*';
 
 @Injectable({
 	providedIn: 'root',
@@ -47,54 +62,58 @@ export class MenuService {
 	private roleAccesMenu: Menu[] = [
 		{
 			id: [1],
-			access: ['*'],
-			name: ['Administrador'],
+			access: [{name: '*', actions: '*'}],
+			name: ['Administrador']
 		},
 		{
 			id: [2],
-			access: ['menu', 'menu.home', 'process', 'process.orders'],
+			access: [{ name: 'menu', actions: '*'}, {name: 'menu.home', actions: '*'}, {name: 'process', actions: '*'}, {name: 'process.orders', actions: {create: true, list: true, viewDetail: true }}],
 			name: ['Cliente'],
 		},
 		{
 			id: [3, 4],
 			access: [
-				'menu',
-				'menu.home',
-				'process',
-				'process.assigned-services',
+				{name: 'menu', actions: '*'},
+				{name: 'menu.home', actions: '*'},
+				{name: 'process', actions: '*'},
+				{name: 'process.assigned-services', actions: { list: true, upload: true, changeStatus: true }},
 			],
 			name: ['Proveedor', 'Contratista'],
 		},
 		{
 			id: [5],
-			access: ['menu', 'menu.home', 'process', 'process.orders'],
+			access: [
+				{ name: 'menu', actions: '*'},
+				{ name: 'menu.home', actions: '*'},
+				{ name: 'process', actions: '*'},
+				{ name: 'process.orders', actions: { list: true, edit: true, assing: true, changeStatus: true }}],
 			name: ['Facilitador'],
 		},
 		{
 			id: [6],
 			access: [
-				'menu',
-				'menu.home',
-				'process',
-				'process.orders',
-				'process.assigned-services',
+				{name: 'menu', actions: '*'},
+				{name: 'menu.home', actions: '*'},
+				{name: 'process', actions: '*'},
+				{name: 'process.orders', actions: { list: true, viewDetail: true }},
+				{name: 'process.assigned-services', actions: { list: true }},
 			],
-			name: ['Facturacion'],
+			name: ['Facturacion']
 		},
 		{
 			id: [7],
 			access: [
-				'menu',
-				'menu.home',
-				'process',
-				'process.orders',
-				'process.assigned-services',
+				{name: 'menu', actions: '*'},
+				{name: 'menu.home', actions: '*'},
+				{name: 'process', actions: '*'},
+				{name: 'process.orders', actions: { list: true, viewDetail: true }},
+				{name: 'process.assigned-services', actions: { list: true }},
 			],
-			name: ['Administrativo'],
+			name: ['Administrativo']
 		},
 	];
 
-	constructor(private _storage: StorageService) {}
+	constructor() {}
 
 	getMenu(): any[] {
 		return this.menu;
@@ -107,25 +126,32 @@ export class MenuService {
 		let roleAccesMenu = [];
 		roleAccesMenu = JSON.parse(JSON.stringify(this.roleAccesMenu));
 
-		const seccionesPermitidas: Menu = roleAccesMenu.find(e => e.id.includes(idrole));
+		const seccionesPermitidas: Menu = roleAccesMenu.find(e =>
+			e.id.includes(idrole)
+		);
 
-		if (seccionesPermitidas.access.find(e => e.includes('*'))) {
-			return menu;
+		if (seccionesPermitidas.access.find(e => e.name.includes('*'))) {
+			return menu.map((e) => {
+				e.access = seccionesPermitidas.access;
+				return e;
+			});
 		}
 
 		return menu
-			.filter((e: any) => seccionesPermitidas.access.includes(e.id))
+			.filter((e: any) => seccionesPermitidas.access.find(y => y.name === e.id))
 			.map((e) => {
-				e.children = e.children.filter(x => seccionesPermitidas.access.includes(x.id));
+				e.children = e.children.filter(x =>
+					seccionesPermitidas.access.find(y => y.name === x.id)
+				);
+				e.access = seccionesPermitidas.access;
 				return e;
 			});
 	}
 
-	getAccess(): any[] {
-		return;
-	}
+	getAccessByRole(idrole): any[] {
+		let access = [];
+		access = JSON.parse(JSON.stringify(this.getMenuByRole(idrole)));
 
-	getAccessByRole(): any[] {
-		return;
+		return access;
 	}
 }

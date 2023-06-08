@@ -275,11 +275,15 @@ export class OrdersComponent implements OnInit {
 			};
 
 			this.listDetails = [];
-			this.getSites(this.data.idcliente);
+			if (this.data.idcliente !== '0') {
+				this.getSites(this.data.idcliente);
+			}
 			return;
 		}
 
-		this.data = { ...JSON.parse(JSON.stringify(data)), idcliente: this.idcliente, idclientesede: this.idclientesede };
+		this.data = JSON.parse(JSON.stringify(data));
+		this.data['idcliente'] = String(this.data.idcliente);
+		console.log(this.data);
 
 		this.getSites(this.data.idcliente);
 
@@ -304,7 +308,7 @@ export class OrdersComponent implements OnInit {
 		});
 	}
 
-	getSites(idcliente: string): void {
+	getSites(idcliente: string | number): void {
 		this._clients.bySite({ idcliente }).subscribe((response) => {
 			this.listSites = response;
 		});

@@ -160,6 +160,9 @@ export class DetailsComponent implements OnInit, OnChanges {
 				this.list = response;
 				this.listCopy = JSON.parse(JSON.stringify(response));
 
+				if ( !this.idtercero ){
+					this._option = 'TOTAL';
+				}
 				this.sort();
 			});
 	}
@@ -321,7 +324,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 	showSection(section: 'add' | 'edit' | 'assign', data = null): void {
 		this.section = section;
 
-		if ((!data && section === 'add') || section === 'edit') {
+		if (!data && section === 'add') {
 			this.data = {
 				iddetalleorden: '',
 				idservicio: '',
@@ -331,7 +334,10 @@ export class DetailsComponent implements OnInit, OnChanges {
 			};
 			return;
 		}
-		this.data = JSON.parse(JSON.stringify(data));
+		if (section === 'edit') {
+			this.data = JSON.parse(JSON.stringify(data));
+			return;
+		}
 
 		if (data && section === 'assign') {
 			this.data = {
