@@ -13,6 +13,8 @@ export class AssignedServicesComponent implements OnInit {
 	idtercero: string = String(this._storage.getUser().idtercero);
 	// idtercero: string = String('0');
 
+	options: 'REALIZADA' | 'ASIGNADA' | 'POR ASIGNAR' | 'ANULADA' | 'TOTAL' = 'ASIGNADA';
+
 	constructor(private _storage: StorageService) {}
 
 	ngOnInit(): void {}
@@ -24,4 +26,6 @@ export class AssignedServicesComponent implements OnInit {
 	getLengthStatus(key: string): number {
 		return this.list.filter(element => element.estado === key).length;
 	}
+
+
 }

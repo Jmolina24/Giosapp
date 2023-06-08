@@ -32,8 +32,8 @@ export class OrdersComponent implements OnInit {
 
 	searchTerm$ = new Subject<string>();
 
-	idcliente =  String(this._storage.getUser().idcliente);
-	idclientesede =  this._storage.getUser().idclientesede;
+	idcliente = String(this._storage.getUser().idcliente);
+	idclientesede = this._storage.getUser().idclientesede;
 
 	contentPagination: {
 		current: number;
@@ -42,12 +42,14 @@ export class OrdersComponent implements OnInit {
 		totalPages: number;
 		range?: number;
 	} = {
-		current: 0,
-		pages: [{ data: [], page: 0 }],
-		countForPages: 5,
-		totalPages: 0,
-		range: 3,
-	};
+			current: 0,
+			pages: [{ data: [], page: 0 }],
+			countForPages: 5,
+			totalPages: 0,
+			range: 3,
+		};
+
+	options: 'ACTIVO' | 'PROCESADO' | 'ANULADA' | 'TOTAL' = 'ACTIVO';
 
 	constructor(
 		private _orders: OrdersService,
@@ -56,7 +58,7 @@ export class OrdersComponent implements OnInit {
 		private _alert: SweetAlertService,
 		private _services: ServicesService,
 		private _storage: StorageService
-	) {}
+	) { }
 
 	ngOnInit(): void {
 		this.get();
@@ -84,7 +86,7 @@ export class OrdersComponent implements OnInit {
 				this.list = response;
 				this.listCopy = JSON.parse(JSON.stringify(response));
 
-				this.fnPagination();
+				this.sort();
 			});
 	}
 
@@ -109,6 +111,15 @@ export class OrdersComponent implements OnInit {
 	}
 
 	fnCreate(): void {
+
+		if (this.listDetails.length === 0) {
+			this._alert.error({
+				title: 'Error',
+				text: 'Error al crear la orden, debe de tener por lo menos, un servicio asociado.',
+			});
+			return;
+		}
+
 		this._alert.loading();
 		this.create()
 			// .pipe(switchMap((r: any) => this.createDetail(r)))
@@ -268,7 +279,7 @@ export class OrdersComponent implements OnInit {
 			return;
 		}
 
-		this.data = {...JSON.parse(JSON.stringify(data)), idcliente: this.idcliente, idclientesede: this.idclientesede };
+		this.data = { ...JSON.parse(JSON.stringify(data)), idcliente: this.idcliente, idclientesede: this.idclientesede };
 
 		this.getSites(this.data.idcliente);
 
@@ -276,10 +287,12 @@ export class OrdersComponent implements OnInit {
 
 	search(): void {
 		this.searchTerm$.subscribe((term) => {
-			this.list = this.listCopy.filter(
-				(item: any) =>
-					item.nombre.toLowerCase().indexOf(term.toLowerCase()) >= 0
-			);
+			this.list = this.listCopy.filter((item: any) => {
+				const itemValues = Object.values(item);
+				return itemValues.some((value: any) =>
+					String(value).toLowerCase().includes(term.toLowerCase())
+				);
+			});
 
 			this.fnPagination();
 		});
@@ -346,7 +359,7 @@ export class OrdersComponent implements OnInit {
 	}
 
 	getLengthStatus(key: string): number {
-		return this.list.filter(element => element.estado === key).length;
+		return this.listCopy.filter(element => element.estado === key).length;
 	}
 
 	generateExcel(): void {
@@ -370,5 +383,15 @@ export class OrdersComponent implements OnInit {
 
 	removeDetail(id: number): void {
 		this.listDetails = this.listDetails.filter(e => e.idservicio !== id);
+	}
+
+	sort(): void {
+		if (this.options === 'TOTAL') {
+			this.list = this.listCopy;
+		} else {
+			this.list = this.listCopy.filter((item: any) => item.estado === this.options);
+		}
+
+		this.fnPagination();
 	}
 }

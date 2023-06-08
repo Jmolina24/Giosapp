@@ -195,10 +195,12 @@ export class ServicesComponent implements OnInit {
 
 	search(): void {
 		this.searchTerm$.subscribe((term) => {
-			this.list = this.listCopy.filter(
-				(item: any) =>
-					item.nombre.toLowerCase().indexOf(term.toLowerCase()) >= 0
-			);
+			this.list = this.listCopy.filter((item: any) => {
+				const itemValues = Object.values(item);
+				return itemValues.some((value: any) =>
+					String(value).toLowerCase().includes(term.toLowerCase())
+				);
+			});
 
 			this.fnPagination();
 		});

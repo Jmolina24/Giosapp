@@ -66,6 +66,17 @@ export class OrdersService {
 		});
 	}
 
+	public changeStatusOrderDatails(iddetalleorden = '0', status: string = 'F'): Observable<any> {
+		if (!iddetalleorden) {
+			return;
+		}
+
+		return this._api.post('admin/orden-detalle-status/' + status, {
+			iddetalleorden,
+			idusuarioregistra: this._storage.getUserId(),
+		});
+	}
+
 	public getDetails({
 		iddetalleorden = '0',
 		idorden = 0,

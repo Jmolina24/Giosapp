@@ -153,13 +153,13 @@ export class ParameterSettingComponent implements OnInit {
 
 	search(): void {
 		this.searchTerm$.subscribe((term) => {
-			this.section.data.list = this.section.data.listCopy
-				// .map((r: any) => Object.values(r))
-				.filter(
-					(item: any) =>
-						item.nombre.toLowerCase().indexOf(term.toLowerCase()) >=
-						0
+			this.section.data.list = this.section.data.listCopy.filter((item: any) => {
+				const itemValues = Object.values(item);
+				return itemValues.some((value: any) =>
+					String(value).toLowerCase().includes(term.toLowerCase())
 				);
+			});
+
 			this.fnPagination();
 		});
 	}

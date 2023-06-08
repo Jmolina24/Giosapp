@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FilesService } from 'app/core/helpers/files.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
@@ -15,7 +15,7 @@ import { Observable, Subject, forkJoin } from 'rxjs';
 	templateUrl: './details.component.html',
 	styleUrls: ['./details.component.scss'],
 })
-export class DetailsComponent implements OnInit {
+export class DetailsComponent implements OnInit, OnChanges {
 	@Input() viewInfoOrden: boolean = true;
 	@Input() idtercero: string = null;
 
@@ -33,6 +33,16 @@ export class DetailsComponent implements OnInit {
 	listCopy: any[] = [];
 	@Output() dataList = new EventEmitter();
 
+	private _option: 'REALIZADA' | 'ASIGNADA' | 'POR ASIGNAR' | 'ANULADA' | 'TOTAL' = 'ASIGNADA';
+	// options$ = new Subject<string>(this.option);
+
+	@Input()
+	set option(value: any) {
+		this._option = value;
+		this.sort();
+	}
+
+	listSupport: any[] = [];
 	listServices: any[] = [];
 	listThirds: any[] = [];
 	listThirdsServices: any[] = [];
@@ -50,12 +60,12 @@ export class DetailsComponent implements OnInit {
 		totalPages: number;
 		range?: number;
 	} = {
-		current: 0,
-		pages: [{ data: [], page: 0 }],
-		countForPages: 5,
-		totalPages: 0,
-		range: 3,
-	};
+			current: 0,
+			pages: [{ data: [], page: 0 }],
+			countForPages: 5,
+			totalPages: 0,
+			range: 3,
+		};
 
 	constructor(
 		private _service: OrdersService,
@@ -66,7 +76,7 @@ export class DetailsComponent implements OnInit {
 		private _file: FilesService,
 		private _rates: RatesService,
 
-	) {}
+	) { }
 
 	ngOnInit(): void {
 		if (this.idtercero) {
@@ -83,12 +93,20 @@ export class DetailsComponent implements OnInit {
 		});
 	}
 
+	ngOnChanges(changes: SimpleChanges): void {
+		if (changes.option) {
+			this.sort();
+		}
+	}
+
 	loadData(): void {
 		this.get(this.idorden);
 
 		this.getByOrden(this.idorden);
 
 		this.search();
+
+		this.sort();
 
 		this.getServices();
 
@@ -110,8 +128,8 @@ export class DetailsComponent implements OnInit {
 	}
 
 	getDetailSupportSelect(iddetalleorden: string): void {
-		this._service.getSupports({iddetalleorden}).subscribe((response) => {
-			console.log(response);
+		this._service.getSupports({ iddetalleorden }).subscribe((response) => {
+			this.listSupport = response;
 		});
 	}
 
@@ -125,8 +143,38 @@ export class DetailsComponent implements OnInit {
 				this.list = response;
 				this.listCopy = JSON.parse(JSON.stringify(response));
 
-				this.fnPagination();
+				this.sort();
 			});
+	}
+
+	changeStatusOrderDetail({ iddetalleorden }, status: 'F'): void {
+		this._alert.loading();
+
+		this._service.changeStatusOrderDatails(iddetalleorden, status).subscribe(
+			(response) => {
+				this._alert.closeAlert();
+				if (response.codigo !== 0) {
+					this._alert.error({
+						title: response.titulo,
+						text: response.mensaje,
+					});
+					return;
+				}
+
+				this._alert.success({
+					title: response.titulo,
+					text: response.mensaje,
+				});
+
+				this.getByOrden(this.idorden);
+			},
+			({ error }) => {
+				this._alert.error({
+					title: error.titulo || 'Error',
+					text: error.mensaje || 'Error al procesar la solicitud.',
+				});
+			}
+		);
 	}
 
 	getServices(): void {
@@ -267,24 +315,26 @@ export class DetailsComponent implements OnInit {
 				...this.data,
 				idterceroservicio: '',
 				valor: '',
-		   };
-		   this.getThirdsServices(data.idservicio, data.idciudadservicio);
+			};
+			this.getThirdsServices(data.idservicio, data.idciudadservicio);
 		}
 	}
 
 	search(): void {
 		this.searchTerm$.subscribe((term) => {
-			this.list = this.listCopy.filter(
-				(item: any) =>
-					item.servicio.toLowerCase().indexOf(term.toLowerCase()) >= 0
-			);
+			this.list = this.listCopy.filter((item: any) => {
+				const itemValues = Object.values(item);
+				return itemValues.some((value: any) =>
+					String(value).toLowerCase().includes(term.toLowerCase())
+				);
+			});
 
 			this.fnPagination();
 		});
 	}
 
 	fnPagination(): void {
-		this.dataList.emit(this.list);
+		this.dataList.emit(this.listCopy);
 		this.contentPagination.pages = [];
 		this.contentPagination.totalPages = Math.ceil(
 			this.list.length / this.contentPagination.countForPages
@@ -333,7 +383,7 @@ export class DetailsComponent implements OnInit {
 	}
 
 	fnBtnModal(item: any = null): void {
-		this.infoDetail = item;
+		this.infoDetail = {...item, iddetalleordensoporte: ''};
 		this.files.forEach((element) => {
 			this.formData.delete(element.name);
 		});
@@ -370,7 +420,17 @@ export class DetailsComponent implements OnInit {
 			this._alert.closeAlert();
 			this._alert.error({
 				title: 'Error',
-				text: 'Ingrese por lo menos un archivo',
+				text: 'Ingrese un archivo',
+			});
+			return;
+		}
+
+		if (this.files.length !== 1) {
+			this.isLoading = false;
+			this._alert.closeAlert();
+			this._alert.error({
+				title: 'Error',
+				text: 'Solamente se permite un archivo',
 			});
 			return;
 		}
@@ -393,11 +453,11 @@ export class DetailsComponent implements OnInit {
 				}
 
 				forkJoin(
-					response.rutas.map(e => this.uploadSupport('0', e.path))
+					response.rutas.map(e => this.uploadSupport(this.infoDetail.iddetalleordensoporte, e.path))
 				).subscribe(
 					(r: any[]) => {
 						this._alert.loading();
-						const i = r.filter(element=> element.codigo !== 0);
+						const i = r.filter(element => element.codigo !== 0);
 						if (i.length > 0) {
 							this._alert.error({
 								title: 'Error',
@@ -443,5 +503,15 @@ export class DetailsComponent implements OnInit {
 
 	getInfoRates(): void {
 		this.infoThirdsServices = this.listThirdsServices.find(item => item.idterceroservicio === this.data.idterceroservicio);
+	}
+
+	private sort(): void {
+		if (this._option === 'TOTAL') {
+			this.list = this.listCopy;
+		} else {
+			this.list = this.listCopy.filter((item: any) => item.estado === this._option);
+		}
+
+		this.fnPagination();
 	}
 }

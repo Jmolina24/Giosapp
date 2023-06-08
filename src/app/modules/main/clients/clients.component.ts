@@ -29,19 +29,19 @@ export class ClientsComponent implements OnInit {
 		totalPages: number;
 		range?: number;
 	} = {
-		current: 0,
-		pages: [{ data: [], page: 0 }],
-		countForPages: 5,
-		totalPages: 0,
-		range: 3,
-	};
+			current: 0,
+			pages: [{ data: [], page: 0 }],
+			countForPages: 5,
+			totalPages: 0,
+			range: 3,
+		};
 
 	constructor(
 		private _service: ClientsService,
 		private _alert: SweetAlertService,
 		private _general: GeneralService,
 		private _files: FilesService
-	) {}
+	) { }
 
 	ngOnInit(): void {
 		this.get();
@@ -150,12 +150,12 @@ export class ClientsComponent implements OnInit {
 
 	search(): void {
 		this.searchTerm$.subscribe((term) => {
-			this.list = this.listCopy.filter(
-				(item: any) =>
-					item.razonsocial
-						.toLowerCase()
-						.indexOf(term.toLowerCase()) >= 0
-			);
+			this.list = this.listCopy.filter((item: any) => {
+				const itemValues = Object.values(item);
+				return itemValues.some((value: any) =>
+					String(value).toLowerCase().includes(term.toLowerCase())
+				);
+			});
 
 			this.fnPagination();
 		});

@@ -276,7 +276,8 @@
 										class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 										(click)="fnBtnModal(item)">Cargar soporte</button>
 									<button type="button"
-										class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">Finalizar</button>
+										class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+										(click)="changeStatusOrderDetail(item, 'F')">Finalizar</button>
 								</div>
 							</ng-container>
 							<div>
@@ -500,11 +501,22 @@
 			<div class="sm:max-w-lg w-full p-10 bg-white rounded-xl z-10">
 				<div class="text-center">
 					<h2 class="mt-5 text-3xl font-bold text-gray-900">
-						Cargar Soporte #{{ infoDetail?.iddetalleorden }} - {{ infoDetail?.servicio }}({{
+						Cargar Soporte: #{{ infoDetail?.iddetalleorden }} - {{ infoDetail?.servicio }}({{
 						infoDetail?.tipoorden }})
 					</h2>
 				</div>
 				<form class="mt-8 space-y-3" action="#" method="POST">
+
+					<ng-container *ngIf="infoDetail">
+						<mat-form-field class="w-full">
+							<mat-label class="text-lg font-medium mb-1">Soporte</mat-label>
+							<mat-select [value]="''" name="type" [(ngModel)]="infoDetail.iddetalleordensoporte" name="type">
+								<mat-option value="" disabled>Seleccione una opción</mat-option>
+								<mat-option [disabled]="item.soporte"  [value]="item.iddetalleordensoporte" *ngFor="let item of listSupport">{{ item.tiposoporte }}</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</ng-container>
+
 					<div class="grid grid-cols-1 space-y-2">
 						<label class="text-sm font-bold text-gray-500 tracking-wide">Adjuntar documento</label>
 						<div class="flex items-center justify-center w-full">

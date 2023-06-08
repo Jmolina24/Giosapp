@@ -42,8 +42,6 @@ interface Menu {
 	providedIn: 'root',
 })
 export class MenuService {
-	idrole: any = this._storage.getRolID() || 0;
-
 	menu: any[] = navigation;
 
 	private roleAccesMenu: Menu[] = [
@@ -96,14 +94,14 @@ export class MenuService {
 		},
 	];
 
-	constructor(private _storage: StorageService) {}
+	constructor(private _storage: StorageService) { }
 
 	getMenu(): any[] {
 		return this.menu;
 	}
 
-	getMenuByRole(): any[] {
-		const seccionesPermitidas: Menu = this.roleAccesMenu.find(e => e.id.includes(this.idrole));
+	getMenuByRole(idrole: Id): any[] {
+		const seccionesPermitidas: Menu = this.roleAccesMenu.find(e => e.id.includes(idrole));
 
 		if (seccionesPermitidas.access.find(e => e.includes('*'))) {
 			return this.menu;

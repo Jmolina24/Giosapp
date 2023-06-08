@@ -8,21 +8,23 @@
 							Ordenes asignadas </h2>
 						<div class="flex flex-wrap items-center font-medium">
 							<div>
-								<a class="whitespace-nowrap text-primary-500">Lista y gestiones las diferentes ordenes asignadas</a>
+								<a class="whitespace-nowrap text-primary-500">Lista y gestiona las diferentes ordenes asignadas</a>
 							</div>
 						</div>
 					</div>
 
 
 					<div class="flex flex-row justify-between">
-						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
+						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100" [ngClass]="{'border-2 border-blue-500': options === 'TOTAL'}"
+						(click)="options = 'TOTAL'">
 							<div class="flex flex-col items-center">
 								<div class="text-4xl font-bold tracking-tight leading-none text-blue-500">{{ list.length }}</div>
 								<div class="text-sm font-medium text-blue-600 dark:text-blue-500">Total</div>
 							</div>
 						</div>
 
-						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
+						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100" [ngClass]="{'border-2 border-green-500': options === 'REALIZADA'}"
+						(click)="options = 'REALIZADA'">
 							<div class="flex flex-col items-center">
 								<div class="text-4xl font-bold tracking-tight leading-none text-green-500">
 									{{ getLengthStatus('REALIZADA') }}</div>
@@ -30,7 +32,8 @@
 							</div>
 						</div>
 
-						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
+						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100" [ngClass]="{'border-2 border-teal-500': options === 'ASIGNADA'}"
+						(click)="options = 'ASIGNADA'">
 							<div class="flex flex-col items-center">
 								<div class="text-4xl font-bold tracking-tight leading-none text-teal-500">
 									{{ getLengthStatus('ASIGNADA') }}</div>
@@ -38,7 +41,8 @@
 							</div>
 						</div>
 
-						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
+						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100" [ngClass]="{'border-2 border-orange-500': options === 'POR ASIGNAR'}"
+						(click)="options = 'POR ASIGNAR'">
 							<div class="flex flex-col items-center">
 								<div class="text-4xl font-bold tracking-tight leading-none text-orange-500">
 									{{ getLengthStatus('POR ASIGNAR') }}</div>
@@ -46,7 +50,8 @@
 							</div>
 						</div>
 
-						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
+						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100" [ngClass]="{'border-2 border-red-500': options === 'ANULADA'}"
+						(click)="options = 'ANULADA'">
 							<div class="flex flex-col items-center">
 								<div class="text-4xl font-bold tracking-tight leading-none text-red-500">{{ getLengthStatus('ANULADA') }}</div>
 								<div class="text-sm font-medium text-red-600">Anuladas</div>
@@ -57,5 +62,5 @@
 			</div>
 		</div>
 	</div>
-	<app-details class="w-full" [idtercero]="idtercero" [viewInfoOrden]="false" (dataList)="loadContent($event)"></app-details>
+	<app-details class="w-full" [idtercero]="idtercero" [viewInfoOrden]="false" (dataList)="loadContent($event)" [option]="options"></app-details>
 </div>
