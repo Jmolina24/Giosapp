@@ -3,6 +3,7 @@ import { FilesService } from 'app/core/helpers/files.service';
 import { StorageService } from 'app/core/helpers/storage.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { ClientsService } from 'app/core/services/clients.service';
+import { Actions, MenuService } from 'app/core/services/menu.service';
 import { OrdersService } from 'app/core/services/orders.service';
 import { ServicesService } from 'app/core/services/services.service';
 import { Observable, Subject, forkJoin } from 'rxjs';
@@ -13,6 +14,9 @@ import { Observable, Subject, forkJoin } from 'rxjs';
 	styleUrls: ['./orders.component.scss'],
 })
 export class OrdersComponent implements OnInit {
+
+	actions: any;
+
 	list: any[] = [];
 	listCopy: any[] = [];
 
@@ -57,10 +61,13 @@ export class OrdersComponent implements OnInit {
 		private _clients: ClientsService,
 		private _alert: SweetAlertService,
 		private _services: ServicesService,
-		private _storage: StorageService
+		private _storage: StorageService,
+		private _menu: MenuService
 	) { }
 
 	ngOnInit(): void {
+		this.actions = this._menu.getAccessByRole(this._storage.getRolID(), { name: 'process.orders' });
+
 		this.get();
 		this.search();
 		this.getTypes();
@@ -69,25 +76,28 @@ export class OrdersComponent implements OnInit {
 	}
 
 	get(): void {
-		this._orders
-			.get()
-			.subscribe((response: any) => {
-				if (!response) {
-					return;
-				}
-				response.map((element: any) => {
-					element.fechaentrega = element.fechaentrega
-						.split('/')
-						.reverse()
-						.join('-');
-					return element;
+		if (this.actions === '*' || this.actions?.list) {
+			this._orders
+				.get()
+				.subscribe((response: any) => {
+					if (!response) {
+						return;
+					}
+					response.map((element: any) => {
+						element.fechaentrega = element.fechaentrega
+							.split('/')
+							.reverse()
+							.join('-');
+						return element;
+					});
+
+					this.list = response;
+					this.listCopy = JSON.parse(JSON.stringify(response));
+
+					this.sort();
 				});
+		}
 
-				this.list = response;
-				this.listCopy = JSON.parse(JSON.stringify(response));
-
-				this.sort();
-			});
 	}
 
 	getTypes(): void {
@@ -111,70 +121,75 @@ export class OrdersComponent implements OnInit {
 	}
 
 	fnCreate(): void {
+		if (this.actions === '*' || this.actions?.create) {
+			if (this.listDetails.length === 0) {
+				this._alert.error({
+					title: 'Error',
+					text: 'Error al crear la orden, debe de tener por lo menos, un servicio asociado.',
+				});
+				return;
+			}
+			this._alert.loading();
+			this.create()
+				// .pipe(switchMap((r: any) => this.createDetail(r)))
+				.subscribe(
+					(response) => {
+						if (response.codigo !== 0) {
+							this._alert.error({
+								title: response.titulo,
+								text: response.mensaje,
+							});
+							return;
+						}
+						forkJoin(
+							this.listDetails.map(e =>
+								this.createDetail(response, e)
+							)
+						).subscribe(
+							(r: any[]) => {
+								this._alert.closeAlert();
+								this.get();
+								this.showSection(null);
+								const i = r.filter(
+									element => element.codigo !== 0
+								);
+								if (i.length > 0) {
+									this._alert.error({
+										title: 'Error',
+										text: i.join(', '),
+									});
+									return;
+								}
 
-		if (this.listDetails.length === 0) {
+								this._alert.success({
+									title: response.titulo,
+									text: 'Orden y Detalle(s) de Orden Creados Correctamente...',
+								});
+							},
+							({ error }) => {
+								this._alert.error({
+									title: error.titulo || 'Error',
+									text:
+										error.mensaje ||
+										'Error al procesar la solicitud.',
+								});
+							}
+						);
+					},
+					({ error }) => {
+						this._alert.error({
+							title: error.titulo || 'Error',
+							text:
+								error.mensaje || 'Error al procesar la solicitud.',
+						});
+					}
+				);
+		} else {
 			this._alert.error({
 				title: 'Error',
-				text: 'Error al crear la orden, debe de tener por lo menos, un servicio asociado.',
+				text: 'No tiene acceso a esta acción.',
 			});
-			return;
 		}
-
-		this._alert.loading();
-		this.create()
-			// .pipe(switchMap((r: any) => this.createDetail(r)))
-			.subscribe(
-				(response) => {
-					if (response.codigo !== 0) {
-						this._alert.error({
-							title: response.titulo,
-							text: response.mensaje,
-						});
-						return;
-					}
-					forkJoin(
-						this.listDetails.map(e =>
-							this.createDetail(response, e)
-						)
-					).subscribe(
-						(r: any[]) => {
-							this._alert.closeAlert();
-							this.get();
-							this.showSection(null);
-							const i = r.filter(
-								element => element.codigo !== 0
-							);
-							if (i.length > 0) {
-								this._alert.error({
-									title: 'Error',
-									text: i.join(', '),
-								});
-								return;
-							}
-
-							this._alert.success({
-								title: response.titulo,
-								text: 'Orden y Detalle(s) de Orden Creados Correctamente...',
-							});
-						},
-						({ error }) => {
-							this._alert.error({
-								title: error.titulo || 'Error',
-								text:
-									error.mensaje ||
-									'Error al procesar la solicitud.',
-							});
-						}
-					);
-				},
-				({ error }) => {
-					this._alert.error({
-						title: error.titulo || 'Error',
-						text:
-							error.mensaje || 'Error al procesar la solicitud.',
-					});
-				}
-			);
 	}
 
 	createDetail(response: any, data): Observable<any> {
@@ -283,7 +298,6 @@ export class OrdersComponent implements OnInit {
 
 		this.data = JSON.parse(JSON.stringify(data));
 		this.data['idcliente'] = String(this.data.idcliente);
-		console.log(this.data);
 
 		this.getSites(this.data.idcliente);
 

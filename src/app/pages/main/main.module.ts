@@ -25,6 +25,7 @@ import { AssignedServicesComponent } from 'app/modules/main/assigned-services/as
 import { FileDragNDropDirective } from 'app/core/directives/file-drag-n-drop.directive';
 import { RatesComponent } from 'app/modules/main/rates/rates.component';
 import { DetailFileComponent } from 'app/modules/main/detail-file/detail-file.component';
+import { SetTimeDifferencePipe } from 'app/core/pipes/set-time-difference.pipe';
 
 @NgModule({
 	declarations: [
@@ -41,7 +42,8 @@ import { DetailFileComponent } from 'app/modules/main/detail-file/detail-file.co
 		AssignedServicesComponent,
 		FileDragNDropDirective,
 		RatesComponent,
-		DetailFileComponent
+		DetailFileComponent,
+		SetTimeDifferencePipe
 	],
 	imports: [
 		CommonModule,

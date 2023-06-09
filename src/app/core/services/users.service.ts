@@ -44,7 +44,6 @@ export class UsersService {
 
 		return this._api.post('admin/create-admin', {
 			...content,
-			idrol: '1',
 			idusuarioregistra: this._storage.getUserId(),
 		});
 	}

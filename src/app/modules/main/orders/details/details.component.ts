@@ -11,7 +11,9 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FilesService } from 'app/core/helpers/files.service';
+import { StorageService } from 'app/core/helpers/storage.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
+import { MenuService } from 'app/core/services/menu.service';
 import { OrdersService } from 'app/core/services/orders.service';
 import { RatesService } from 'app/core/services/rates.service';
 import { ServicesService } from 'app/core/services/services.service';
@@ -26,6 +28,8 @@ import { Observable, Subject, forkJoin } from 'rxjs';
 export class DetailsComponent implements OnInit, OnChanges {
 	@Input() viewInfoOrden: boolean = true;
 	@Input() idtercero: string = null;
+
+	actions: any;
 
 	isLoading: boolean = false;
 
@@ -47,7 +51,6 @@ export class DetailsComponent implements OnInit, OnChanges {
 		| 'POR ASIGNAR'
 		| 'ANULADA'
 		| 'TOTAL' = 'ASIGNADA';
-	// options$ = new Subject<string>(this.option);
 
 	@Input()
 	set option(value: any) {
@@ -74,12 +77,12 @@ export class DetailsComponent implements OnInit, OnChanges {
 		totalPages: number;
 		range?: number;
 	} = {
-		current: 0,
-		pages: [{ data: [], page: 0 }],
-		countForPages: 5,
-		totalPages: 0,
-		range: 3,
-	};
+			current: 0,
+			pages: [{ data: [], page: 0 }],
+			countForPages: 5,
+			totalPages: 0,
+			range: 3,
+		};
 
 	constructor(
 		private _service: OrdersService,
@@ -88,10 +91,13 @@ export class DetailsComponent implements OnInit, OnChanges {
 		private route: ActivatedRoute,
 		private _alert: SweetAlertService,
 		private _file: FilesService,
-		private _rates: RatesService
-	) {}
+		private _rates: RatesService,
+		private _menu: MenuService,
+		private _storage: StorageService
+	) { }
 
 	ngOnInit(): void {
+		this.actions = this._menu.getAccessByRole(this._storage.getRolID(), { name: 'process.assigned-services' });
 		if (this.idtercero) {
 			this.loadData();
 			return;
@@ -113,19 +119,21 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	loadData(): void {
-		this.get(this.idorden);
+		if (this.actions === '*' || this.actions?.list || this.actions?.viewDetail) {
+			this.get(this.idorden);
 
-		this.getByOrden(this.idorden);
+			this.getByOrden(this.idorden);
 
-		this.search();
+			this.search();
 
-		this.sort();
+			this.sort();
 
-		this.getServices();
+			this.getServices();
 
-		this.getThirds();
+			this.getThirds();
 
-		this.getThirdsServices('0', '0');
+			// this.getThirdsServices('0', '0');
+		}
 	}
 
 	get(idorden: string = '0'): void {
@@ -160,44 +168,51 @@ export class DetailsComponent implements OnInit, OnChanges {
 				this.list = response;
 				this.listCopy = JSON.parse(JSON.stringify(response));
 
-				if ( !this.idtercero ){
+				if (!this.idtercero) {
 					this._option = 'TOTAL';
 				}
 				this.sort();
 			});
 	}
 
-	changeStatusOrderDetail({ iddetalleorden }, status: 'F'): void {
-		this._alert.loading();
+	changeStatusOrderDetail({ iddetalleorden }, status: 'F' | 'P' = 'P'): void {
+		if (this.actions.changeStatus || this.actions === '*') {
+			this._alert.loading();
 
-		this._service
-			.changeStatusOrderDatails(iddetalleorden, status)
-			.subscribe(
-				(response) => {
-					this._alert.closeAlert();
-					if (response.codigo !== 0) {
-						this._alert.error({
+			this._service
+				.changeStatusOrderDatails(iddetalleorden, status)
+				.subscribe(
+					(response) => {
+						this._alert.closeAlert();
+						if (response.codigo !== 0) {
+							this._alert.error({
+								title: response.titulo,
+								text: response.mensaje,
+							});
+							return;
+						}
+
+						this._alert.success({
 							title: response.titulo,
 							text: response.mensaje,
 						});
-						return;
+
+						this.getByOrden(this.idorden);
+					},
+					({ error }) => {
+						this._alert.error({
+							title: error.titulo || 'Error',
+							text:
+								error.mensaje || 'Error al procesar la solicitud.',
+						});
 					}
-
-					this._alert.success({
-						title: response.titulo,
-						text: response.mensaje,
-					});
-
-					this.getByOrden(this.idorden);
-				},
-				({ error }) => {
-					this._alert.error({
-						title: error.titulo || 'Error',
-						text:
-							error.mensaje || 'Error al procesar la solicitud.',
-					});
-				}
-			);
+				);
+		} else {
+			this._alert.error({
+				title: 'Error',
+				text: 'No tiene acceso a esta acción.',
+			});
+		}
 	}
 
 	getServices(): void {
@@ -213,7 +228,16 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	getThirdsServices(idservicio: string, idciudad: string): void {
-		this._rates.get({ idservicio, idciudad }).subscribe((response) => {
+		this._rates.get({ idservicio, idciudad }).subscribe((response: any[]) => {
+			if (response.length === 0) {
+				this._alert.error({
+					title: 'Error',
+					text: 'No Existe Tarifa Parametrizada Para El Servicio. Contactar al Administrador',
+				});
+				this.showSection(null, null);
+				return;
+			}
+			this.section = 'assign';
 			this.listThirdsServices = response;
 		});
 	}
@@ -257,42 +281,10 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	update(): void {
-		this._alert.loading();
+		if (this.actions.edit || this.actions === '*') {
+			this._alert.loading();
 
-		this._service.createDetail({ ...this.data }).subscribe(
-			(response) => {
-				this._alert.closeAlert();
-				if (response.codigo !== 0) {
-					this._alert.error({
-						title: response.titulo,
-						text: response.mensaje,
-					});
-					return;
-				}
-
-				this._alert.success({
-					title: response.titulo,
-					text: response.mensaje,
-				});
-
-				this.getByOrden(this.idorden);
-				this.showSection(null);
-			},
-			({ error }) => {
-				this._alert.error({
-					title: error.titulo || 'Error',
-					text: error.mensaje || 'Error al procesar la solicitud.',
-				});
-			}
-		);
-	}
-
-	assign(): void {
-		this._alert.loading();
-
-		this._service
-			.assign({ ...this.data, valor: this.data.valor || '1' })
-			.subscribe(
+			this._service.createDetail({ ...this.data }).subscribe(
 				(response) => {
 					this._alert.closeAlert();
 					if (response.codigo !== 0) {
@@ -314,17 +306,74 @@ export class DetailsComponent implements OnInit, OnChanges {
 				({ error }) => {
 					this._alert.error({
 						title: error.titulo || 'Error',
-						text:
-							error.mensaje || 'Error al procesar la solicitud.',
+						text: error.mensaje || 'Error al procesar la solicitud.',
 					});
 				}
 			);
+		} else {
+			this._alert.error({
+				title: 'Error',
+				text: 'No tiene acceso a esta acción.',
+			});
+		}
+	}
+
+	assign(): void {
+		if (this.actions.assign || this.actions === '*') {
+			const { iddetalleorden, idterceroservicio, valor } = this.data;
+
+			if (!iddetalleorden || !idterceroservicio) {
+				// if (!iddetalleorden || !idterceroservicio || !valor) {
+				this._alert.error({
+					title: 'Error',
+					text: 'Error al asignar',
+				});
+				return;
+			}
+
+			this._alert.loading();
+
+			this._service
+				.assign({ ...this.data, valor: this.data.valor || '1' })
+				.subscribe(
+					(response) => {
+						this._alert.closeAlert();
+						if (response.codigo !== 0) {
+							this._alert.error({
+								title: response.titulo,
+								text: response.mensaje,
+							});
+							return;
+						}
+
+						this._alert.success({
+							title: response.titulo,
+							text: response.mensaje,
+						});
+
+						this.getByOrden(this.idorden);
+						this.showSection(null);
+					},
+					({ error }) => {
+						this._alert.error({
+							title: error.titulo || 'Error',
+							text:
+								error.mensaje || 'Error al procesar la solicitud.',
+						});
+					}
+				);
+		} else {
+			this._alert.error({
+				title: 'Error',
+				text: 'No tiene acceso a esta acción.',
+			});
+		}
 	}
 
 	showSection(section: 'add' | 'edit' | 'assign', data = null): void {
-		this.section = section;
 
 		if (!data && section === 'add') {
+			this.section = section;
 			this.data = {
 				iddetalleorden: '',
 				idservicio: '',
@@ -335,13 +384,14 @@ export class DetailsComponent implements OnInit, OnChanges {
 			return;
 		}
 		if (section === 'edit') {
+			this.section = section;
 			this.data = JSON.parse(JSON.stringify(data));
 			return;
 		}
 
 		if (data && section === 'assign') {
 			this.data = {
-				...this.data,
+				...data,
 				idterceroservicio: '',
 				valor: '',
 			};
@@ -475,87 +525,94 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	fnUpload(): void {
-		if (this.files.length === 0) {
-			this._alert.error({
-				title: 'Error',
-				text: 'Ingrese un archivo',
-			});
-			return;
-		}
-
-		if (this.files.some(e => this.isIdRepeated(e.iddetalleordensoporte))) {
-			this._alert.error({
-				title: 'Error',
-				text: 'Solamente se permite un archivo por tipo de soporte',
-			});
-			return;
-		}
-
-		this.isLoading = true;
-		this._alert.loading();
-
-		this.files.forEach((r) => {
-			this.formData.append('files', r.file);
-		});
-
-		this._file.upload(this.formData).subscribe(
-			(response) => {
-				this.isLoading = false;
-
-				if (response.codigo !== 0) {
-					this._alert.loading();
-					this._alert.error({
-						title: response.titulo,
-						text: response.mensaje,
-					});
-					return;
-				}
-
-				forkJoin(
-					response.rutas.map((e, i) =>
-						this.uploadSupport(
-							this.files[i].iddetalleordensoporte,
-							e.path
-						)
-					)
-				).subscribe(
-					(r: any[]) => {
-						this._alert.loading();
-						const i = r.filter(element => element.codigo !== 0);
-						if (i.length > 0) {
-							this._alert.error({
-								title: 'Error',
-								text: i.join(', '),
-							});
-							return;
-						}
-
-						this._alert.success({
-							title: response.titulo,
-							text: 'Soporte(s) Cargados Correctamente...',
-						});
-
-						this.getByOrden(this.idorden);
-
-						this.fnBtnModal(null);
-					},
-					({ error }) => {
-						this._alert.error({
-							title: error.titulo || 'Error',
-							text:
-								error.mensaje ||
-								'Error al procesar la solicitud.',
-						});
-					}
-				);
-			},
-			({ error }) => {
+		if (this.actions.upload || this.actions === '*') {
+			if (this.files.length === 0) {
 				this._alert.error({
-					title: error.titulo || 'Error',
-					text: error.mensaje || 'Error al procesar la solicitud.',
+					title: 'Error',
+					text: 'Ingrese un archivo',
 				});
+				return;
 			}
-		);
+
+			if (this.files.some(e => this.isIdRepeated(e.iddetalleordensoporte))) {
+				this._alert.error({
+					title: 'Error',
+					text: 'Solamente se permite un archivo por tipo de soporte',
+				});
+				return;
+			}
+
+			this.isLoading = true;
+			this._alert.loading();
+
+			this.files.forEach((r) => {
+				this.formData.append('files', r.file);
+			});
+
+			this._file.upload(this.formData).subscribe(
+				(response) => {
+					this.isLoading = false;
+
+					if (response.codigo !== 0) {
+						this._alert.loading();
+						this._alert.error({
+							title: response.titulo,
+							text: response.mensaje,
+						});
+						return;
+					}
+
+					forkJoin(
+						response.rutas.map((e, i) =>
+							this.uploadSupport(
+								this.files[i].iddetalleordensoporte,
+								e.path
+							)
+						)
+					).subscribe(
+						(r: any[]) => {
+							this._alert.loading();
+							const i = r.filter(element => element.codigo !== 0);
+							if (i.length > 0) {
+								this._alert.error({
+									title: 'Error',
+									text: i.join(', '),
+								});
+								return;
+							}
+
+							this._alert.success({
+								title: response.titulo,
+								text: 'Soporte(s) Cargados Correctamente...',
+							});
+
+							this.getByOrden(this.idorden);
+
+							this.fnBtnModal(null);
+						},
+						({ error }) => {
+							this._alert.error({
+								title: error.titulo || 'Error',
+								text:
+									error.mensaje ||
+									'Error al procesar la solicitud.',
+							});
+						}
+					);
+				},
+				({ error }) => {
+					this._alert.error({
+						title: error.titulo || 'Error',
+						text: error.mensaje || 'Error al procesar la solicitud.',
+					});
+				}
+			);
+		} else {
+			this._alert.error({
+				title: 'Error',
+				text: 'No tiene acceso a esta acción.',
+			});
+		}
 	}
 
 	uploadSupport(

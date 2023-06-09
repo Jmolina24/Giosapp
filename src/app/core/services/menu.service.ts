@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { navigation } from 'app/layout/layouts/classy/navigation';
 import { StorageService } from '../helpers/storage.service';
 
-interface Access{
+export interface Access {
 	name: 'menu' | 'menu.home' | 'menu.settings'
 	| 'access'
 	| 'access.roles'
@@ -38,19 +38,19 @@ interface Menu {
 	access: Access[];
 }
 
-type Actions =
+export type Actions =
 	| {
-			create?: boolean;
-			edit?: boolean;
-			view?: boolean;
-			viewDetail?: boolean;
-			list?: boolean;
-			inactive?: boolean;
-			upload?: boolean;
-			changeStatus?: boolean;
-			assing?: boolean;
-			viewFn?: { name: string; view: boolean }[];
-	  }
+		create?: boolean;
+		edit?: boolean;
+		view?: boolean;
+		viewDetail?: boolean;
+		list?: boolean;
+		inactive?: boolean;
+		upload?: boolean;
+		changeStatus?: boolean;
+		assing?: boolean;
+		viewFn?: { name: string; view: boolean }[];
+	}
 	| '*';
 
 @Injectable({
@@ -62,58 +62,60 @@ export class MenuService {
 	private roleAccesMenu: Menu[] = [
 		{
 			id: [1],
-			access: [{name: '*', actions: '*'}],
+			access: [{ name: '*', actions: '*' }],
 			name: ['Administrador']
 		},
 		{
 			id: [2],
-			access: [{ name: 'menu', actions: '*'}, {name: 'menu.home', actions: '*'}, {name: 'process', actions: '*'}, {name: 'process.orders', actions: {create: true, list: true, viewDetail: true }}],
+			access: [{ name: 'menu', actions: '*' }, { name: 'menu.home', actions: '*' }, { name: 'process', actions: '*' }, { name: 'process.orders', actions: { create: true, list: true, viewDetail: true } }],
 			name: ['Cliente'],
 		},
 		{
 			id: [3, 4],
 			access: [
-				{name: 'menu', actions: '*'},
-				{name: 'menu.home', actions: '*'},
-				{name: 'process', actions: '*'},
-				{name: 'process.assigned-services', actions: { list: true, upload: true, changeStatus: true }},
+				{ name: 'menu', actions: '*' },
+				{ name: 'menu.home', actions: '*' },
+				{ name: 'process', actions: '*' },
+				{ name: 'process.assigned-services', actions: { list: true, upload: true, changeStatus: true } },
 			],
 			name: ['Proveedor', 'Contratista'],
 		},
 		{
 			id: [5],
 			access: [
-				{ name: 'menu', actions: '*'},
-				{ name: 'menu.home', actions: '*'},
-				{ name: 'process', actions: '*'},
-				{ name: 'process.orders', actions: { list: true, edit: true, assing: true, changeStatus: true }}],
+				{ name: 'menu', actions: '*' },
+				{ name: 'menu.home', actions: '*' },
+				{ name: 'process', actions: '*' },
+				{ name: 'process.orders', actions: { list: true, edit: true, assing: true, changeStatus: true, viewDetail: true }},
+				{ name: 'process.assigned-services', actions: { viewDetail: true, list: true, assing: true, changeStatus: true }}
+			],
 			name: ['Facilitador'],
 		},
 		{
 			id: [6],
 			access: [
-				{name: 'menu', actions: '*'},
-				{name: 'menu.home', actions: '*'},
-				{name: 'process', actions: '*'},
-				{name: 'process.orders', actions: { list: true, viewDetail: true }},
-				{name: 'process.assigned-services', actions: { list: true }},
+				{ name: 'menu', actions: '*' },
+				{ name: 'menu.home', actions: '*' },
+				{ name: 'process', actions: '*' },
+				{ name: 'process.orders', actions: { list: true, viewDetail: true } },
+				{ name: 'process.assigned-services', actions: { list: true } },
 			],
 			name: ['Facturacion']
 		},
 		{
 			id: [7],
 			access: [
-				{name: 'menu', actions: '*'},
-				{name: 'menu.home', actions: '*'},
-				{name: 'process', actions: '*'},
-				{name: 'process.orders', actions: { list: true, viewDetail: true }},
-				{name: 'process.assigned-services', actions: { list: true }},
+				{ name: 'menu', actions: '*' },
+				{ name: 'menu.home', actions: '*' },
+				{ name: 'process', actions: '*' },
+				{ name: 'process.orders', actions: { list: true, viewDetail: true } },
+				{ name: 'process.assigned-services', actions: { list: true } },
 			],
 			name: ['Administrativo']
 		},
 	];
 
-	constructor() {}
+	constructor() { }
 
 	getMenu(): any[] {
 		return this.menu;
@@ -131,27 +133,27 @@ export class MenuService {
 		);
 
 		if (seccionesPermitidas.access.find(e => e.name.includes('*'))) {
-			return menu.map((e) => {
-				e.access = seccionesPermitidas.access;
-				return e;
-			});
+			return menu;
 		}
 
 		return menu
 			.filter((e: any) => seccionesPermitidas.access.find(y => y.name === e.id))
 			.map((e) => {
-				e.children = e.children.filter(x =>
+				e.children = e.children.filter((x: { id: string; }) =>
 					seccionesPermitidas.access.find(y => y.name === x.id)
 				);
-				e.access = seccionesPermitidas.access;
 				return e;
 			});
 	}
 
-	getAccessByRole(idrole): any[] {
-		let access = [];
-		access = JSON.parse(JSON.stringify(this.getMenuByRole(idrole)));
+	getAccessByRole(idrole: any, { name }: Access): Actions {
+		let access = JSON.parse(JSON.stringify(this.roleAccesMenu));
 
-		return access;
+		access = access.find((r: { id: string | any[]; }) => r.id.includes(idrole))
+
+		if (access.id.includes(1)) {
+			return access.access[0].actions;
+		}
+		return access.access.find((r: { name: string; }) => r.name === name)?.actions;
 	}
 }

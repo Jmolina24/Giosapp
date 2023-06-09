@@ -215,7 +215,7 @@
 										{{ item.estado }}
 									</td>
 									<td class="px-6 py-4 text-center">
-										{{ item.fecharegistro | date: 'short' }}
+										{{ item.fecharegistro | date:'short' | setTimeDifference }}
 									</td>
 									<td class="px-6 py-4 text-center">
 										{{ item.usuarioregistra }}

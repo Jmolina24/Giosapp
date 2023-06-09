@@ -24,8 +24,6 @@ export class DetailFileComponent implements OnInit {
 		this.route.params.subscribe((params) => {
 			const { iddetalleorden, iddetalleordensoporte } = params;
 
-			console.log(iddetalleorden, iddetalleordensoporte);
-
 			if (!iddetalleorden && !iddetalleordensoporte) {
 				this._alert.error({
 					title: 'Error',

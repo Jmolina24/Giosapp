@@ -3,6 +3,7 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { NoAuthGuard } from './core/guards/no-auth.guard';
+import { AccessGuard } from './core/guards/access.guard';
 
 const routes: Routes = [
 	{ path: '', pathMatch: 'full', redirectTo: 'dashboard/home' },
@@ -35,7 +36,7 @@ const routes: Routes = [
 					),
 			},
 		],
-		canActivate: [AuthGuard],
+		canActivate: [AuthGuard, AccessGuard],
 	},
 	{
 		path: 'others',

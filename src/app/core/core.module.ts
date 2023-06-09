@@ -3,6 +3,7 @@ import { IconsModule } from 'app/core/icons/icons.module';
 
 @NgModule({
 	imports: [IconsModule],
+	declarations: [],
 })
 export class CoreModule {
 	/**
