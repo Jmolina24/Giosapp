@@ -67,7 +67,7 @@ export class MenuService {
 		},
 		{
 			id: [2],
-			access: [{ name: 'menu', actions: '*' }, { name: 'menu.home', actions: '*' }, { name: 'process', actions: '*' }, { name: 'process.orders', actions: { create: true, list: true, viewDetail: true } }],
+			access: [{ name: 'menu', actions: '*' }, { name: 'menu.home', actions: '*' }, { name: 'process', actions: '*' }, { name: 'process.orders', actions: { create: true, list: true, viewDetail: true } }, { name: 'process.assigned-services', actions: { create: true, edit: true, list: true, viewDetail: true } }],
 			name: ['Cliente'],
 		},
 		{

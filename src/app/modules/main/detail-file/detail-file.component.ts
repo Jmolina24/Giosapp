@@ -67,6 +67,7 @@ export class DetailFileComponent implements OnInit {
 
 					this.support = response.map((r) => {
 						if (r.estado === 'CARGADO' && r.soporte) {
+							r.soporte = r.soporte.split('/web')[1];
 							const soporte = r.soporte.split('.');
 							r.tipo = soporte[soporte.length - 1].toUpperCase();
 						}
@@ -81,5 +82,9 @@ export class DetailFileComponent implements OnInit {
 					});
 				}
 			);
+	}
+
+	back(): void {
+		window.history.back();
 	}
 }
