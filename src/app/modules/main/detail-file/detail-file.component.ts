@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { OrdersService } from 'app/core/services/orders.service';
@@ -9,8 +9,8 @@ import { OrdersService } from 'app/core/services/orders.service';
 	styleUrls: ['./detail-file.component.scss'],
 })
 export class DetailFileComponent implements OnInit {
-	iddetalleorden: string = '0';
-	iddetalleordensoporte: string = '0';
+	@Input() iddetalleorden: string = '0';
+	@Input() iddetalleordensoporte: string = '0';
 
 	support: any = null;
 

@@ -29,11 +29,15 @@ export class DetailsComponent implements OnInit, OnChanges {
 	@Input() viewInfoOrden: boolean = true;
 	@Input() idtercero: string = null;
 
+
+	support: any;
+
 	actions: any;
 
 	isLoading: boolean = false;
 
 	idorden: string = '0';
+	idrole: string | number = '0';
 	files: any[] = [];
 	formData: FormData = new FormData();
 
@@ -97,7 +101,8 @@ export class DetailsComponent implements OnInit, OnChanges {
 	) { }
 
 	ngOnInit(): void {
-		this.actions = this._menu.getAccessByRole(this._storage.getRolID(), { name: 'process.assigned-services' });
+		this.idrole = this._storage.getRolID();
+		this.actions = this._menu.getAccessByRole(this.idrole, { name: 'process.assigned-services' });
 		if (this.idtercero) {
 			this.loadData();
 			return;
@@ -465,10 +470,12 @@ export class DetailsComponent implements OnInit, OnChanges {
 		this.action = action;
 
 		this.infoDetail = { ...item, iddetalleordensoporte: '' };
-		this.files.forEach((element) => {
-			this.formData.delete(element.file.name);
+		this.formData.forEach((element, key) => {
+			this.formData.delete(key);
 		});
 		this.files = [];
+
+		console.log(this.formData, this.files);
 
 		if (item) {
 			this.getDetailSupportSelect(item.iddetalleorden);
@@ -512,12 +519,11 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	getNameDetailSoporte(id: any): string {
-		return this.files.find(e => e.iddetalleordensoporte === id)
-			.tiposoporte;
+		return this.listSupport.find(e => e.iddetalleordensoporte === id).tiposoporte;
 	}
 
 	deleteFile(f: any): void {
-		this.files = this.files.filter(w => w.name !== f.name);
+		this.files = this.files.filter(w => w.iddetalleordensoporte !== f.iddetalleordensoporte);
 	}
 
 	isIdRepeated(id: number): boolean {
@@ -554,7 +560,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 					this.isLoading = false;
 
 					if (response.codigo !== 0) {
-						this._alert.loading();
+						this._alert.closeAlert();
 						this._alert.error({
 							title: response.titulo,
 							text: response.mensaje,
@@ -571,7 +577,8 @@ export class DetailsComponent implements OnInit, OnChanges {
 						)
 					).subscribe(
 						(r: any[]) => {
-							this._alert.loading();
+							this.isLoading = false;
+							this._alert.closeAlert();
 							const i = r.filter(element => element.codigo !== 0);
 							if (i.length > 0) {
 								this._alert.error({
