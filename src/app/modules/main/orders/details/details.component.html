@@ -239,7 +239,8 @@
 										<div
 											class="grid grid-cols-2 grid-rows-2 gap-4 my-4 pb-2 border-b-2 border-gray-300">
 											<ng-container *ngIf="![2].includes(idrole)">
-												<p class="inline-flex flex-col xl:flex-row xl:items-center text-gray-800">
+												<p
+													class="inline-flex flex-col xl:flex-row xl:items-center text-gray-800">
 													<span class="text-center items-center flex">
 														<mat-icon svgIcon="heroicons_outline:currency-dollar"
 															class="mr-2"></mat-icon>
@@ -255,7 +256,8 @@
 											</ng-container>
 
 											<ng-container *ngIf="![3, 4].includes(idrole)">
-												<p class="inline-flex flex-col xl:flex-row xl:items-center text-gray-800">
+												<p
+													class="inline-flex flex-col xl:flex-row xl:items-center text-gray-800">
 													<span class="text-center items-center flex">
 														<mat-icon svgIcon="heroicons_outline:currency-dollar"
 															class="mr-2"></mat-icon>
@@ -271,15 +273,15 @@
 											</ng-container>
 
 											<ng-container *ngIf="![2].includes(idrole)">
-												<p class="inline-flex flex-col xl:flex-row xl:items-center text-gray-800">
+												<p
+													class="inline-flex flex-col xl:flex-row xl:items-center text-gray-800">
 													<span class="text-center items-center flex">
 														<mat-icon svgIcon="heroicons_outline:currency-dollar"
 															class="mr-2"></mat-icon>
 														Total de Precio de Compra:
 													</span>
-													<span class="mt-2 xl:mt-0" *ngIf="item.precio_compra">
-														{{ (item.precio_compra * item.cantidad) | currency:"COP ":"symbol"
-														}}
+													<span class="mt-2 xl:mt-0" *ngIf="item.preciocompra">
+														{{ (item.precio_compra * item.cantidad) | currency:"COP":"symbol" }}
 													</span>
 													<span class="mt-2 xl:mt-0" *ngIf="!item.precio_compra">
 														Sin precio de compra
@@ -288,14 +290,16 @@
 											</ng-container>
 
 											<ng-container *ngIf="![3, 4].includes(idrole)">
-												<p class="inline-flex flex-col xl:flex-row xl:items-center text-gray-800">
+												<p
+													class="inline-flex flex-col xl:flex-row xl:items-center text-gray-800">
 													<span class="text-center items-center flex">
 														<mat-icon svgIcon="heroicons_outline:currency-dollar"
 															class="mr-2"></mat-icon>
 														Total Precio de Venta:
 													</span>
 													<span class="mt-2 xl:mt-0" *ngIf="item.precio_venta">
-														{{ (item.precio_venta * item.cantidad) | currency:"COP ":"symbol" }}
+														{{ (item.precio_venta * item.cantidad) | currency:"COP":"symbol"
+														}}
 													</span>
 													<span class="mt-2 xl:mt-0" *ngIf="!item.precio_venta">
 														Sin precio de venta
@@ -687,35 +691,47 @@
 						<div class="flex flex-wrap justify-center mt-2">
 							<ng-container *ngFor="let file of listSupport;">
 								<ng-container *ngIf="file.estado === 'CARGADO' && file.soporte">
-									<a class="flex flex-col w-40 h-40 m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
-										[routerLink]="['./../detail-file/', file.iddetalleorden, file.iddetalleordensoporte]">
-										<div class="aspect-w-9 aspect-h-6">
-											<div class="flex items-center justify-center">
-												<!-- Icons -->
-												<div class="relative">
-													<mat-icon class="icon-size-14 text-hint"
-														[svgIcon]="'iconsmind:file'"></mat-icon>
-													<div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-														[class.bg-red-600]="file?.tipo === 'PDF'"
-														[class.bg-blue-600]="file?.tipo === 'DOC'"
-														[class.bg-green-600]="file?.tipo === 'XLS'"
-														[class.bg-gray-600]="file?.tipo === 'TXT'"
-														[class.bg-amber-600]="file?.tipo === 'JPG' || file?.tipo === 'PNG' || file?.tipo === 'JPEG'">
-														{{ file?.tipo }}
+									<div class="w-40 h-40 mb-20">
+										<a class="flex flex-col m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
+										(click)="fnModalViewFile(file)">
+											<div class="aspect-w-9 aspect-h-6">
+												<div class="flex items-center justify-center">
+													<!-- Icons -->
+													<div class="relative">
+														<mat-icon class="icon-size-14 text-hint"
+															[svgIcon]="'iconsmind:file'"></mat-icon>
+														<div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
+															[class.bg-red-600]="file?.tipo === 'PDF'"
+															[class.bg-blue-600]="file?.tipo === 'DOC'"
+															[class.bg-green-600]="file?.tipo === 'XLS'"
+															[class.bg-gray-600]="file?.tipo === 'TXT'"
+															[class.bg-amber-600]="file?.tipo === 'JPG' || file?.tipo === 'PNG' || file?.tipo === 'JPEG'">
+															{{ file?.tipo }}
+														</div>
 													</div>
 												</div>
 											</div>
-										</div>
-										<div
-											class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
-											<div class="truncate" [matTooltip]="file.tiposoporte">{{file.tiposoporte}}
-											</div>
-											<ng-container *ngIf="file.iddetalleordensoporte">
-												<div class="text-secondary truncate"># {{file.iddetalleordensoporte}}
+											<div
+												class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+												<div class="truncate" [matTooltip]="file.tiposoporte">
+													{{file.tiposoporte}}
 												</div>
-											</ng-container>
+												<ng-container *ngIf="file.iddetalleordensoporte">
+													<div class="text-secondary truncate">#
+														{{file.iddetalleordensoporte}}
+													</div>
+												</ng-container>
+											</div>
+										</a>
+										<div class="w-full px-5">
+											<a (click)="download(file.soporte)"
+												class="flex justify-center w-full bg-red-500 p-4  rounded-full tracking-wide
+										font-semibold  focus:outline-none focus:shadow-outline hover:bg-red-600 shadow-lg cursor-pointer transition ease-in duration-300 mr-2">
+												<mat-icon svgIcon="heroicons_outline:arrow-down"
+													class="text-white"></mat-icon>
+											</a>
 										</div>
-									</a>
+									</div>
 								</ng-container>
 							</ng-container>
 						</div>
@@ -730,6 +746,126 @@
 					</div>
 				</ng-container>
 			</ng-container>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal relative hidden" id="modalViewFile" aria-labelledby="modal-title" role="dialog"
+	style="z-index: 200;" aria-modal="true">
+	<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+	<div class="fixed inset-0 overflow-y-auto">
+		<div class="relative min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+			<div class="w-full p-10 bg-white rounded-xl z-10 ml-4">
+				<div class="text-center">
+					<h2 class="mt-5 text-3xl font-bold text-gray-900">
+						Soportes: #{{ infoDetail?.iddetalleorden }} - {{ infoDetail?.servicio }}({{
+						infoDetail?.tipoorden }})
+					</h2>
+				</div>
+				<div class="flex flex-row flex-auto min-w-0">
+					<ng-container>
+						<div class="flex-auto p-5 w-full">
+							<div class="relative shadow-md rounded-lg bg-card px-5 py-7">
+								<ng-container [ngSwitch]="support?.tipo">
+									<ng-container *ngSwitchCase="'PDF'">
+										<object [data]="support.soporte" type="application/pdf" class="h-100"></object>
+									</ng-container>
+									<ng-container *ngSwitchCase="'DOC'"></ng-container>
+									<ng-container *ngSwitchCase="'XLS'"></ng-container>
+									<ng-container *ngSwitchCase="'TXT'"></ng-container>
+									<ng-container *ngSwitchCase="'JPG'">
+										<ng-container *ngTemplateOutlet="tImage"></ng-container>
+									</ng-container>
+									<ng-container *ngSwitchCase="'PNG'">
+										<ng-container *ngTemplateOutlet="tImage"></ng-container>
+									</ng-container>
+									<ng-container *ngSwitchCase="'JPEG'">
+										<ng-container *ngTemplateOutlet="tImage"></ng-container>
+									</ng-container>
+								</ng-container>
+
+								<ng-template #tImage>
+									<img [src]="support.soporte" alt="">
+								</ng-template>
+							</div>
+						</div>
+					</ng-container>
+					<div class="flex-auto p-5 w-2/5">
+						<div class="relative shadow-md rounded-lg bg-card p-5">
+							<div class="flex justify-between items-center my-4">
+								<h2 class="text-2xl font-extrabold tracking-tight leading-7 truncate">
+									Archivo #{{ support?.iddetalleordensoporte }} </h2>
+								<span
+									class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{{
+									support?.estado }}</span>
+							</div>
+
+							<div class="my-4">
+								<div>
+									<span class="text-1xl whitespace-nowrap text-gray-500">
+										Soporte: {{ support?.tiposoporte }}</span>
+								</div>
+							</div>
+
+							<div class="my-4"
+								[ngClass]="{'border-b-2 border-gray-300': support?.motivorechazo && support?.idmotivorechazo}">
+								<div>
+									<span class="text-1xl whitespace-nowrap text-gray-500">
+										Observación: <p>
+											{{ support?.observacion || 'Sin observación' }}
+										</p></span>
+								</div>
+							</div>
+
+							<div class="my-4 border-b-2 border-gray-300" *ngIf="support?.motivorechazo && support?.idmotivorechazo">
+								<div>
+									<span class="text-1xl whitespace-nowrap text-gray-500">
+										Motivo de rechazo: {{ support?.motivorechazo }}</span>
+								</div>
+							</div>
+						</div>
+
+						<div class="flex justify-between mt-4">
+							<button type="submit"
+								class="my-1 mx-2 w-full flex justify-center bg-blue-500 text-gray-100 p-4 rounded-xl tracking-wide
+							font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
+							[matTooltip]="'Anterior'"
+							(click)="changeFileNextOrPrevius('previus', support)">
+								<mat-icon svgIcon="heroicons_outline:arrow-left" class="text-white"></mat-icon>
+							</button>
+							<button type="submit"
+								class="my-1 mx-2 w-full flex justify-center bg-blue-500 text-gray-100 p-4 rounded-xl tracking-wide
+							font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
+							[matTooltip]="'Siguiente'"
+							(click)="changeFileNextOrPrevius('next', support)">
+								<mat-icon svgIcon="heroicons_outline:arrow-right" class="text-white"></mat-icon>
+							</button>
+							<button type="submit"
+								(click)="download(support?.soporte)"
+								class="my-1 mx-2 w-full flex justify-center bg-blue-500 text-gray-100 p-4 rounded-xl tracking-wide
+									font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
+									[matTooltip]="'Descargar'">
+								<mat-icon svgIcon="heroicons_outline:arrow-down" class="text-white"></mat-icon>
+							</button>
+							<button type="submit"
+								class="my-1 mx-2 w-full flex justify-center bg-blue-500 text-gray-100 p-4 rounded-xl tracking-wide
+									font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
+									[matTooltip]="'Abrir en otra pestaña'"
+									[routerLink]="['./../detail-file/', support?.iddetalleorden, support?.iddetalleordensoporte]">
+									<mat-icon svgIcon="mat_outline:aspect_ratio" class="text-white"></mat-icon>
+							</button>
+						</div>
+						<button type="submit"
+							class="my-3 w-full flex justify-center bg-red-500 text-gray-100 p-4 rounded-full tracking-wide
+								font-semibold  focus:outline-none focus:shadow-outline hover:bg-red-600 shadow-lg cursor-pointer transition ease-in duration-300"
+								(click)="fnModalViewFile(null)">
+							<!-- <mat-icon svgIcon="heroicons_outline:x-mark" class="text-white"></mat-icon> -->
+							Cerrar
+						</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

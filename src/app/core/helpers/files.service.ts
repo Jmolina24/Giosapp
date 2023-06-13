@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 
-import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
 import { ApiService } from '../api/api.service';
 import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
-const EXCEL_TYPE =
-	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+import * as File from 'file-saver';
+
+const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
 
 @Injectable({
@@ -14,7 +15,7 @@ const EXCEL_EXTENSION = '.xlsx';
 })
 export class FilesService {
 
-	constructor(private _api: ApiService) {}
+	constructor(private _api: ApiService, private _http: HttpClient) {}
 
 	public exportAsExcelFile(
 		data: any[],
@@ -35,5 +36,11 @@ export class FilesService {
 
 	upload(bodyContent: FormData): Observable<any> {
 		return this._api.postFile('upload/files', bodyContent);
+	}
+
+	download(url: string): void {
+		this._http.get(url, { responseType: 'blob' }).subscribe((response: Blob) => {
+			File.saveAs(response);
+		});
 	}
 }

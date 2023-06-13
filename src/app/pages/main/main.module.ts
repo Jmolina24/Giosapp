@@ -26,6 +26,7 @@ import { FileDragNDropDirective } from 'app/core/directives/file-drag-n-drop.dir
 import { RatesComponent } from 'app/modules/main/rates/rates.component';
 import { DetailFileComponent } from 'app/modules/main/detail-file/detail-file.component';
 import { SetTimeDifferencePipe } from 'app/core/pipes/set-time-difference.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
 	declarations: [
@@ -58,7 +59,8 @@ import { SetTimeDifferencePipe } from 'app/core/pipes/set-time-difference.pipe';
 		MatInputModule,
 		MatMenuModule,
 		MatSelectModule,
-		SharedModule
+		SharedModule,
+		MatTooltipModule
 	],
 })
 export class MainModule {}

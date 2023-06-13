@@ -155,6 +155,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 		this._service.getSupports({ iddetalleorden }).subscribe((response) => {
 			this.listSupport = response.map((r) => {
 				if (r.estado === 'CARGADO' && r.soporte) {
+					r.soporte = 'https://demo.mainsoft.technology' + r.soporte.split('/web')[1];
 					const soporte = r.soporte.split('.');
 					r.tipo = soporte[soporte.length - 1].toUpperCase();
 				}
@@ -475,8 +476,6 @@ export class DetailsComponent implements OnInit, OnChanges {
 		});
 		this.files = [];
 
-		console.log(this.formData, this.files);
-
 		if (item) {
 			this.getDetailSupportSelect(item.iddetalleorden);
 		}
@@ -645,5 +644,32 @@ export class DetailsComponent implements OnInit, OnChanges {
 		}
 
 		this.fnPagination();
+	}
+
+	download(url: string): void {
+		this._file.download(url);
+	}
+
+	fnModalViewFile(file: any = null): void {
+		if (file) {
+			this.support = file;
+		}
+
+		const modal = document.getElementById('modalViewFile');
+
+		modal.classList.toggle('hidden');
+	}
+
+	changeFileNextOrPrevius(section: 'next' | 'previus', file: any): void {
+		const d = this.listSupport.findIndex(r => r.iddetalleordensoporte === file.iddetalleordensoporte);
+
+		switch (section) {
+			case 'next':
+				this.support = this.listSupport[d + 1 === this.listSupport.length ? 0 : d + 1];
+				break;
+			case 'previus':
+				this.support = this.listSupport[d === 0 ? 0 : d - 1];
+				break;
+		}
 	}
 }
