@@ -5,11 +5,11 @@ import { AuthSignOutComponent } from 'app/modules/auth/sign-out/sign-out.compone
 
 const routes: Routes = [
 	{
-		path: 'sign-in',
+		path: 'iniciar-sesion',
 		component: AuthSignInComponent
 	},
 	{
-		path: 'sign-out',
+		path: 'cerrar-sesion',
 		component: AuthSignOutComponent
 	}
 ];

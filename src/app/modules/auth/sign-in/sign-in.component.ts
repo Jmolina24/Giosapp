@@ -67,7 +67,7 @@ export class AuthSignInComponent implements OnInit {
 					this._storage.saveRolId(idrol);
 
 					if (this._storage.getUserId()) {
-						this._router.navigate(['/dashboard/home']);
+						this._router.navigate(['/panel/inicio']);
 					}
 				}
 			},

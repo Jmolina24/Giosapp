@@ -33,7 +33,7 @@ export class AuthGuard implements CanActivate {
 		if (this._storage.getToken()) {
 			return true;
 		}
-		this._router.navigate(['/auth/sign-in']);
+		this._router.navigate(['/autenticacion/iniciar-sesion']);
 		return false;
 	}
 }

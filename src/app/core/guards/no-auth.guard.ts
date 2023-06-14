@@ -32,7 +32,7 @@ export class NoAuthGuard implements CanActivate {
 		if (!this._storage.getToken()) {
 			return true;
 		}
-		this._router.navigate(['/dashboard']);
+		this._router.navigate(['/panel']);
 		return false;
 	}
 }

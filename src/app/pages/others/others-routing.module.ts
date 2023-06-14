@@ -4,7 +4,7 @@ import { Error404Component } from 'app/modules/others/error-404/error-404.compon
 
 const routes: Routes = [
 	{
-		path: '404-not-found',
+		path: '404',
 		component: Error404Component
 	}
 ];

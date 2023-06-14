@@ -242,4 +242,10 @@ export class RolesComponent implements OnInit {
 	generateExcel(): void {
 		this._files.exportAsExcelFile(this.list, 'roles');
 	}
+
+	fnBtnModal(): void {
+		const modal = document.getElementById('modalConfigMenu');
+
+		modal.classList.toggle('hidden');
+	}
 }

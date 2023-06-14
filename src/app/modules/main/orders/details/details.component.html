@@ -768,33 +768,31 @@
 					</h2>
 				</div>
 				<div class="flex flex-row flex-auto min-w-0">
-					<ng-container>
-						<div class="flex-auto p-5 w-full">
-							<div class="relative shadow-md rounded-lg bg-card px-5 py-7">
-								<ng-container [ngSwitch]="support?.tipo">
-									<ng-container *ngSwitchCase="'PDF'">
-										<object [data]="support.soporte" type="application/pdf" class="h-100"></object>
-									</ng-container>
-									<ng-container *ngSwitchCase="'DOC'"></ng-container>
-									<ng-container *ngSwitchCase="'XLS'"></ng-container>
-									<ng-container *ngSwitchCase="'TXT'"></ng-container>
-									<ng-container *ngSwitchCase="'JPG'">
-										<ng-container *ngTemplateOutlet="tImage"></ng-container>
-									</ng-container>
-									<ng-container *ngSwitchCase="'PNG'">
-										<ng-container *ngTemplateOutlet="tImage"></ng-container>
-									</ng-container>
-									<ng-container *ngSwitchCase="'JPEG'">
-										<ng-container *ngTemplateOutlet="tImage"></ng-container>
-									</ng-container>
+					<div class="flex-auto p-5 w-full">
+						<div class="relative shadow-md rounded-lg bg-card px-5 py-7">
+							<ng-container [ngSwitch]="support?.tipo">
+								<ng-container *ngSwitchCase="'PDF'">
+									<object [data]="support.soporte" type="application/pdf" class="h-100"></object>
 								</ng-container>
+								<ng-container *ngSwitchCase="'DOC'"></ng-container>
+								<ng-container *ngSwitchCase="'XLS'"></ng-container>
+								<ng-container *ngSwitchCase="'TXT'"></ng-container>
+								<ng-container *ngSwitchCase="'JPG'">
+									<ng-container *ngTemplateOutlet="tImage"></ng-container>
+								</ng-container>
+								<ng-container *ngSwitchCase="'PNG'">
+									<ng-container *ngTemplateOutlet="tImage"></ng-container>
+								</ng-container>
+								<ng-container *ngSwitchCase="'JPEG'">
+									<ng-container *ngTemplateOutlet="tImage"></ng-container>
+								</ng-container>
+							</ng-container>
 
-								<ng-template #tImage>
-									<img [src]="support.soporte" alt="">
-								</ng-template>
-							</div>
+							<ng-template #tImage>
+								<img [src]="support.soporte" alt="">
+							</ng-template>
 						</div>
-					</ng-container>
+					</div>
 					<div class="flex-auto p-5 w-2/5">
 						<div class="relative shadow-md rounded-lg bg-card p-5">
 							<div class="flex justify-between items-center my-4">
@@ -856,7 +854,7 @@
 								class="my-1 mx-2 w-full flex justify-center bg-blue-500 text-gray-100 p-4 rounded-xl tracking-wide
 									font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
 									[matTooltip]="'Abrir en otra pestaña'"
-									[routerLink]="['./../detail-file/', support?.iddetalleorden, support?.iddetalleordensoporte]">
+									[routerLink]="['./../archivo-detalle/', support?.iddetalleorden, support?.iddetalleordensoporte]">
 									<mat-icon svgIcon="mat_outline:aspect_ratio" class="text-white"></mat-icon>
 							</button>
 						</div>

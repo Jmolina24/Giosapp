@@ -12,15 +12,15 @@ import { UsersComponent } from 'app/modules/main/users/users.component';
 
 const routes: Routes = [
 	{
-		path: 'home',
+		path: 'inicio',
 		component: HomeComponent
 	},
 	{
-		path: 'users',
+		path: 'usuarios',
 		component: UsersComponent
 	},
 	{
-		path: 'clients',
+		path: 'clientes',
 		children: [
 			{
 				path: '',
@@ -33,7 +33,7 @@ const routes: Routes = [
 		component: RolesComponent
 	},
 	{
-		path: 'orders',
+		path: 'ordenes',
 		children: [
 			{
 				path: '',
@@ -42,27 +42,27 @@ const routes: Routes = [
 		]
 	},
 	{
-		path: 'services',
+		path: 'servicios',
 		component: ServicesComponent
 	},
 	{
-		path: 'third-parties',
+		path: 'terceros',
 		component: ThirdPartiesComponent
 	},
 	{
-		path: 'parameter-setting',
+		path: 'parametrizacion',
 		component: ParameterSettingComponent
 	},
 	{
-		path: 'assigned-services',
+		path: 'servicios-asignados',
 		component: AssignedServicesComponent
 	},
 	{
-		path: 'rates',
+		path: 'tarifarios',
 		component: RatesComponent
 	},
 	{
-		path: 'detail-file/:iddetalleorden/:iddetalleordensoporte',
+		path: 'archivo-detalle/:iddetalleorden/:iddetalleordensoporte',
 		component: DetailFileComponent
 	}
 ];

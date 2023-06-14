@@ -6,9 +6,9 @@ import { NoAuthGuard } from './core/guards/no-auth.guard';
 import { AccessGuard } from './core/guards/access.guard';
 
 const routes: Routes = [
-	{ path: '', pathMatch: 'full', redirectTo: 'dashboard/home' },
+	{ path: '', pathMatch: 'full', redirectTo: 'panel/inicio' },
 	{
-		path: 'auth',
+		path: 'autenticacion',
 		data: {
 			layout: 'empty',
 		},
@@ -25,7 +25,7 @@ const routes: Routes = [
 		canActivate: [NoAuthGuard],
 	},
 	{
-		path: 'dashboard',
+		path: 'panel',
 		component: LayoutComponent,
 		children: [
 			{
@@ -39,7 +39,7 @@ const routes: Routes = [
 		canActivate: [AuthGuard, AccessGuard],
 	},
 	{
-		path: 'others',
+		path: 'otros',
 		component: LayoutComponent,
 		data: {
 			layout: 'empty',
@@ -55,7 +55,7 @@ const routes: Routes = [
 		],
 		canActivate: [AuthGuard],
 	},
-	{ path: '**', redirectTo: 'others/404-not-found' },
+	{ path: '**', redirectTo: 'otros/404' },
 ];
 
 @NgModule({
