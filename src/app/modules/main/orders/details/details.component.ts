@@ -102,13 +102,14 @@ export class DetailsComponent implements OnInit, OnChanges {
 
 	ngOnInit(): void {
 		this.idrole = this._storage.getRolID();
-		this.actions = this._menu.getAccessByRole(this.idrole, { name: 'process.assigned-services' });
 		if (this.idtercero) {
+			this.actions = this._menu.getAccessByRole(this.idrole, { name: 'process.assigned-services' });
 			this.loadData();
 			return;
 		}
 		this.route.params.subscribe((params) => {
 			this.idorden = params['id'];
+			this.actions = this._menu.getAccessByRole(this.idrole, { name: 'process.orders' });
 			if (!this.idorden) {
 				return;
 			}
@@ -377,6 +378,11 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	showSection(section: 'add' | 'edit' | 'assign', data = null): void {
+
+		if (!section) {
+			this.section = section;
+			return;
+		}
 
 		if (!data && section === 'add') {
 			this.section = section;

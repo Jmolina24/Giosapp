@@ -48,7 +48,7 @@ export type Actions =
 		inactive?: boolean;
 		upload?: boolean;
 		changeStatus?: boolean;
-		assing?: boolean;
+		assign?: boolean;
 		viewFn?: { name: string; view: boolean }[];
 	}
 	| '*';
@@ -86,8 +86,8 @@ export class MenuService {
 				{ name: 'menu', actions: '*' },
 				{ name: 'menu.home', actions: '*' },
 				{ name: 'process', actions: '*' },
-				{ name: 'process.orders', actions: { list: true, edit: true, assing: true, changeStatus: true, viewDetail: true }},
-				{ name: 'process.assigned-services', actions: { viewDetail: true, list: true, assing: true, changeStatus: true }}
+				{ name: 'process.orders', actions: { list: true, edit: true, assign: true, changeStatus: true, viewDetail: true }},
+				{ name: 'process.assigned-services', actions: { viewDetail: true, list: true, assign: true, changeStatus: true }}
 			],
 			name: ['Facilitador'],
 		},
@@ -139,7 +139,7 @@ export class MenuService {
 		return menu
 			.filter((e: any) => seccionesPermitidas.access.find(y => y.name === e.id))
 			.map((e) => {
-				e.children = e.children.filter((x: { id: string; }) =>
+				e.children = e.children.filter((x: { id: string }) =>
 					seccionesPermitidas.access.find(y => y.name === x.id)
 				);
 				return e;
@@ -149,11 +149,11 @@ export class MenuService {
 	getAccessByRole(idrole: any, { name }: Access): Actions {
 		let access = JSON.parse(JSON.stringify(this.roleAccesMenu));
 
-		access = access.find((r: { id: string | any[]; }) => r.id.includes(idrole))
+		access = access.find((r: { id: string | any[] }) => r.id.includes(idrole));
 
 		if (access.id.includes(1)) {
 			return access.access[0].actions;
 		}
-		return access.access.find((r: { name: string; }) => r.name === name)?.actions;
+		return access.access.find((r: { name: string }) => r.name === name)?.actions;
 	}
 }
