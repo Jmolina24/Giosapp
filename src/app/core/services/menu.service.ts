@@ -5,19 +5,22 @@ import { navigation } from 'app/layout/layouts/classy/navigation';
 import { StorageService } from '../helpers/storage.service';
 
 export interface Access {
-	name: 'menu' | 'menu.home' | 'menu.settings'
-	| 'access'
-	| 'access.roles'
-	| 'access.users'
-	| 'administration'
-	| 'administration.clients'
-	| 'administration.services'
-	| 'administration.third-parties'
-	| 'administration.rates'
-	| 'process'
-	| 'process.orders'
-	| 'process.assigned-services'
-	| '*';
+	name:
+		| 'menu'
+		| 'menu.home'
+		| 'menu.settings'
+		| 'access'
+		| 'access.roles'
+		| 'access.users'
+		| 'administration'
+		| 'administration.clients'
+		| 'administration.services'
+		| 'administration.third-parties'
+		| 'administration.rates'
+		| 'process'
+		| 'process.orders'
+		| 'process.assigned-services'
+		| '*';
 	actions?: Actions;
 }
 
@@ -40,17 +43,22 @@ interface Menu {
 
 export type Actions =
 	| {
-		create?: boolean;
-		edit?: boolean;
-		view?: boolean;
-		viewDetail?: boolean;
-		list?: boolean;
-		inactive?: boolean;
-		upload?: boolean;
-		changeStatus?: boolean;
-		assign?: boolean;
-		viewFn?: { name: string; view: boolean }[];
-	}
+			create?: boolean;
+			edit?: boolean;
+			view?: boolean;
+			createDetail?: boolean;
+			listDetail?: boolean;
+			editDetail?: boolean;
+			viewDetail?: boolean;
+			list?: boolean;
+			inactive?: boolean;
+			upload?: boolean;
+			viewSupport?: boolean;
+			changeStatus?: boolean;
+			changeStatusDetail?: boolean;
+			assign?: boolean;
+			viewFn?: { name: string; view: boolean }[];
+	  }
 	| '*';
 
 @Injectable({
@@ -63,22 +71,46 @@ export class MenuService {
 		{
 			id: [1],
 			access: [{ name: '*', actions: '*' }],
-			name: ['Administrador']
+			name: ['Administrador'],
 		},
 		{
 			id: [2],
-			access: [{ name: 'menu', actions: '*' }, { name: 'menu.home', actions: '*' }, { name: 'process', actions: '*' }, { name: 'process.orders', actions: { create: true, list: true, viewDetail: true } }, { name: 'process.assigned-services', actions: { create: true, edit: true, list: true, viewDetail: true } }],
-			name: ['Cliente'],
-		},
-		{
-			id: [3, 4],
 			access: [
 				{ name: 'menu', actions: '*' },
 				{ name: 'menu.home', actions: '*' },
 				{ name: 'process', actions: '*' },
-				{ name: 'process.assigned-services', actions: { list: true, upload: true, changeStatus: true } },
+				{
+					name: 'process.orders',
+					actions: { create: true, list: true, viewDetail: true, listDetail: true },
+				},
 			],
-			name: ['Proveedor', 'Contratista'],
+			name: ['Cliente'],
+		},
+		{
+			id: [3],
+			access: [
+				{ name: 'menu', actions: '*' },
+				{ name: 'menu.home', actions: '*' },
+				{ name: 'process', actions: '*' },
+				{
+					name: 'process.assigned-services',
+					actions: { listDetail: true, upload: true, changeStatusDetail: true },
+				},
+			],
+			name: ['Proveedor'],
+		},
+		{
+			id: [4],
+			access: [
+				{ name: 'menu', actions: '*' },
+				{ name: 'menu.home', actions: '*' },
+				{ name: 'process', actions: '*' },
+				{
+					name: 'process.assigned-services',
+					actions: { listDetail: true, upload: true, changeStatusDetail: true, viewSupport: true },
+				},
+			],
+			name: ['Contratista'],
 		},
 		{
 			id: [5],
@@ -86,8 +118,10 @@ export class MenuService {
 				{ name: 'menu', actions: '*' },
 				{ name: 'menu.home', actions: '*' },
 				{ name: 'process', actions: '*' },
-				{ name: 'process.orders', actions: { list: true, edit: true, assign: true, changeStatus: true, viewDetail: true }},
-				{ name: 'process.assigned-services', actions: { viewDetail: true, list: true, assign: true, changeStatus: true }}
+				{
+					name: 'process.orders',
+					actions: { edit: true, list: true, viewDetail: true, listDetail: true, assign: true, changeStatusDetail: true },
+				},
 			],
 			name: ['Facilitador'],
 		},
@@ -97,10 +131,13 @@ export class MenuService {
 				{ name: 'menu', actions: '*' },
 				{ name: 'menu.home', actions: '*' },
 				{ name: 'process', actions: '*' },
-				{ name: 'process.orders', actions: { list: true, viewDetail: true } },
-				{ name: 'process.assigned-services', actions: { list: true } },
+				{
+					name: 'process.orders',
+					actions: { list: true, viewDetail: true, listDetail: true },
+				},
+				{ name: 'process.assigned-services', actions: { listDetail: true } },
 			],
-			name: ['Facturacion']
+			name: ['Facturacion'],
 		},
 		{
 			id: [7],
@@ -108,14 +145,17 @@ export class MenuService {
 				{ name: 'menu', actions: '*' },
 				{ name: 'menu.home', actions: '*' },
 				{ name: 'process', actions: '*' },
-				{ name: 'process.orders', actions: { list: true, viewDetail: true } },
-				{ name: 'process.assigned-services', actions: { list: true } },
+				{
+					name: 'process.orders',
+					actions: { list: true, viewDetail: true, listDetail: true },
+				},
+				{ name: 'process.assigned-services', actions: { listDetail: true } },
 			],
-			name: ['Administrativo']
+			name: ['Administrativo'],
 		},
 	];
 
-	constructor() { }
+	constructor() {}
 
 	getMenu(): any[] {
 		return this.menu;
@@ -137,7 +177,9 @@ export class MenuService {
 		}
 
 		return menu
-			.filter((e: any) => seccionesPermitidas.access.find(y => y.name === e.id))
+			.filter((e: any) =>
+				seccionesPermitidas.access.find(y => y.name === e.id)
+			)
 			.map((e) => {
 				e.children = e.children.filter((x: { id: string }) =>
 					seccionesPermitidas.access.find(y => y.name === x.id)
@@ -149,11 +191,14 @@ export class MenuService {
 	getAccessByRole(idrole: any, { name }: Access): Actions {
 		let access = JSON.parse(JSON.stringify(this.roleAccesMenu));
 
-		access = access.find((r: { id: string | any[] }) => r.id.includes(idrole));
+		access = access.find((r: { id: string | any[] }) =>
+			r.id.includes(idrole)
+		);
 
 		if (access.id.includes(1)) {
 			return access.access[0].actions;
 		}
-		return access.access.find((r: { name: string }) => r.name === name)?.actions;
+		return access.access.find((r: { name: string }) => r.name === name)
+			?.actions;
 	}
 }

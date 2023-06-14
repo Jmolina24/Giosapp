@@ -1,4 +1,4 @@
-<ng-container *ngIf="actions?.list || actions === '*' || actions?.viewDetail">
+<ng-container *ngIf="actions?.listDetail || actions === '*'">
 	<div class="flex flex-row flex-auto p-4">
 		<ng-container *ngIf="viewInfoOrden">
 			<div class="flex flex-col border-b rounded-xl bg-card w-1/3 p-3 mr-2">
@@ -10,7 +10,7 @@
 								[routerLink]="['/dashboard/orders']">
 								Regresar
 							</button>
-							<ng-container *ngIf="actions?.create || actions === '*'">
+							<ng-container *ngIf="actions?.createDetail || actions === '*'">
 								<button type="button" class="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4
 								focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
 									(click)="showSection('add')">Crear</button>
@@ -312,9 +312,10 @@
 							</ng-container>
 							<div class="flex justify-between mt-2">
 								<div>
+									<!-- Cliente -->
 									<ng-container *ngIf="viewInfoOrden || !idtercero">
 										<ng-container *ngIf="item.estado === 'POR ASIGNAR'">
-											<ng-container *ngIf="actions?.edit || actions === '*'">
+											<ng-container *ngIf="actions?.editDetail || actions === '*'">
 												<button type="button"
 													class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 													(click)="showSection('edit', item)">Editar</button>
@@ -331,6 +332,7 @@
 												(click)="fnBtnModal('view', item)">Visualizar soportes</button>
 										</ng-container>
 									</ng-container>
+									<!-- Servicios asignados -->
 									<ng-container *ngIf="!viewInfoOrden">
 										<ng-container *ngIf="item.estado === 'ASIGNADA'">
 											<ng-container *ngIf="actions?.upload || actions === '*'">
@@ -339,11 +341,13 @@
 													(click)="fnBtnModal('upload', item)">Cargar soportes</button>
 											</ng-container>
 										</ng-container>
-										<button type="button"
-											class="text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-											(click)="fnBtnModal('view', item)">Visualizar soportes</button>
+										<ng-container *ngIf="actions?.viewSupport || actions === '*'">
+											<button type="button"
+												class="text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+												(click)="fnBtnModal('view', item)">Visualizar soportes</button>
+										</ng-container>
 										<ng-container *ngIf="item.estado === 'ASIGNADA'">
-											<ng-container *ngIf="actions?.changeStatus || actions === '*'">
+											<ng-container *ngIf="actions?.changeStatusDetail || actions === '*'">
 												<button type="button"
 													class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 													(click)="changeStatusOrderDetail(item, 'P')">Finalizar</button>
@@ -553,7 +557,7 @@
 									(click)="create()">Guardar</button>
 							</ng-container>
 							<ng-container *ngSwitchCase="'edit'">
-								<ng-container *ngIf="actions?.edit || actions === '*'">
+								<ng-container *ngIf="actions?.editDetail || actions === '*'">
 									<button type="button"
 										class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 										(click)="update()">Editar</button>

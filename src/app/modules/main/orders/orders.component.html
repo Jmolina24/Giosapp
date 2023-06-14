@@ -229,8 +229,10 @@
 													class="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-3">Ver
 													Detalles</a>
 											</ng-container>
-											<a (click)="showSection('edit', item)"
-												class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">Editar</a>
+											<ng-container *ngIf="actions?.edit || actions === '*'">
+												<a (click)="showSection('edit', item)"
+													class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">Editar</a>
+											</ng-container>
 										</td>
 									</tr>
 								</ng-container>

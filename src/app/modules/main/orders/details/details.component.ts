@@ -125,7 +125,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	loadData(): void {
-		if (this.actions === '*' || this.actions?.list || this.actions?.viewDetail) {
+		if (this.actions === '*' || this.actions?.listDetail || this.actions?.viewDetail) {
 			this.get(this.idorden);
 
 			this.getByOrden(this.idorden);
@@ -183,7 +183,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	changeStatusOrderDetail({ iddetalleorden }, status: 'F' | 'P' = 'P'): void {
-		if (this.actions.changeStatus || this.actions === '*') {
+		if (this.actions.changeStatusDetail || this.actions === '*') {
 			this._alert.loading();
 
 			this._service
