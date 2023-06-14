@@ -9,7 +9,7 @@ const routes: Routes = [
 		component: ClientsComponent
 	},
 	{
-		path: 'site/:id',
+		path: 'sede/:id',
 		component: DetailSiteComponent
 	}
 ];

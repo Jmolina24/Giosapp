@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FilesService } from 'app/core/helpers/files.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
+import { MenuService } from 'app/core/services/menu.service';
 import { RolesService } from 'app/core/services/roles.service';
 import { Subject } from 'rxjs';
 
@@ -13,6 +14,8 @@ import { Subject } from 'rxjs';
 export class RolesComponent implements OnInit {
 	list: any[] = [];
 	listCopy: any[] = [];
+
+	menu: any[] = [];
 
 	data: any = null;
 
@@ -37,12 +40,14 @@ export class RolesComponent implements OnInit {
 	constructor(
 		private _service: RolesService,
 		private _alert: SweetAlertService,
-		private _files: FilesService
+		private _files: FilesService,
+		private _menu: MenuService
 	) {}
 
 	ngOnInit(): void {
 		this.get();
 		this.search();
+		this.fnBtnModal();
 	}
 
 	get(): void {
@@ -247,5 +252,8 @@ export class RolesComponent implements OnInit {
 		const modal = document.getElementById('modalConfigMenu');
 
 		modal.classList.toggle('hidden');
+
+		this.menu = JSON.parse(JSON.stringify(this._menu.getMenu()));
+		console.log(this._menu.getMenu());
 	}
 }

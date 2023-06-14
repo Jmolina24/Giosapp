@@ -23,10 +23,10 @@ export class AccessGuard implements CanActivate {
 		| Promise<boolean | UrlTree>
 		| boolean
 		| UrlTree {
-		const menu = this._menu.getMenuByRole(this._storage.getRolID());
-		const menuChildren = menu.filter(
-			r => r.children.length > 0 || r.type === 'collapsable'
-		);
+		// const menu = this._menu.getMenuByRole(this._storage.getRolID());
+		// const menuChildren = menu.filter(
+		// 	r => r.children.length > 0 || r.type === 'collapsable'
+		// );
 		return true;
 	}
 }

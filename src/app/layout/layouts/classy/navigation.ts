@@ -1,24 +1,27 @@
 const navigation = [
 	{
-		id: 'menu',
-		title: 'Menú',
+		id: 'home',
+		title: 'Inicio',
 		subtitle: '',
-		type: 'collapsable',
+		type: 'basic',
 		icon: 'heroicons_outline:home',
-		children: [
+		link: '/panel/inicio',
+		actions: []
+	},
+	{
+		id: 'parameterization',
+		title: 'Parametrización',
+		type: 'basic',
+		icon: 'heroicons_outline:cog',
+		link: '/panel/parametrizacion',
+		actions: [
+			{ id: 'create', status: false, name: 'Crear' },
+			{ id: 'edit', status: false, name: 'Editar' },
+			{ id: 'list', status: false, name: 'Listar' },
 			{
-				id: 'menu.home',
-				title: 'Inicio',
-				type: 'basic',
-				icon: 'heroicons_outline:home',
-				link: '/panel/inicio',
-			},
-			{
-				id: 'menu.settings',
-				title: 'Parametrización',
-				type: 'basic',
-				icon: 'heroicons_outline:cog',
-				link: '/panel/parametrizacion',
+				id: 'changeStatus',
+				status: false,
+				name: 'Cambiar de Estado',
 			},
 		],
 	},
@@ -35,6 +38,16 @@ const navigation = [
 				type: 'basic',
 				icon: 'heroicons_outline:key',
 				link: '/panel/roles',
+				actions: [
+					{ id: 'create', status: false, name: 'Crear' },
+					{ id: 'edit', status: false, name: 'Editar' },
+					{ id: 'list', status: false, name: 'Listar' },
+					{
+						id: 'changeStatus',
+						status: false,
+						name: 'Cambiar de Estado',
+					},
+				],
 			},
 			{
 				id: 'access.users',
@@ -42,6 +55,16 @@ const navigation = [
 				type: 'basic',
 				icon: 'heroicons_outline:users',
 				link: '/panel/usuarios',
+				actions: [
+					{ id: 'create', status: false, name: 'Crear' },
+					{ id: 'edit', status: false, name: 'Editar' },
+					{ id: 'list', status: false, name: 'Listar' },
+					{
+						id: 'changeStatus',
+						status: false,
+						name: 'Cambiar de Estado',
+					},
+				],
 			},
 		],
 	},
@@ -58,6 +81,19 @@ const navigation = [
 				type: 'basic',
 				icon: 'heroicons_outline:document-report',
 				link: '/panel/clientes',
+				actions: [
+					{ id: 'create', status: false, name: 'Crear' },
+					{ id: 'edit', status: false, name: 'Editar' },
+					{ id: 'list', status: false, name: 'Listar' },
+					{
+						id: 'changeStatus',
+						status: false,
+						name: 'Cambiar de Estado',
+					},
+					{ id: 'view_sites', status: false, name: 'Ver Sedes' },
+					{ id: 'create_site', status: false, name: 'Crear Sede' },
+					{ id: 'edit_site', status: false, name: 'Editar Sede' },
+				],
 			},
 			{
 				id: 'administration.services',
@@ -65,6 +101,16 @@ const navigation = [
 				type: 'basic',
 				icon: 'heroicons_outline:view-list',
 				link: '/panel/servicios',
+				actions: [
+					{ id: 'create', status: false, name: 'Crear' },
+					{ id: 'edit', status: false, name: 'Editar' },
+					{ id: 'list', status: false, name: 'Listar' },
+					{
+						id: 'changeStatus',
+						status: false,
+						name: 'Cambiar de Estado',
+					},
+				],
 			},
 			{
 				id: 'administration.third-parties',
@@ -72,6 +118,16 @@ const navigation = [
 				type: 'basic',
 				icon: 'heroicons_outline:user',
 				link: '/panel/terceros',
+				actions: [
+					{ id: 'create', status: false, name: 'Crear' },
+					{ id: 'edit', status: false, name: 'Editar' },
+					{ id: 'list', status: false, name: 'Listar' },
+					{
+						id: 'changeStatus',
+						status: false,
+						name: 'Cambiar de Estado',
+					},
+				],
 			},
 			{
 				id: 'administration.rates',
@@ -79,6 +135,16 @@ const navigation = [
 				type: 'basic',
 				icon: 'mat_outline:library_books',
 				link: '/panel/tarifarios',
+				actions: [
+					{ id: 'create', status: false, name: 'Crear' },
+					{ id: 'edit', status: false, name: 'Editar' },
+					{ id: 'list', status: false, name: 'Listar' },
+					{
+						id: 'changeStatus',
+						status: false,
+						name: 'Cambiar de Estado',
+					},
+				],
 			},
 		],
 	},
@@ -95,6 +161,42 @@ const navigation = [
 				type: 'basic',
 				icon: 'heroicons_outline:clipboard-list',
 				link: '/panel/ordenes',
+				actions: [
+					{ id: 'create', status: false, name: 'Crear' },
+					{ id: 'edit', status: false, name: 'Editar' },
+					{ id: 'list', status: false, name: 'Listar' },
+					{
+						id: 'changeStatusDetail',
+						status: false,
+						name: 'Cambiar de Estado Detalle',
+					},
+					{ id: 'view_details', status: false, name: 'Ver Detalle' },
+					{
+						id: 'create_detail',
+						status: false,
+						name: 'Crear Detalle',
+					},
+					{
+						id: 'edit_detail',
+						status: false,
+						name: 'Editar Detalle',
+					},
+					{
+						id: 'assign_detail',
+						status: false,
+						name: 'Asignar Detalle',
+					},
+					{
+						id: 'upload_support',
+						status: false,
+						name: 'Cargar Soporte',
+					},
+					{
+						id: 'view_support',
+						status: false,
+						name: 'Visualizar Soporte',
+					},
+				],
 			},
 			{
 				id: 'process.assigned-services',
@@ -102,6 +204,39 @@ const navigation = [
 				type: 'basic',
 				icon: 'mat_outline:ballot',
 				link: '/panel/servicios-asignados',
+				actions: [
+					{
+						id: 'changeStatusDetail',
+						status: false,
+						name: 'Cambiar de Estado Detalle',
+					},
+					{ id: 'view_details', status: false, name: 'Ver Detalle' },
+					{
+						id: 'create_detail',
+						status: false,
+						name: 'Crear Detalle',
+					},
+					{
+						id: 'edit_detail',
+						status: false,
+						name: 'Editar Detalle',
+					},
+					{
+						id: 'assign_detail',
+						status: false,
+						name: 'Asignar Detalle',
+					},
+					{
+						id: 'upload_support',
+						status: false,
+						name: 'Cargar Soporte',
+					},
+					{
+						id: 'view_support',
+						status: false,
+						name: 'Visualizar Soporte',
+					},
+				],
 			},
 		],
 	},

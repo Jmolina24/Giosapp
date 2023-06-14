@@ -20,7 +20,7 @@
 				</mat-optgroup>
 				<ng-container *ngFor="let result of resultSet.results; trackBy: trackByFn">
 					<mat-option
-						class="group relative mb-1 py-0 px-6 text-md rounded-md hover:bg-gray-100 dark:hover:bg-hover"
+						class="group relative mb-1 py-0 px-6 text-md rounded-md hover:bg-gray-100"
 						[routerLink]="result.link">
 						<!-- Users -->
 						<ng-container *ngIf="resultSet.id === 'users'">
@@ -66,7 +66,7 @@
 				</mat-optgroup>
 				<ng-container *ngFor="let result of resultSet.results; trackBy: trackByFn">
 					<mat-option
-						class="group relative mb-1 py-0 px-6 text-md rounded-md hover:bg-gray-100 dark:hover:bg-hover"
+						class="group relative mb-1 py-0 px-6 text-md rounded-md hover:bg-gray-100"
 						[routerLink]="result.link">
 						<!-- Users -->
 						<ng-container *ngIf="resultSet.id === 'users'">
@@ -92,9 +92,9 @@
 <ng-template #userResult let-result>
 	<div class="flex items-center">
 		<div
-			class="flex flex-shrink-0 items-center justify-center w-8 h-8 rounded-full overflow-hidden bg-primary-100 dark:bg-primary-800">
+			class="flex flex-shrink-0 items-center justify-center w-8 h-8 rounded-full overflow-hidden bg-primary-100">
 			<img *ngIf="result.avatar" [src]="result.avatar">
-			<mat-icon class="m-0 icon-size-5 text-primary dark:text-primary-400" *ngIf="!result.avatar"
+			<mat-icon class="m-0 icon-size-5 text-primary" *ngIf="!result.avatar"
 				[svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
 		</div>
 		<div class="ml-3 truncate">
@@ -117,7 +117,7 @@
 <ng-template #taskResult let-result>
 	<div class="flex items-center">
 		<ng-container *ngIf="result.completed">
-			<mat-icon class="mr-0 text-primary dark:text-primary-400"
+			<mat-icon class="mr-0 text-primary"
 				[svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
 		</ng-container>
 		<ng-container *ngIf="!result.completed">

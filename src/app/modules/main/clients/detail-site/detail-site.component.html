@@ -20,7 +20,7 @@
 							<div class="flex flex-col items-center">
 								<div class="text-4xl font-bold tracking-tight leading-none text-blue-500">{{ list.length
 									}}</div>
-								<div class="text-sm font-medium text-blue-600 dark:text-blue-500">Total</div>
+								<div class="text-sm font-medium text-blue-600">Total</div>
 							</div>
 						</div>
 
@@ -44,7 +44,7 @@
 					<div class="flex justify-between">
 						<button type="button" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4
 							focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mx-2"
-							[routerLink]="['/dashboard/clients']">
+							[routerLink]="['/panel/clientes']">
 							<!-- <mat-icon svgIcon="heroicons_outline:arrow-left"></mat-icon> -->
 							Regresar
 						</button>
@@ -138,7 +138,7 @@
 					<label for="table-search" class="sr-only">Search</label>
 					<div class="relative">
 						<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-							<svg class="w-5 h-5 text-gray-500 dark:text-gray-400" aria-hidden="true" fill="currentColor"
+							<svg class="w-5 h-5 text-gray-500" aria-hidden="true" fill="currentColor"
 								viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
 								<path fill-rule="evenodd"
 									d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
@@ -146,19 +146,19 @@
 							</svg>
 						</div>
 						<input type="text" id="table-search"
-							class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+							class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
 							placeholder="Buscar" (keyup)="searchTerm$.next($event.target.value)">
 					</div>
 				</div>
 			</div>
 			<div class="">
-				<table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-					<thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+				<table class="w-full text-sm text-left text-gray-500">
+					<thead class="text-xs text-gray-700 uppercase bg-gray-50">
 						<tr>
 							<th scope="col" class="p-4">
 								<div class="flex items-center">
 									<input id="checkbox-all-search" type="checkbox"
-										class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+										class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
 									<label for="checkbox-all-search" class="sr-only">checkbox</label>
 								</div>
 							</th>
@@ -193,11 +193,11 @@
 						<ng-container *ngIf="list.length; else noContent">
 							<ng-container *ngFor="let item of contentPagination.pages[contentPagination.current].data;">
 								<tr
-									class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+									class="bg-white border-b">
 									<td class="w-4 p-4">
 										<div class="flex items-center">
 											<input id="checkbox-table-search-1" type="checkbox"
-												class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+												class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
 											<label for="checkbox-table-search-1" class="sr-only">checkbox</label>
 										</div>
 									</td>
@@ -205,7 +205,7 @@
 										{{ item.idclientesede }}
 									</td>
 									<td scope="row"
-										class="px-6 py-4 text-left font-medium text-gray-900 whitespace-nowrap dark:text-white">
+										class="px-6 py-4 text-left font-medium text-gray-900 whitespace-nowrap">
 										{{ item.cliensede }}
 									</td>
 									<td class="px-6 py-4 text-center">
@@ -228,7 +228,7 @@
 									</td>
 									<td class="px-6 py-4 text-center">
 										<a (click)="showSection('edit', item)"
-											class="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">Editar</a>
+											class="font-medium text-blue-600 hover:underline cursor-pointer">Editar</a>
 									</td>
 								</tr>
 							</ng-container>
@@ -236,7 +236,7 @@
 
 						<ng-template #noContent>
 							<tr>
-								<td colspan="6" class="px-6 py-4 text-center">Sin información</td>
+								<td colspan="9" class="px-6 py-4 text-center">Sin información</td>
 							</tr>
 						</ng-template>
 					</tbody>
@@ -252,7 +252,7 @@
 			<div class="w-140 bg-card p-4 rounded-lg shadow-2xl max-h-160">
 				<div class="w-full flex justify-end">
 					<button type="button"
-						class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900"
+						class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2¿"
 						(click)="section = null">Cerrar</button>
 				</div>
 
@@ -346,17 +346,17 @@
 
 					<div class="w-full flex justify-between">
 						<button type="button"
-							class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+							class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 							(click)="section = null">Cancelar</button>
 						<ng-container [ngSwitch]="section">
 							<ng-container *ngSwitchCase="'add'">
 								<button type="button"
-									class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+									class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 									(click)="create()">Guardar</button>
 							</ng-container>
 							<ng-container *ngSwitchCase="'edit'">
 								<button type="button"
-									class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+									class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 									(click)="update()">Editar</button>
 							</ng-container>
 						</ng-container>
