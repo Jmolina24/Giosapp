@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FilesService } from 'app/core/helpers/files.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { GeneralService } from 'app/core/services/general.service';
+import { Action, MenuService } from 'app/core/services/menu.service';
 import { OrdersService } from 'app/core/services/orders.service';
 import { ReasonsService } from 'app/core/services/reasons.service';
 import { ServicesService } from 'app/core/services/services.service';
@@ -83,18 +84,26 @@ export class ParameterSettingComponent implements OnInit {
 		range: 3,
 	};
 
+	actions: Action[];
+
 	constructor(
 		private _general: GeneralService,
 		private _reason: ReasonsService,
 		private _order: OrdersService,
 		private _service: ServicesService,
 		private _alert: SweetAlertService,
-		private _files: FilesService
+		private _files: FilesService,
+		private _menu: MenuService
 	) {}
 
 	ngOnInit(): void {
-		this.changeSection({ section: 'M' });
-		this.search();
+		this.actions = this._menu.getActions('parameterization');
+
+		if (this.getAction('list')) {
+			this.changeSection({ section: 'M' });
+			this.search();
+		}
+
 	}
 
 	changeSection({ section, data, callback }: Section): void {
@@ -666,5 +675,9 @@ export class ParameterSettingComponent implements OnInit {
 			this.section.data.list,
 			this.section.title.split(' ').join('_').toLowerCase()
 		);
+	}
+
+	getAction(item: Action): boolean {
+		return this.actions.includes(item);
 	}
 }

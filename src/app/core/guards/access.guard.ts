@@ -1,32 +1,33 @@
 import { Injectable } from '@angular/core';
 import {
 	ActivatedRouteSnapshot,
-	CanActivate,
+	CanActivateChild,
+	Router,
 	RouterStateSnapshot,
 	UrlTree,
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { StorageService } from '../helpers/storage.service';
 import { MenuService } from '../services/menu.service';
+import { StorageService } from '../helpers/storage.service';
 
 @Injectable({
 	providedIn: 'root',
 })
-export class AccessGuard implements CanActivate {
-	constructor(private _storage: StorageService, private _menu: MenuService) {}
+export class AccessGuard implements CanActivateChild {
+	constructor(private _storage: StorageService, private _menu: MenuService, private _router: Router) {}
 
-	canActivate(
-		route: ActivatedRouteSnapshot,
+	canActivateChild(
+		childRoute: ActivatedRouteSnapshot,
 		state: RouterStateSnapshot
 	):
 		| Observable<boolean | UrlTree>
 		| Promise<boolean | UrlTree>
 		| boolean
 		| UrlTree {
-		// const menu = this._menu.getMenuByRole(this._storage.getRolID());
-		// const menuChildren = menu.filter(
-		// 	r => r.children.length > 0 || r.type === 'collapsable'
-		// );
+			if (!this._menu.getMenuOneLevel(this._storage.getRolID()).find(r => r.link.includes(state.url))) {
+				this._router.navigate(['/']);
+				return false;
+			}
 		return true;
 	}
 }

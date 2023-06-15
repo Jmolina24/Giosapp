@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FilesService } from 'app/core/helpers/files.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
-import { MenuService } from 'app/core/services/menu.service';
+import { Action, MenuService } from 'app/core/services/menu.service';
 import { RolesService } from 'app/core/services/roles.service';
 import { Subject } from 'rxjs';
 
@@ -38,6 +38,8 @@ export class RolesComponent implements OnInit {
 		range: 3,
 	};
 
+	actions: Action[];
+
 	constructor(
 		private _service: RolesService,
 		private _alert: SweetAlertService,
@@ -46,9 +48,13 @@ export class RolesComponent implements OnInit {
 	) {}
 
 	ngOnInit(): void {
-		this.get();
-		this.search();
-		this.menuBase = JSON.parse(JSON.stringify(this._menu.getMenu()));
+		this.actions = this._menu.getActions('access.roles');
+
+		if (this.getAction('list')) {
+			this.get();
+			this.search();
+			this.menuBase = JSON.parse(JSON.stringify(this._menu.getMenu()));
+		}
 	}
 
 	get(): void {
@@ -272,7 +278,7 @@ export class RolesComponent implements OnInit {
 
 		if (this.data.menu !== '') {
 			const menuUser = JSON.parse(
-				JSON.stringify(JSON.parse(this.data.menu))
+				JSON.stringify(JSON.parse(this.data.menu) || this.data.menu)
 			);
 
 			if (menuUser) {
@@ -289,10 +295,6 @@ export class RolesComponent implements OnInit {
 									.filter(t => t.includes(r.id)).length > 0;
 							return r;
 						});
-						console.log(
-							e.actions,
-							menuUser.map(r => r.actions.map(t => t.id))
-						);
 					}
 					return e;
 				});
@@ -326,5 +328,9 @@ export class RolesComponent implements OnInit {
 			e.status = item.status;
 			return e;
 		});
+	}
+
+	getAction(item: Action): boolean {
+		return this.actions.includes(item);
 	}
 }

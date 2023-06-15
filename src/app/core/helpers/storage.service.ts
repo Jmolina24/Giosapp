@@ -141,4 +141,13 @@ export class StorageService {
 
 		return '';
 	}
+
+	public getMenu(): any {
+		const menu = this.getUser().menu;
+		if (menu) {
+			return JSON.parse(menu);
+		}
+
+		return '';
+	}
 }

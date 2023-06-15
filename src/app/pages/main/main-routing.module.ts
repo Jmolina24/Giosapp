@@ -13,62 +13,68 @@ import { UsersComponent } from 'app/modules/main/users/users.component';
 const routes: Routes = [
 	{
 		path: 'inicio',
-		component: HomeComponent
+		component: HomeComponent,
 	},
 	{
 		path: 'usuarios',
-		component: UsersComponent
+		component: UsersComponent,
 	},
 	{
 		path: 'clientes',
 		children: [
 			{
 				path: '',
-				loadChildren: (): any => import('app/modules/main/clients/clients.module').then((m: any) => m.ClientsModule),
-			}
-		]
+				loadChildren: (): any =>
+					import('app/modules/main/clients/clients.module').then(
+						(m: any) => m.ClientsModule
+					),
+			},
+		],
 	},
 	{
 		path: 'roles',
-		component: RolesComponent
+		component: RolesComponent,
 	},
 	{
 		path: 'ordenes',
 		children: [
 			{
 				path: '',
-				loadChildren: (): any => import('app/modules/main/orders/orders.module').then((m: any) => m.OrdersModule),
-			}
-		]
+				loadChildren: (): any =>
+					import('app/modules/main/orders/orders.module').then(
+						(m: any) => m.OrdersModule
+					),
+			},
+		],
 	},
 	{
 		path: 'servicios',
-		component: ServicesComponent
+		component: ServicesComponent,
 	},
 	{
 		path: 'terceros',
-		component: ThirdPartiesComponent
+		component: ThirdPartiesComponent,
 	},
 	{
 		path: 'parametrizacion',
-		component: ParameterSettingComponent
+		component: ParameterSettingComponent,
 	},
 	{
 		path: 'servicios-asignados',
-		component: AssignedServicesComponent
+		component: AssignedServicesComponent,
 	},
 	{
 		path: 'tarifarios',
-		component: RatesComponent
+		component: RatesComponent,
 	},
 	{
 		path: 'archivo-detalle/:iddetalleorden/:iddetalleordensoporte',
-		component: DetailFileComponent
-	}
+		component: DetailFileComponent,
+	},
 ];
 
 @NgModule({
 	imports: [RouterModule.forChild(routes)],
-	exports: [RouterModule]
+	exports: [RouterModule],
 })
-export class MainRoutingModule { }
+export class MainRoutingModule {}

@@ -3,6 +3,7 @@ import { FilesService } from 'app/core/helpers/files.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { ClientsService } from 'app/core/services/clients.service';
 import { GeneralService } from 'app/core/services/general.service';
+import { Action, MenuService } from 'app/core/services/menu.service';
 import { RolesService } from 'app/core/services/roles.service';
 import { ThirdPartiesService } from 'app/core/services/third-parties.service';
 import { UsersService } from 'app/core/services/users.service';
@@ -43,6 +44,9 @@ export class UsersComponent implements OnInit {
 			range: 3,
 		};
 
+
+	actions: Action[];
+
 	constructor(
 		private _service: UsersService,
 		private _alert: SweetAlertService,
@@ -50,13 +54,18 @@ export class UsersComponent implements OnInit {
 		private _thirds: ThirdPartiesService,
 		private _roles: RolesService,
 		private _clients: ClientsService,
-		private _files: FilesService
+		private _files: FilesService,
+		private _menu: MenuService
 	) { }
 
 	ngOnInit(): void {
-		this.get();
-		this.search();
-		this.getSelects();
+		this.actions = this._menu.getActions('access.users');
+
+		if (this.getAction('list')) {
+			this.get();
+			this.search();
+			this.getSelects();
+		}
 	}
 
 	get(): void {
@@ -291,5 +300,9 @@ export class UsersComponent implements OnInit {
 
 	generateExcel(): void {
 		this._files.exportAsExcelFile(this.list, 'usuarios');
+	}
+
+	getAction(item: Action): boolean {
+		return this.actions.includes(item);
 	}
 }

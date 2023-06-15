@@ -103,13 +103,13 @@ export class DetailsComponent implements OnInit, OnChanges {
 	ngOnInit(): void {
 		this.idrole = this._storage.getRolID();
 		if (this.idtercero) {
-			this.actions = this._menu.getAccessByRole(this.idrole, { name: 'process.assigned-services' });
+			// this.actions = this._menu.getAccessByRole(this.idrole, { name: 'process.assigned-services' });
 			this.loadData();
 			return;
 		}
 		this.route.params.subscribe((params) => {
 			this.idorden = params['id'];
-			this.actions = this._menu.getAccessByRole(this.idrole, { name: 'process.orders' });
+			// this.actions = this._menu.getAccessByRole(this.idrole, { name: 'process.orders' });
 			if (!this.idorden) {
 				return;
 			}

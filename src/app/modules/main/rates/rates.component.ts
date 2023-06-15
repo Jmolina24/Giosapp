@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FilesService } from 'app/core/helpers/files.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { GeneralService } from 'app/core/services/general.service';
+import { Action, MenuService } from 'app/core/services/menu.service';
 import { RatesService } from 'app/core/services/rates.service';
 import { ServicesService } from 'app/core/services/services.service';
 import { ThirdPartiesService } from 'app/core/services/third-parties.service';
@@ -41,19 +42,26 @@ export class RatesComponent implements OnInit {
 		range: 3,
 	};
 
+	actions: Action[];
+
 	constructor(
 		private _service: RatesService,
 		private _alert: SweetAlertService,
 		private _files: FilesService,
 		private _general: GeneralService,
 		private _thirds: ThirdPartiesService,
-		private _services: ServicesService
+		private _services: ServicesService,
+		private _menu: MenuService
 	) {}
 
 	ngOnInit(): void {
-		this.get();
-		this.search();
-		this.getSelects();
+		this.actions = this._menu.getActions('administration.rates');
+
+		if (this.getAction('list')) {
+			this.get();
+			this.search();
+			this.getSelects();
+		}
 	}
 
 	get(): void {
@@ -265,5 +273,9 @@ export class RatesComponent implements OnInit {
 
 	generateExcel(): void {
 		this._files.exportAsExcelFile(this.list, 'roles');
+	}
+
+	getAction(item: Action): boolean {
+		return this.actions.includes(item);
 	}
 }

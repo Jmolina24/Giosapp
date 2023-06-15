@@ -36,7 +36,8 @@ const routes: Routes = [
 					),
 			},
 		],
-		canActivate: [AuthGuard, AccessGuard],
+		canActivate: [AuthGuard],
+		canActivateChild: [AccessGuard]
 	},
 	{
 		path: 'otros',
