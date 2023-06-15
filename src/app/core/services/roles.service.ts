@@ -32,7 +32,7 @@ export class RolesService {
 	public create(content: {
 		idrol: string;
 		nombre: string;
-		menu: string;
+		menu: any[];
 		tipo: string;
 		crear: string;
 		editar: string;
@@ -46,6 +46,7 @@ export class RolesService {
 
 		return this._api.post('admin/create-rol', {
 			...content,
+			menu: JSON.stringify(content.menu),
 			idusuarioregistra: this._storage.getUserId(),
 		});
 	}

@@ -132,15 +132,9 @@
 			</div>
 			<div class="">
 				<table class="w-full text-sm text-left text-gray-500">
-					<thead class="text-xs text-gray-700 uppercase bg-gray-500">
+					<thead class="text-xs text-gray-700 uppercase bg-gray-50">
 						<tr>
-							<th scope="col" class="p-4">
-								<div class="flex items-center">
-									<input id="checkbox-all-search" type="checkbox"
-										class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
-									<label for="checkbox-all-search" class="sr-only">checkbox</label>
-								</div>
-							</th>
+							<th scope="col" class="p-4"></th>
 							<th scope="col" class="px-6 py-3 text-center">
 								#
 							</th>
@@ -279,7 +273,7 @@
 							(click)="section = null">Cancelar</button>
 						<button type="button"
 							class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-							(click)="fnBtnModal()">Menu</button>
+							(click)="fnBtnModal(item)">Menu</button>
 						<ng-container [ngSwitch]="section">
 							<ng-container *ngSwitchCase="'add'">
 								<button type="button"
@@ -313,51 +307,32 @@
 				</div>
 				<div class="flex flex-row flex-auto min-w-0">
 					<div class="flex-auto p-5 w-full">
-						<div class="relative px-5 py-7">
+						<div class="relative px-5 py-7 grid grid-cols-4 gap-4">
 							<ng-container *ngFor="let item of menu; let i = index">
-								<div class="">
-									<ng-container *ngIf="item?.type === 'basic'; else collapsable">
-										<div class="flex items-center mb-4">
-											<input id="item-{{ i + 1 }}" name="detail" type="checkbox" value=""
-												class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-												[(ngModel)]="item.status">
-											<label for="item-{{ i + 1 }}"
-												class="ml-2 text-3xl font-medium text-gray-900">
-												{{ item.title }}</label>
-										</div>
-									</ng-container>
-									<ng-template #collapsable>
-										<details>
-											<summary class="flex items-center text-3xl font-medium text-gray-900">{{
-												item.title }}
-												<button class="ml-auto">
-													<svg class="fill-current opacity-75 w-4 h-4 -mr-1"
-														xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-														<path
-															d="M12.95 10.707l.707-.707L8 4.343 6.586 5.757 10.828 10l-4.242 4.243L8 15.657l4.95-4.95z" />
-													</svg>
-												</button>
-											</summary>
-											<ng-container *ngIf="item?.children?.length > 0">
-												<div class="items p-3 my-4 leading-normal text-md "
-													style="height: 20vh; overflow-y: auto;">
-													<ng-container
-														*ngFor="let sub_item of item?.children; let j = index">
-														<div class="flex items-center mb-4">
-															<input id="item-{{ i + 1 + j }}" name="detail"
-																type="checkbox" value=""
-																class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-																[(ngModel)]="sub_item.status">
-															<label for="item-{{ i + 1 + j }}"
-																class="ml-2 text-sm font-medium text-gray-900 ">
-																{{ sub_item.title }}</label>
-														</div>
-													</ng-container>
-												</div>
-											</ng-container>
-										</details>
-									</ng-template>
-
+								<div class="min-w-1/3">
+									<div class="flex items-center mb-4">
+										<input id="item-{{ i + 1 }}" name="detail" type="checkbox"
+											class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+											(change)="changeStatusItem(item)"
+											[(ngModel)]="item.status"
+											[checked]="activeModule(item.id)">
+										<label for="item-{{ i + 1 }}" class="ml-2 text-3xl font-bold text-gray-900">
+											{{ item.title }}</label>
+									</div>
+									<hr class="m-0">
+									<div class="items p-3 row my-2" style="height: 25vh; overflow-y: auto;">
+										<ng-container *ngFor="let sub_item of item?.actions; let j = index">
+											<div class="flex justify-between mb-4">
+												<label for="sub_item-{{ i + 1 + j }}-{{ sub_item.id }}"
+													class="ml-2 text-1xl font-semibold text-gray-900">
+													{{ sub_item.title }}</label>
+												<input id="sub_item-{{ i + 1 + j }}-{{ sub_item.id }}" name="detail"
+													type="checkbox" value=""
+													class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+													[(ngModel)]="sub_item.status">
+											</div>
+										</ng-container>
+									</div>
 								</div>
 							</ng-container>
 						</div>
@@ -368,7 +343,8 @@
 						class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 						(click)="fnBtnModal()">Cerrar</button>
 					<button type="button"
-						class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">Guardar</button>
+						class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+						(click)="saveMenu()">Guardar</button>
 				</div>
 			</div>
 		</div>

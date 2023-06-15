@@ -16,6 +16,7 @@ export class RolesComponent implements OnInit {
 	listCopy: any[] = [];
 
 	menu: any[] = [];
+	menuBase: any[] = [];
 
 	data: any = null;
 
@@ -47,11 +48,15 @@ export class RolesComponent implements OnInit {
 	ngOnInit(): void {
 		this.get();
 		this.search();
-		this.fnBtnModal();
+		this.menuBase = JSON.parse(JSON.stringify(this._menu.getMenu()));
 	}
 
 	get(): void {
 		this._service.get().subscribe((response) => {
+			response = response.map((r) => {
+				r.menu = r.menu.trim();
+				return r;
+			});
 			this.list = response;
 			this.listCopy = JSON.parse(JSON.stringify(response));
 
@@ -127,7 +132,7 @@ export class RolesComponent implements OnInit {
 			this.data = {
 				nombre: '',
 				tipo: '',
-				menu: '[]',
+				menu: '',
 				crear: '',
 				editar: '',
 				detalle: '',
@@ -253,7 +258,73 @@ export class RolesComponent implements OnInit {
 
 		modal.classList.toggle('hidden');
 
-		this.menu = JSON.parse(JSON.stringify(this._menu.getMenu()));
-		console.log(this._menu.getMenu());
+		const menu = JSON.parse(JSON.stringify(this.menuBase));
+
+		const data = menu.filter((e: { type: string }) => e.type === 'basic');
+		data.push(
+			...menu
+				.filter(
+					(e: { type: string; children: any[] }) =>
+						e.type !== 'basic' || e.children?.length > 0
+				)
+				.reduce((a, b) => a.concat(b.children), [])
+		);
+
+		if (this.data.menu !== '') {
+			const menuUser = JSON.parse(
+				JSON.stringify(JSON.parse(this.data.menu))
+			);
+
+			if (menuUser) {
+				data.map((e) => {
+					e.status =
+						menuUser
+							.map(r => r.id)
+							.filter(r => r.includes(e.id)).length > 0;
+					if (e.status) {
+						e.actions = e.actions.map((r) => {
+							r.status =
+								menuUser
+									.map(x => x.actions.map(t => t.id))
+									.filter(t => t.includes(r.id)).length > 0;
+							return r;
+						});
+						console.log(
+							e.actions,
+							menuUser.map(r => r.actions.map(t => t.id))
+						);
+					}
+					return e;
+				});
+			}
+		}
+
+		this.menu = data;
+	}
+
+	saveMenu(): void {
+		this.data.menu = this.menu
+			.filter(e => e.actions.some(r => r.status) || e.status)
+			.map(e => ({
+				id: e.id,
+				actions: e.actions
+					.filter(x => x.status)
+					.map(r => ({ id: r.id })),
+			}));
+
+		this.fnBtnModal();
+	}
+
+	activeModule(id: string): boolean {
+		return this.menu
+			.filter(e => e.id === id)
+			.find(e => e.actions.some(r => r.status));
+	}
+
+	changeStatusItem(item: any): void {
+		item.actions.map((e: any) => {
+			e.status = item.status;
+			return e;
+		});
 	}
 }
