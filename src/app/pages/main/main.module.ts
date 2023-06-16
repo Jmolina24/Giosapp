@@ -27,6 +27,7 @@ import { RatesComponent } from 'app/modules/main/rates/rates.component';
 import { DetailFileComponent } from 'app/modules/main/detail-file/detail-file.component';
 import { SetTimeDifferencePipe } from 'app/core/pipes/set-time-difference.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @NgModule({
 	declarations: [
@@ -60,6 +61,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 		MatMenuModule,
 		MatSelectModule,
 		SharedModule,
+		NgApexchartsModule,
 		MatTooltipModule
 	],
 })
