@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Injectable } from '@angular/core';
 import {
 	ActivatedRouteSnapshot,
@@ -28,9 +29,14 @@ export class AccessGuard implements CanActivateChild {
 		| Promise<boolean | UrlTree>
 		| boolean
 		| UrlTree {
-		if (state.url.includes('/panel/archivo-detalle') && (this._menu.getAction('process.orders', 'view_support') || this._menu.getAction('process.assigned', 'view_support'))) {
+		if (state.url.includes('/panel/archivo-detalle') && (this._menu.getAction('process.orders', 'view_support') || this._menu.getAction('process.assigned-services', 'view_support'))) {
 			return true;
 		}
+
+		if (state.url.includes('/panel/ordenes/detail') && (this._menu.getAction('process.orders', 'view_details'))) {
+			return true;
+		}
+
 		if (
 			!this._menu
 				.getMenuOneLevel(this._storage.getRolID())

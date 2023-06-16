@@ -17,7 +17,7 @@ type Modules =
 	| 'administration.rates'
 	| 'process'
 	| 'process.orders'
-	| 'process.assigned';
+	| 'process.assigned-services';
 
 
 export type Action =
