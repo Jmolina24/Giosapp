@@ -1,29 +1,62 @@
+/* eslint-disable quote-props */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {
-	ApexAxisChartSeries,
-	ApexChart,
-	ChartComponent,
-	ApexDataLabels,
-	ApexPlotOptions,
-	ApexYAxis,
-	ApexAnnotations,
-	ApexFill,
-	ApexStroke,
-	ApexGrid,
-} from 'ng-apexcharts';
+import { ChartComponent, ApexOptions } from 'ng-apexcharts';
 
-export type ChartOptions = {
-	series: ApexAxisChartSeries;
-	chart: ApexChart;
-	dataLabels: ApexDataLabels;
-	plotOptions: ApexPlotOptions;
-	yaxis: ApexYAxis;
-	xaxis: any; //ApexXAxis;
-	annotations: ApexAnnotations;
-	fill: ApexFill;
-	stroke: ApexStroke;
-	grid: ApexGrid;
+import * as _ from 'lodash';
+import { OrdersService } from 'app/core/services/orders.service';
+
+const githubIssues = {
+	overview: {
+		'this-week': {
+			'new-issues': 214,
+			'closed-issues': 75,
+			fixed: 3,
+			'wont-fix': 4,
+			're-opened': 8,
+			'needs-triage': 6,
+		},
+		'last-week': {
+			'new-issues': 197,
+			'closed-issues': 72,
+			fixed: 6,
+			'wont-fix': 11,
+			're-opened': 6,
+			'needs-triage': 5,
+		},
+	},
+	labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+	series: {
+		'this-week': [
+			{
+				name: 'New issues',
+				type: 'line',
+				data: [42, 28, 43, 34, 20, 25, 22],
+			},
+			{
+				name: 'Closed issues',
+				type: 'column',
+				data: [11, 10, 8, 11, 8, 10, 17],
+			},
+		],
+		'last-week': [
+			{
+				name: 'New issues',
+				type: 'line',
+				data: [37, 32, 39, 27, 18, 24, 20],
+			},
+			{
+				name: 'Closed issues',
+				type: 'column',
+				data: [9, 8, 10, 12, 7, 11, 15],
+			},
+			{
+				name: 'Closed issues',
+				type: 'column',
+				data: [9, 8, 10, 12, 7, 11, 15],
+			},
+		],
+	},
 };
 
 @Component({
@@ -33,95 +66,96 @@ export type ChartOptions = {
 })
 export class HomeComponent implements OnInit {
 	@ViewChild('chart') chart: ChartComponent;
-	public chartOptions: Partial<ChartOptions>;
 
-	constructor() {
-		this.chartOptions = {
-			series: [
-				{
-					name: 'Servings',
-					data: [44, 55, 41, 67, 22, 43, 21, 33, 45, 31, 87, 65, 35],
-				},
-			],
-			annotations: {
-				points: [
-					{
-						x: 'Bananas',
-						seriesIndex: 0,
-						label: {
-							borderColor: '#775DD0',
-							offsetY: 0,
-							style: {
-								color: '#fff',
-								background: '#775DD0',
-							},
-							text: 'Bananas are good',
-						},
-					},
-				],
-			},
+	chartGithubIssues: ApexOptions = {};
+
+	constructor(private _orders: OrdersService) {}
+
+	ngOnInit(): void {
+		this._prepareChartData();
+		this._test();
+	}
+
+	private _prepareChartData(): void {
+		this.chartGithubIssues = {
 			chart: {
-				height: 350,
-				type: 'bar',
+				fontFamily: 'inherit',
+				foreColor: 'inherit',
+				height: '100%',
+				type: 'line',
+				toolbar: {
+					show: false,
+				},
+				zoom: {
+					enabled: false,
+				},
+			},
+			colors: ['#64748B', '#94A3B8'],
+			dataLabels: {
+				enabled: true,
+				enabledOnSeries: [0],
+				background: {
+					borderWidth: 0,
+				},
+			},
+			grid: {
+				borderColor: 'var(--fuse-border)',
+			},
+			labels: githubIssues.labels,
+			legend: {
+				show: false,
 			},
 			plotOptions: {
 				bar: {
 					columnWidth: '50%',
 				},
 			},
-			dataLabels: {
-				enabled: false,
+			series: githubIssues.series['last-week'],
+			states: {
+				hover: {
+					filter: {
+						type: 'darken',
+						value: 0.75,
+					},
+				},
 			},
 			stroke: {
-				width: 2,
+				width: [3, 0],
 			},
-
-			grid: {
-				row: {
-					colors: ['#fff', '#f2f2f2'],
-				},
+			tooltip: {
+				followCursor: true,
+				theme: 'dark',
 			},
 			xaxis: {
-				labels: {
-					rotate: -45,
+				axisBorder: {
+					show: false,
 				},
-				categories: [
-					'Apples',
-					'Oranges',
-					'Strawberries',
-					'Pineapples',
-					'Mangoes',
-					'Bananas',
-					'Blackberries',
-					'Pears',
-					'Watermelons',
-					'Cherries',
-					'Pomegranates',
-					'Tangerines',
-					'Papayas',
-				],
-				tickPlacement: 'on',
+				axisTicks: {
+					color: 'var(--fuse-border)',
+				},
+				labels: {
+					style: {
+						colors: 'var(--fuse-text-secondary)',
+					},
+				},
+				tooltip: {
+					enabled: false,
+				},
 			},
 			yaxis: {
-				title: {
-					text: 'Servings',
-				},
-			},
-			fill: {
-				type: 'gradient',
-				gradient: {
-					shade: 'light',
-					type: 'horizontal',
-					shadeIntensity: 0.25,
-					gradientToColors: undefined,
-					inverseColors: true,
-					opacityFrom: 0.85,
-					opacityTo: 0.85,
-					stops: [50, 0, 100],
+				labels: {
+					offsetX: -16,
+					style: {
+						colors: 'var(--fuse-text-secondary)',
+					},
 				},
 			},
 		};
 	}
 
-	ngOnInit(): void {}
+	private _test(): void {
+		this._orders.getDetails().subscribe((response) => {
+			console.log(_.chain(response).groupBy('estado').value());
+		});
+	}
 }
