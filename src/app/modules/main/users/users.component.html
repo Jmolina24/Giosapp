@@ -5,7 +5,8 @@
 				<div class="mt-2">
 					<div class="w-full flex justify-between items-center px-3">
 						<div>
-							<h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+							<h2
+								class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
 								Usuarios </h2>
 							<div class="flex flex-wrap items-center font-medium">
 								<div>
@@ -16,15 +17,18 @@
 
 
 						<div class="flex flex-row justify-between">
-							<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
+							<div
+								class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
 								<div class="flex flex-col items-center">
-									<div class="text-4xl font-bold tracking-tight leading-none text-blue-500">{{ list.length
+									<div class="text-4xl font-bold tracking-tight leading-none text-blue-500">{{
+										list.length
 										}}</div>
 									<div class="text-sm font-medium text-blue-600">Total</div>
 								</div>
 							</div>
 
-							<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
+							<div
+								class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
 								<div class="flex flex-col items-center">
 									<div class="text-4xl font-bold tracking-tight leading-none text-green-500">{{
 										getLengthStatus('ACTIVO') }}</div>
@@ -32,7 +36,8 @@
 								</div>
 							</div>
 
-							<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
+							<div
+								class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
 								<div class="flex flex-col items-center">
 									<div class="text-4xl font-bold tracking-tight leading-none text-red-500">{{
 										getLengthStatus('INACTIVO') }}</div>
@@ -170,9 +175,9 @@
 						</thead>
 						<tbody>
 							<ng-container *ngIf="list.length; else noContent">
-								<ng-container *ngFor="let item of contentPagination.pages[contentPagination.current].data;">
-									<tr
-										class="bg-white border-b hover:bg-gray-50">
+								<ng-container
+									*ngFor="let item of contentPagination.pages[contentPagination.current].data;">
+									<tr class="bg-white border-b hover:bg-gray-50">
 										<td class="w-4 p-4">
 											<div class="flex items-center">
 												<input id="checkbox-table-search-1" type="checkbox"
@@ -346,8 +351,8 @@
 					<div class="flex justify-between">
 						<mat-form-field class="fuse-mat-dense flex-auto w-full mr-1">
 							<mat-label class="text-lg font-medium mb-1">Contraseña</mat-label>
-							<input id="password" matInput type="password" placeholder="Contraseña" name="current_password"
-								[(ngModel)]="data.clave">
+							<input id="password" matInput type="password" placeholder="Contraseña"
+								name="current_password" [(ngModel)]="data.clave">
 						</mat-form-field>
 
 						<mat-form-field class="fuse-mat-dense flex-auto w-full">

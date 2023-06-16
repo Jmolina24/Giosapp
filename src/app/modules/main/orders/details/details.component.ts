@@ -13,7 +13,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FilesService } from 'app/core/helpers/files.service';
 import { StorageService } from 'app/core/helpers/storage.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
-import { MenuService } from 'app/core/services/menu.service';
+import { Action, MenuService } from 'app/core/services/menu.service';
 import { OrdersService } from 'app/core/services/orders.service';
 import { RatesService } from 'app/core/services/rates.service';
 import { ServicesService } from 'app/core/services/services.service';
@@ -29,10 +29,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 	@Input() viewInfoOrden: boolean = true;
 	@Input() idtercero: string = null;
 
-
 	support: any;
-
-	actions: any;
 
 	isLoading: boolean = false;
 
@@ -88,6 +85,8 @@ export class DetailsComponent implements OnInit, OnChanges {
 			range: 3,
 		};
 
+	actions: Action[];
+
 	constructor(
 		private _service: OrdersService,
 		private _services: ServicesService,
@@ -103,13 +102,13 @@ export class DetailsComponent implements OnInit, OnChanges {
 	ngOnInit(): void {
 		this.idrole = this._storage.getRolID();
 		if (this.idtercero) {
-			// this.actions = this._menu.getAccessByRole(this.idrole, { name: 'process.assigned-services' });
+			this.actions = this._menu.getActions('process.assigned');
 			this.loadData();
 			return;
 		}
 		this.route.params.subscribe((params) => {
+			this.actions = this._menu.getActions('process.orders');
 			this.idorden = params['id'];
-			// this.actions = this._menu.getAccessByRole(this.idrole, { name: 'process.orders' });
 			if (!this.idorden) {
 				return;
 			}
@@ -125,21 +124,17 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	loadData(): void {
-		if (this.actions === '*' || this.actions?.listDetail || this.actions?.viewDetail) {
-			this.get(this.idorden);
+		this.get(this.idorden);
 
-			this.getByOrden(this.idorden);
+		this.getByOrden(this.idorden);
 
-			this.search();
+		this.search();
 
-			this.sort();
+		this.sort();
 
-			this.getServices();
+		this.getServices();
 
-			this.getThirds();
-
-			// this.getThirdsServices('0', '0');
-		}
+		this.getThirds();
 	}
 
 	get(idorden: string = '0'): void {
@@ -183,43 +178,36 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	changeStatusOrderDetail({ iddetalleorden }, status: 'F' | 'P' = 'P'): void {
-		if (this.actions.changeStatusDetail || this.actions === '*') {
-			this._alert.loading();
+		this._alert.loading();
 
-			this._service
-				.changeStatusOrderDatails(iddetalleorden, status)
-				.subscribe(
-					(response) => {
-						this._alert.closeAlert();
-						if (response.codigo !== 0) {
-							this._alert.error({
-								title: response.titulo,
-								text: response.mensaje,
-							});
-							return;
-						}
-
-						this._alert.success({
+		this._service
+			.changeStatusOrderDatails(iddetalleorden, status)
+			.subscribe(
+				(response) => {
+					this._alert.closeAlert();
+					if (response.codigo !== 0) {
+						this._alert.error({
 							title: response.titulo,
 							text: response.mensaje,
 						});
-
-						this.getByOrden(this.idorden);
-					},
-					({ error }) => {
-						this._alert.error({
-							title: error.titulo || 'Error',
-							text:
-								error.mensaje || 'Error al procesar la solicitud.',
-						});
+						return;
 					}
-				);
-		} else {
-			this._alert.error({
-				title: 'Error',
-				text: 'No tiene acceso a esta acción.',
-			});
-		}
+
+					this._alert.success({
+						title: response.titulo,
+						text: response.mensaje,
+					});
+
+					this.getByOrden(this.idorden);
+				},
+				({ error }) => {
+					this._alert.error({
+						title: error.titulo || 'Error',
+						text:
+							error.mensaje || 'Error al procesar la solicitud.',
+					});
+				}
+			);
 	}
 
 	getServices(): void {
@@ -288,10 +276,53 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	update(): void {
-		if (this.actions.edit || this.actions === '*') {
-			this._alert.loading();
+		this._alert.loading();
 
-			this._service.createDetail({ ...this.data }).subscribe(
+		this._service.createDetail({ ...this.data }).subscribe(
+			(response) => {
+				this._alert.closeAlert();
+				if (response.codigo !== 0) {
+					this._alert.error({
+						title: response.titulo,
+						text: response.mensaje,
+					});
+					return;
+				}
+
+				this._alert.success({
+					title: response.titulo,
+					text: response.mensaje,
+				});
+
+				this.getByOrden(this.idorden);
+				this.showSection(null);
+			},
+			({ error }) => {
+				this._alert.error({
+					title: error.titulo || 'Error',
+					text: error.mensaje || 'Error al procesar la solicitud.',
+				});
+			}
+		);
+	}
+
+	assign(): void {
+		const { iddetalleorden, idterceroservicio, valor } = this.data;
+
+		if (!iddetalleorden || !idterceroservicio) {
+			// if (!iddetalleorden || !idterceroservicio || !valor) {
+			this._alert.error({
+				title: 'Error',
+				text: 'Error al asignar',
+			});
+			return;
+		}
+
+		this._alert.loading();
+
+		this._service
+			.assign({ ...this.data, valor: this.data.valor || '1' })
+			.subscribe(
 				(response) => {
 					this._alert.closeAlert();
 					if (response.codigo !== 0) {
@@ -313,68 +344,11 @@ export class DetailsComponent implements OnInit, OnChanges {
 				({ error }) => {
 					this._alert.error({
 						title: error.titulo || 'Error',
-						text: error.mensaje || 'Error al procesar la solicitud.',
+						text:
+							error.mensaje || 'Error al procesar la solicitud.',
 					});
 				}
 			);
-		} else {
-			this._alert.error({
-				title: 'Error',
-				text: 'No tiene acceso a esta acción.',
-			});
-		}
-	}
-
-	assign(): void {
-		if (this.actions.assign || this.actions === '*') {
-			const { iddetalleorden, idterceroservicio, valor } = this.data;
-
-			if (!iddetalleorden || !idterceroservicio) {
-				// if (!iddetalleorden || !idterceroservicio || !valor) {
-				this._alert.error({
-					title: 'Error',
-					text: 'Error al asignar',
-				});
-				return;
-			}
-
-			this._alert.loading();
-
-			this._service
-				.assign({ ...this.data, valor: this.data.valor || '1' })
-				.subscribe(
-					(response) => {
-						this._alert.closeAlert();
-						if (response.codigo !== 0) {
-							this._alert.error({
-								title: response.titulo,
-								text: response.mensaje,
-							});
-							return;
-						}
-
-						this._alert.success({
-							title: response.titulo,
-							text: response.mensaje,
-						});
-
-						this.getByOrden(this.idorden);
-						this.showSection(null);
-					},
-					({ error }) => {
-						this._alert.error({
-							title: error.titulo || 'Error',
-							text:
-								error.mensaje || 'Error al procesar la solicitud.',
-						});
-					}
-				);
-		} else {
-			this._alert.error({
-				title: 'Error',
-				text: 'No tiene acceso a esta acción.',
-			});
-		}
 	}
 
 	showSection(section: 'add' | 'edit' | 'assign', data = null): void {
@@ -536,95 +510,88 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	fnUpload(): void {
-		if (this.actions.upload || this.actions === '*') {
-			if (this.files.length === 0) {
-				this._alert.error({
-					title: 'Error',
-					text: 'Ingrese un archivo',
-				});
-				return;
-			}
-
-			if (this.files.some(e => this.isIdRepeated(e.iddetalleordensoporte))) {
-				this._alert.error({
-					title: 'Error',
-					text: 'Solamente se permite un archivo por tipo de soporte',
-				});
-				return;
-			}
-
-			this.isLoading = true;
-			this._alert.loading();
-
-			this.files.forEach((r) => {
-				this.formData.append('files', r.file);
-			});
-
-			this._file.upload(this.formData).subscribe(
-				(response) => {
-					this.isLoading = false;
-
-					if (response.codigo !== 0) {
-						this._alert.closeAlert();
-						this._alert.error({
-							title: response.titulo,
-							text: response.mensaje,
-						});
-						return;
-					}
-
-					forkJoin(
-						response.rutas.map((e, i) =>
-							this.uploadSupport(
-								this.files[i].iddetalleordensoporte,
-								e.path
-							)
-						)
-					).subscribe(
-						(r: any[]) => {
-							this.isLoading = false;
-							this._alert.closeAlert();
-							const i = r.filter(element => element.codigo !== 0);
-							if (i.length > 0) {
-								this._alert.error({
-									title: 'Error',
-									text: i.join(', '),
-								});
-								return;
-							}
-
-							this._alert.success({
-								title: response.titulo,
-								text: 'Soporte(s) Cargados Correctamente...',
-							});
-
-							this.getByOrden(this.idorden);
-
-							this.fnBtnModal(null);
-						},
-						({ error }) => {
-							this._alert.error({
-								title: error.titulo || 'Error',
-								text:
-									error.mensaje ||
-									'Error al procesar la solicitud.',
-							});
-						}
-					);
-				},
-				({ error }) => {
-					this._alert.error({
-						title: error.titulo || 'Error',
-						text: error.mensaje || 'Error al procesar la solicitud.',
-					});
-				}
-			);
-		} else {
+		if (this.files.length === 0) {
 			this._alert.error({
 				title: 'Error',
-				text: 'No tiene acceso a esta acción.',
+				text: 'Ingrese un archivo',
 			});
+			return;
 		}
+
+		if (this.files.some(e => this.isIdRepeated(e.iddetalleordensoporte))) {
+			this._alert.error({
+				title: 'Error',
+				text: 'Solamente se permite un archivo por tipo de soporte',
+			});
+			return;
+		}
+
+		this.isLoading = true;
+		this._alert.loading();
+
+		this.files.forEach((r) => {
+			this.formData.append('files', r.file);
+		});
+
+		this._file.upload(this.formData).subscribe(
+			(response) => {
+				this.isLoading = false;
+
+				if (response.codigo !== 0) {
+					this._alert.closeAlert();
+					this._alert.error({
+						title: response.titulo,
+						text: response.mensaje,
+					});
+					return;
+				}
+
+				forkJoin(
+					response.rutas.map((e, i) =>
+						this.uploadSupport(
+							this.files[i].iddetalleordensoporte,
+							e.path
+						)
+					)
+				).subscribe(
+					(r: any[]) => {
+						this.isLoading = false;
+						this._alert.closeAlert();
+						const i = r.filter(element => element.codigo !== 0);
+						if (i.length > 0) {
+							this._alert.error({
+								title: 'Error',
+								text: i.join(', '),
+							});
+							return;
+						}
+
+						this._alert.success({
+							title: response.titulo,
+							text: 'Soporte(s) Cargados Correctamente...',
+						});
+
+						this.getByOrden(this.idorden);
+
+						this.fnBtnModal(null);
+					},
+					({ error }) => {
+						this._alert.error({
+							title: error.titulo || 'Error',
+							text:
+								error.mensaje ||
+								'Error al procesar la solicitud.',
+						});
+					}
+				);
+			},
+			({ error }) => {
+				this._alert.error({
+					title: error.titulo || 'Error',
+					text: error.mensaje || 'Error al procesar la solicitud.',
+				});
+			}
+		);
 	}
 
 	uploadSupport(
@@ -677,5 +644,9 @@ export class DetailsComponent implements OnInit, OnChanges {
 				this.support = this.listSupport[d === 0 ? 0 : d - 1];
 				break;
 		}
+	}
+
+	getAction(item: Action): boolean {
+		return this.actions.includes(item);
 	}
 }

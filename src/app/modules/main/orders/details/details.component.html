@@ -1,4 +1,4 @@
-<ng-container *ngIf="actions?.listDetail || actions === '*'">
+<ng-container *ngIf="getAction('view_details')">
 	<div class="flex flex-row flex-auto p-4">
 		<ng-container *ngIf="viewInfoOrden">
 			<div class="flex flex-col border-b rounded-xl bg-card w-1/3 p-3 mr-2">
@@ -10,7 +10,7 @@
 								[routerLink]="['/panel/ordenes']">
 								Regresar
 							</button>
-							<ng-container *ngIf="actions?.createDetail || actions === '*'">
+							<ng-container *ngIf="getAction('create_detail')">
 								<button type="button" class="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4
 								focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
 									(click)="showSection('add')">Crear</button>
@@ -281,7 +281,8 @@
 														Total de Precio de Compra:
 													</span>
 													<span class="mt-2 xl:mt-0" *ngIf="item.preciocompra">
-														{{ (item.precio_compra * item.cantidad) | currency:"COP":"symbol" }}
+														{{ (item.precio_compra * item.cantidad) |
+														currency:"COP":"symbol" }}
 													</span>
 													<span class="mt-2 xl:mt-0" *ngIf="!item.precio_compra">
 														Sin precio de compra
@@ -315,39 +316,41 @@
 									<!-- Cliente -->
 									<ng-container *ngIf="viewInfoOrden || !idtercero">
 										<ng-container *ngIf="item.estado === 'POR ASIGNAR'">
-											<ng-container *ngIf="actions?.editDetail || actions === '*'">
+											<ng-container *ngIf="getAction('edit_detail')">
 												<button type="button"
 													class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 													(click)="showSection('edit', item)">Editar</button>
 											</ng-container>
-											<ng-container *ngIf="actions?.assign || actions === '*'">
+											<ng-container *ngIf="getAction('assign_detail')">
 												<button type="button"
 													class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 													(click)="showSection('assign', item)">Asignar</button>
 											</ng-container>
 										</ng-container>
 										<ng-container *ngIf="!['ASIGNADA', 'POR ASIGNAR'].includes(item.estado)">
-											<button type="button"
-												class="text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-												(click)="fnBtnModal('view', item)">Visualizar soportes</button>
+											<ng-container *ngIf="getAction('view_support')">
+												<button type="button"
+													class="text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+													(click)="fnBtnModal('view', item)">Visualizar soportes</button>
+											</ng-container>
 										</ng-container>
 									</ng-container>
 									<!-- Servicios asignados -->
 									<ng-container *ngIf="!viewInfoOrden">
 										<ng-container *ngIf="item.estado === 'ASIGNADA'">
-											<ng-container *ngIf="actions?.upload || actions === '*'">
+											<ng-container *ngIf="getAction('upload_support')">
 												<button type="button"
 													class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 													(click)="fnBtnModal('upload', item)">Cargar soportes</button>
 											</ng-container>
 										</ng-container>
-										<ng-container *ngIf="actions?.viewSupport || actions === '*'">
+										<ng-container *ngIf="getAction('view_support')">
 											<button type="button"
 												class="text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 												(click)="fnBtnModal('view', item)">Visualizar soportes</button>
 										</ng-container>
 										<ng-container *ngIf="item.estado === 'ASIGNADA'">
-											<ng-container *ngIf="actions?.changeStatusDetail || actions === '*'">
+											<ng-container *ngIf="getAction('changeStatusDetail')">
 												<button type="button"
 													class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 													(click)="changeStatusOrderDetail(item, 'P')">Finalizar</button>
@@ -552,19 +555,21 @@
 							(click)="section = null">Cancelar</button>
 						<ng-container [ngSwitch]="section">
 							<ng-container *ngSwitchCase="'add'">
-								<button type="button"
-									class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-									(click)="create()">Guardar</button>
+								<ng-container *ngIf="getAction('create_detail')">
+									<button type="button"
+										class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+										(click)="create()">Guardar</button>
+								</ng-container>
 							</ng-container>
 							<ng-container *ngSwitchCase="'edit'">
-								<ng-container *ngIf="actions?.editDetail || actions === '*'">
+								<ng-container *ngIf="getAction('edit_detail')">
 									<button type="button"
 										class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 										(click)="update()">Editar</button>
 								</ng-container>
 							</ng-container>
 							<ng-container *ngSwitchCase="'assign'">
-								<ng-container *ngIf="actions?.assign || actions === '*'">
+								<ng-container *ngIf="getAction('assign_detail')">
 									<button type="button"
 										class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 										(click)="assign()" [disabled]="!data.idterceroservicio">Asignar</button>
@@ -581,7 +586,7 @@
 <div class="modal relative z-50 hidden" id="modalUploadFile" aria-labelledby="modal-title" role="dialog"
 	aria-modal="true">
 	<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
-	<div class="fixed inset-0 overflow-y-auto">
+	<div class="fixed inset-0 overflow-y-auto">/
 		<div class="relative min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
 			<ng-container [ngSwitch]="action">
 				<ng-container *ngSwitchCase="'upload'">
@@ -697,7 +702,7 @@
 								<ng-container *ngIf="file.estado === 'CARGADO' && file.soporte">
 									<div class="w-40 h-40 mb-20">
 										<a class="flex flex-col m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
-										(click)="fnModalViewFile(file)">
+											(click)="fnModalViewFile(file)">
 											<div class="aspect-w-9 aspect-h-6">
 												<div class="flex items-center justify-center">
 													<!-- Icons -->
@@ -755,8 +760,8 @@
 </div>
 
 
-<div class="modal relative hidden" id="modalViewFile" aria-labelledby="modal-title" role="dialog"
-	style="z-index: 200;" aria-modal="true">
+<div class="modal relative hidden" id="modalViewFile" aria-labelledby="modal-title" role="dialog" style="z-index: 200;"
+	aria-modal="true">
 	<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 	<div class="fixed inset-0 overflow-y-auto">
 		<div class="relative min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -820,7 +825,8 @@
 								</div>
 							</div>
 
-							<div class="my-4 border-b-2 border-gray-300" *ngIf="support?.motivorechazo && support?.idmotivorechazo">
+							<div class="my-4 border-b-2 border-gray-300"
+								*ngIf="support?.motivorechazo && support?.idmotivorechazo">
 								<div>
 									<span class="text-1xl whitespace-nowrap text-gray-500">
 										Motivo de rechazo: {{ support?.motivorechazo }}</span>
@@ -832,36 +838,32 @@
 							<button type="submit"
 								class="my-1 mx-2 w-full flex justify-center bg-blue-500 text-gray-100 p-4 rounded-xl tracking-wide
 							font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
-							[matTooltip]="'Anterior'"
-							(click)="changeFileNextOrPrevius('previus', support)">
+								[matTooltip]="'Anterior'" (click)="changeFileNextOrPrevius('previus', support)">
 								<mat-icon svgIcon="heroicons_outline:arrow-left" class="text-white"></mat-icon>
 							</button>
 							<button type="submit"
 								class="my-1 mx-2 w-full flex justify-center bg-blue-500 text-gray-100 p-4 rounded-xl tracking-wide
 							font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
-							[matTooltip]="'Siguiente'"
-							(click)="changeFileNextOrPrevius('next', support)">
+								[matTooltip]="'Siguiente'" (click)="changeFileNextOrPrevius('next', support)">
 								<mat-icon svgIcon="heroicons_outline:arrow-right" class="text-white"></mat-icon>
 							</button>
-							<button type="submit"
-								(click)="download(support?.soporte)"
+							<button type="submit" (click)="download(support?.soporte)"
 								class="my-1 mx-2 w-full flex justify-center bg-blue-500 text-gray-100 p-4 rounded-xl tracking-wide
-									font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
-									[matTooltip]="'Descargar'">
+									font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300" [matTooltip]="'Descargar'">
 								<mat-icon svgIcon="heroicons_outline:arrow-down" class="text-white"></mat-icon>
 							</button>
 							<button type="submit"
 								class="my-1 mx-2 w-full flex justify-center bg-blue-500 text-gray-100 p-4 rounded-xl tracking-wide
 									font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
-									[matTooltip]="'Abrir en otra pestaña'"
-									[routerLink]="['./../archivo-detalle/', support?.iddetalleorden, support?.iddetalleordensoporte]">
-									<mat-icon svgIcon="mat_outline:aspect_ratio" class="text-white"></mat-icon>
+								[matTooltip]="'Abrir en otra pestaña'"
+								[routerLink]="['./../archivo-detalle/', support?.iddetalleorden, support?.iddetalleordensoporte]">
+								<mat-icon svgIcon="mat_outline:aspect_ratio" class="text-white"></mat-icon>
 							</button>
 						</div>
 						<button type="submit"
 							class="my-3 w-full flex justify-center bg-red-500 text-gray-100 p-4 rounded-full tracking-wide
 								font-semibold  focus:outline-none focus:shadow-outline hover:bg-red-600 shadow-lg cursor-pointer transition ease-in duration-300"
-								(click)="fnModalViewFile(null)">
+							(click)="fnModalViewFile(null)">
 							<!-- <mat-icon svgIcon="heroicons_outline:x-mark" class="text-white"></mat-icon> -->
 							Cerrar
 						</button>
