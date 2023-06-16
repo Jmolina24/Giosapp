@@ -7,7 +7,7 @@ const navigation = [
 		icon: 'heroicons_outline:home',
 		link: '/panel/inicio',
 		actions: [],
-		children: []
+		children: [],
 	},
 	{
 		id: 'parameterization',
@@ -25,7 +25,7 @@ const navigation = [
 				title: 'Cambiar de Estado',
 			},
 		],
-		children: []
+		children: [],
 	},
 	{
 		id: 'access',

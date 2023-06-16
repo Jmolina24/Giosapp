@@ -107,6 +107,15 @@ export class MenuService {
 		);
 	}
 
+	getAction(name: Modules, action: Action): boolean {
+		return (
+			this._storage
+				.getMenu()
+				.find((e: { id: any }) => e.id === name)
+				?.actions.map((e: { id: string }) => e.id).includes(action)
+		);
+	}
+
 	getMenuOneLevel(idrole: Id): any[] {
 		const menu = this.getMenuByRole(idrole);
 		const data = menu.filter((e: { type: string }) => e.type === 'basic');

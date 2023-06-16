@@ -14,7 +14,11 @@ import { StorageService } from '../helpers/storage.service';
 	providedIn: 'root',
 })
 export class AccessGuard implements CanActivateChild {
-	constructor(private _storage: StorageService, private _menu: MenuService, private _router: Router) {}
+	constructor(
+		private _storage: StorageService,
+		private _menu: MenuService,
+		private _router: Router
+	) {}
 
 	canActivateChild(
 		childRoute: ActivatedRouteSnapshot,
@@ -24,10 +28,17 @@ export class AccessGuard implements CanActivateChild {
 		| Promise<boolean | UrlTree>
 		| boolean
 		| UrlTree {
-			if (!this._menu.getMenuOneLevel(this._storage.getRolID()).find(r => r.link.includes(state.url))) {
-				this._router.navigate(['/']);
-				return false;
-			}
+		if (state.url.includes('/panel/archivo-detalle') && (this._menu.getAction('process.orders', 'view_support') || this._menu.getAction('process.assigned', 'view_support'))) {
+			return true;
+		}
+		if (
+			!this._menu
+				.getMenuOneLevel(this._storage.getRolID())
+				.find(r => r.link.includes(state.url))
+		) {
+			this._router.navigate(['/']);
+			return false;
+		}
 		return true;
 	}
 }
