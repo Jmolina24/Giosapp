@@ -3,6 +3,7 @@ import { FilesService } from 'app/core/helpers/files.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { ClientsService } from 'app/core/services/clients.service';
 import { GeneralService } from 'app/core/services/general.service';
+import { Action, MenuService } from 'app/core/services/menu.service';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -29,24 +30,31 @@ export class ClientsComponent implements OnInit {
 		totalPages: number;
 		range?: number;
 	} = {
-			current: 0,
-			pages: [{ data: [], page: 0 }],
-			countForPages: 5,
-			totalPages: 0,
-			range: 3,
-		};
+		current: 0,
+		pages: [{ data: [], page: 0 }],
+		countForPages: 5,
+		totalPages: 0,
+		range: 3,
+	};
+
+	actions: Action[];
 
 	constructor(
 		private _service: ClientsService,
 		private _alert: SweetAlertService,
 		private _general: GeneralService,
-		private _files: FilesService
-	) { }
+		private _files: FilesService,
+		private _menu: MenuService
+	) {}
 
 	ngOnInit(): void {
-		this.get();
-		this.getSelects();
-		this.search();
+		this.actions = this._menu.getActions('administration.clients');
+
+		if (this.getAction('list')) {
+			this.get();
+			this.getSelects();
+			this.search();
+		}
 	}
 
 	get(): void {
@@ -215,5 +223,9 @@ export class ClientsComponent implements OnInit {
 
 	generateExcel(): void {
 		this._files.exportAsExcelFile(this.list, 'clientes');
+	}
+
+	getAction(item: Action): boolean {
+		return this.actions.includes(item);
 	}
 }

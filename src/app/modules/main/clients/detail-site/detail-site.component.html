@@ -1,78 +1,86 @@
-<div class="flex flex-col flex-auto min-w-0">
-	<div class="flex flex-col sm:py-4 sm:px-5 border-b bg-card">
-		<div class="flex-1 min-w-0">
-			<div class="mt-2">
-				<div class="w-full flex justify-between items-center px-3">
-					<div>
-						<h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
-							Cliente: </h2>
-						<div class="flex flex-wrap items-center font-medium">
-							<div>
-								<a class="whitespace-nowrap text-primary-500">{{ info.razonsocial }} ({{
-									info.tipodocumento }}: {{
-									info.numerodocumento }}) </a>
-							</div>
-						</div>
-					</div>
-
-					<div class="flex flex-row justify-between">
-						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
-							<div class="flex flex-col items-center">
-								<div class="text-4xl font-bold tracking-tight leading-none text-blue-500">{{ list.length
-									}}</div>
-								<div class="text-sm font-medium text-blue-600">Total</div>
+<ng-container *ngIf="getAction('list')">
+	<div class="flex flex-col flex-auto min-w-0">
+		<div class="flex flex-col sm:py-4 sm:px-5 border-b bg-card">
+			<div class="flex-1 min-w-0">
+				<div class="mt-2">
+					<div class="w-full flex justify-between items-center px-3">
+						<div>
+							<h2
+								class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+								Cliente: </h2>
+							<div class="flex flex-wrap items-center font-medium">
+								<div>
+									<a class="whitespace-nowrap text-primary-500">{{ info.razonsocial }} ({{
+										info.tipodocumento }}: {{
+										info.numerodocumento }}) </a>
+								</div>
 							</div>
 						</div>
 
-						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
-							<div class="flex flex-col items-center">
-								<div class="text-4xl font-bold tracking-tight leading-none text-green-500">{{
-									getLengthStatus('ACTIVO') }}</div>
-								<div class="text-sm font-medium text-green-600">Activos</div>
+						<div class="flex flex-row justify-between">
+							<div
+								class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
+								<div class="flex flex-col items-center">
+									<div class="text-4xl font-bold tracking-tight leading-none text-blue-500">{{
+										list.length
+										}}</div>
+									<div class="text-sm font-medium text-blue-600">Total</div>
+								</div>
+							</div>
+
+							<div
+								class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
+								<div class="flex flex-col items-center">
+									<div class="text-4xl font-bold tracking-tight leading-none text-green-500">{{
+										getLengthStatus('ACTIVO') }}</div>
+									<div class="text-sm font-medium text-green-600">Activos</div>
+								</div>
+							</div>
+
+							<div
+								class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
+								<div class="flex flex-col items-center">
+									<div class="text-4xl font-bold tracking-tight leading-none text-red-500">{{
+										getLengthStatus('INACTIVO') }}</div>
+									<div class="text-sm font-medium text-red-600">Inactivos</div>
+								</div>
 							</div>
 						</div>
 
-						<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden">
-							<div class="flex flex-col items-center">
-								<div class="text-4xl font-bold tracking-tight leading-none text-red-500">{{
-									getLengthStatus('INACTIVO') }}</div>
-								<div class="text-sm font-medium text-red-600">Inactivos</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="flex justify-between">
-						<button type="button" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4
+						<div class="flex justify-between">
+							<button type="button" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4
 							focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mx-2"
-							[routerLink]="['/panel/clientes']">
-							<!-- <mat-icon svgIcon="heroicons_outline:arrow-left"></mat-icon> -->
-							Regresar
-						</button>
-						<button type="button" class="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4
-						focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-							(click)="showSection('add')">Crear</button>
+								[routerLink]="['/panel/clientes']">
+								<!-- <mat-icon svgIcon="heroicons_outline:arrow-left"></mat-icon> -->
+								Regresar
+							</button>
+							<ng-container *ngIf="getAction('create')">
+								<button type="button" class="text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4
+							focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+									(click)="showSection('add')">Crear</button>
+							</ng-container>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="flex-auto p-5">
-		<div class="relative shadow-md sm:rounded-lg">
-			<div class="flex items-center justify-between pb-4 px-4">
-				<div class="flex flex-row items-center mx-4">
-					<div class="inline-flex xs:mt-0">
-						<!-- Buttons -->
-						<button *ngIf="fnDisabledBtn('previus')" (click)="fnBtnChangePage('previus')"
-							class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gray-800 mx-1 rounded-l hover:bg-gray-900">
-							<svg aria-hidden="true" class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"
-								xmlns="http://www.w3.org/2000/svg">
-								<path fill-rule="evenodd"
-									d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
-									clip-rule="evenodd"></path>
-							</svg>
-							Anterior
-						</button>
-						<!-- <ng-container *ngFor="let item of contentPagination.pages">
+		<div class="flex-auto p-5">
+			<div class="relative shadow-md sm:rounded-lg">
+				<div class="flex items-center justify-between pb-4 px-4">
+					<div class="flex flex-row items-center mx-4">
+						<div class="inline-flex xs:mt-0">
+							<!-- Buttons -->
+							<button *ngIf="fnDisabledBtn('previus')" (click)="fnBtnChangePage('previus')"
+								class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gray-800 mx-1 rounded-l hover:bg-gray-900">
+								<svg aria-hidden="true" class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"
+									xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd"
+										d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
+										clip-rule="evenodd"></path>
+								</svg>
+								Anterior
+							</button>
+							<!-- <ng-container *ngFor="let item of contentPagination.pages">
 							<ng-container
 								*ngIf="  contentPagination.current - contentPagination.range < item.page && item.page < contentPagination.current + contentPagination.range">
 								<ng-container [ngSwitch]="contentPagination.current === item.page">
@@ -94,157 +102,160 @@
 								</ng-container>
 							</ng-container>
 						</ng-container> -->
-						<button *ngIf="fnDisabledBtn('next')" (click)="fnBtnChangePage('next')" class="inline-flex items-center mx-1 px-4 py-2 text-sm font-medium text-white bg-gray-800
+							<button *ngIf="fnDisabledBtn('next')" (click)="fnBtnChangePage('next')" class="inline-flex items-center mx-1 px-4 py-2 text-sm font-medium text-white bg-gray-800
 							border-0 border-l border-gray-700 rounded-r hover:bg-gray-900 ">
-							Siguiente
-							<svg aria-hidden="true" class="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 20 20"
-								xmlns="http://www.w3.org/2000/svg">
-								<path fill-rule="evenodd"
-									d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-									clip-rule="evenodd"></path>
-							</svg>
-						</button>
-					</div>
-				</div>
-				<div>
-					<mat-form-field class="fuse-mat-dense flex-auto mr-2">
-						<mat-label class="text-lg font-medium mb-1">Departamento</mat-label>
-						<mat-select [value]="''" name="deptos" [(ngModel)]="iddepartamento"
-							(selectionChange)="getCities(iddepartamento)">
-							<mat-option value="" disabled>Seleccione una opción</mat-option>
-							<mat-option value="0">TODOS</mat-option>
-							<mat-option [value]="item.iddepartamento" *ngFor="let item of listDeptos">{{ item.nombre
-								}}</mat-option>
-						</mat-select>
-					</mat-form-field>
-
-					<mat-form-field class="fuse-mat-dense flex-auto">
-						<mat-label class="text-lg font-medium mb-1">Ciudad</mat-label>
-						<mat-select [value]="''" name="cities" [(ngModel)]="idCiudad"
-							[disabled]="listCities.length === 0" (selectionChange)="getBySite(idcliente, idCiudad)">
-							<mat-option value="" disabled>Seleccione una opción</mat-option>
-							<mat-option [value]="item.idciudad" *ngFor="let item of listCities">{{ item.nombre
-								}}</mat-option>
-						</mat-select>
-					</mat-form-field>
-				</div>
-				<div class="flex flex-row">
-					<ng-container *ngIf="list.length">
-						<button
-							class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 text-center inline-flex items-center mx-3"
-							type="button" (click)="generateExcel()"><mat-icon class="text-white"
-								svgIcon="heroicons_outline:document-download"></mat-icon></button>
-					</ng-container>
-					<label for="table-search" class="sr-only">Search</label>
-					<div class="relative">
-						<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-							<svg class="w-5 h-5 text-gray-500" aria-hidden="true" fill="currentColor"
-								viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-								<path fill-rule="evenodd"
-									d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-									clip-rule="evenodd"></path>
-							</svg>
+								Siguiente
+								<svg aria-hidden="true" class="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 20 20"
+									xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd"
+										d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+										clip-rule="evenodd"></path>
+								</svg>
+							</button>
 						</div>
-						<input type="text" id="table-search"
-							class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-							placeholder="Buscar" (keyup)="searchTerm$.next($event.target.value)">
+					</div>
+					<div>
+						<mat-form-field class="fuse-mat-dense flex-auto mr-2">
+							<mat-label class="text-lg font-medium mb-1">Departamento</mat-label>
+							<mat-select [value]="''" name="deptos" [(ngModel)]="iddepartamento"
+								(selectionChange)="getCities(iddepartamento)">
+								<mat-option value="" disabled>Seleccione una opción</mat-option>
+								<mat-option value="0">TODOS</mat-option>
+								<mat-option [value]="item.iddepartamento" *ngFor="let item of listDeptos">{{ item.nombre
+									}}</mat-option>
+							</mat-select>
+						</mat-form-field>
+
+						<mat-form-field class="fuse-mat-dense flex-auto">
+							<mat-label class="text-lg font-medium mb-1">Ciudad</mat-label>
+							<mat-select [value]="''" name="cities" [(ngModel)]="idCiudad"
+								[disabled]="listCities.length === 0" (selectionChange)="getBySite(idcliente, idCiudad)">
+								<mat-option value="" disabled>Seleccione una opción</mat-option>
+								<mat-option [value]="item.idciudad" *ngFor="let item of listCities">{{ item.nombre
+									}}</mat-option>
+							</mat-select>
+						</mat-form-field>
+					</div>
+					<div class="flex flex-row">
+						<ng-container *ngIf="list.length">
+							<button
+								class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 text-center inline-flex items-center mx-3"
+								type="button" (click)="generateExcel()"><mat-icon class="text-white"
+									svgIcon="heroicons_outline:document-download"></mat-icon></button>
+						</ng-container>
+						<label for="table-search" class="sr-only">Search</label>
+						<div class="relative">
+							<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+								<svg class="w-5 h-5 text-gray-500" aria-hidden="true" fill="currentColor"
+									viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+									<path fill-rule="evenodd"
+										d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+										clip-rule="evenodd"></path>
+								</svg>
+							</div>
+							<input type="text" id="table-search"
+								class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+								placeholder="Buscar" (keyup)="searchTerm$.next($event.target.value)">
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="">
-				<table class="w-full text-sm text-left text-gray-500">
-					<thead class="text-xs text-gray-700 uppercase bg-gray-50">
-						<tr>
-							<th scope="col" class="p-4">
-								<div class="flex items-center">
-									<input id="checkbox-all-search" type="checkbox"
-										class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
-									<label for="checkbox-all-search" class="sr-only">checkbox</label>
-								</div>
-							</th>
-							<th scope="col" class="px-6 py-3 text-center">
-								#
-							</th>
-							<th scope="col" class="px-6 py-3 text-center">
-								Cliente Sede
-							</th>
-							<th scope="col" class="px-6 py-3 text-center">
-								Codigo Costo
-							</th>
-							<th scope="col" class="px-6 py-3 text-center">
-								Ciudad
-							</th>
-							<!-- <th scope="col" class="px-6 py-3 text-center">
+				<div class="">
+					<table class="w-full text-sm text-left text-gray-500">
+						<thead class="text-xs text-gray-700 uppercase bg-gray-50">
+							<tr>
+								<th scope="col" class="p-4">
+									<div class="flex items-center">
+										<input id="checkbox-all-search" type="checkbox"
+											class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+										<label for="checkbox-all-search" class="sr-only">checkbox</label>
+									</div>
+								</th>
+								<th scope="col" class="px-6 py-3 text-center">
+									#
+								</th>
+								<th scope="col" class="px-6 py-3 text-center">
+									Cliente Sede
+								</th>
+								<th scope="col" class="px-6 py-3 text-center">
+									Codigo Costo
+								</th>
+								<th scope="col" class="px-6 py-3 text-center">
+									Ciudad
+								</th>
+								<!-- <th scope="col" class="px-6 py-3 text-center">
 								Razón Social
 							</th> -->
-							<th scope="col" class="px-6 py-3 text-center">
-								Estado
-							</th>
-							<th scope="col" class="px-6 py-3 text-center">
-								Fecha Registro
-							</th>
-							<th scope="col" class="px-6 py-3 text-center">
-								Usuario Creador
-							</th>
-							<th scope="col" class="px-6 py-3 text-center"></th>
-						</tr>
-					</thead>
-					<tbody>
-						<ng-container *ngIf="list.length; else noContent">
-							<ng-container *ngFor="let item of contentPagination.pages[contentPagination.current].data;">
-								<tr
-									class="bg-white border-b">
-									<td class="w-4 p-4">
-										<div class="flex items-center">
-											<input id="checkbox-table-search-1" type="checkbox"
-												class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
-											<label for="checkbox-table-search-1" class="sr-only">checkbox</label>
-										</div>
-									</td>
-									<td class="px-6 py-4 text-center">
-										{{ item.idclientesede }}
-									</td>
-									<td scope="row"
-										class="px-6 py-4 text-left font-medium text-gray-900 whitespace-nowrap">
-										{{ item.cliensede }}
-									</td>
-									<td class="px-6 py-4 text-center">
-										{{ item.codigocosto }}
-									</td>
-									<td class="px-6 py-4 text-center">
-										{{ item.ciudad }}
-									</td>
-									<!-- <td class="px-6 py-4 text-center">
+								<th scope="col" class="px-6 py-3 text-center">
+									Estado
+								</th>
+								<th scope="col" class="px-6 py-3 text-center">
+									Fecha Registro
+								</th>
+								<th scope="col" class="px-6 py-3 text-center">
+									Usuario Creador
+								</th>
+								<th scope="col" class="px-6 py-3 text-center"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<ng-container *ngIf="list.length; else noContent">
+								<ng-container
+									*ngFor="let item of contentPagination.pages[contentPagination.current].data;">
+									<tr class="bg-white border-b">
+										<td class="w-4 p-4">
+											<div class="flex items-center">
+												<input id="checkbox-table-search-1" type="checkbox"
+													class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2">
+												<label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+											</div>
+										</td>
+										<td class="px-6 py-4 text-center">
+											{{ item.idclientesede }}
+										</td>
+										<td scope="row"
+											class="px-6 py-4 text-left font-medium text-gray-900 whitespace-nowrap">
+											{{ item.cliensede }}
+										</td>
+										<td class="px-6 py-4 text-center">
+											{{ item.codigocosto }}
+										</td>
+										<td class="px-6 py-4 text-center">
+											{{ item.ciudad }}
+										</td>
+										<!-- <td class="px-6 py-4 text-center">
 										{{ item.razonsocial }}
 									</td> -->
-									<td class="px-6 py-4 text-center">
-										{{ item.estado }}
-									</td>
-									<td class="px-6 py-4 text-center">
-										{{ item.fecharegistro | date:'short' | setTimeDifference }}
-									</td>
-									<td class="px-6 py-4 text-center">
-										{{ item.usuarioregistra }}
-									</td>
-									<td class="px-6 py-4 text-center">
-										<a (click)="showSection('edit', item)"
-											class="font-medium text-blue-600 hover:underline cursor-pointer">Editar</a>
-									</td>
-								</tr>
+										<td class="px-6 py-4 text-center">
+											{{ item.estado }}
+										</td>
+										<td class="px-6 py-4 text-center">
+											{{ item.fecharegistro | date:'short' | setTimeDifference }}
+										</td>
+										<td class="px-6 py-4 text-center">
+											{{ item.usuarioregistra }}
+										</td>
+										<td class="px-6 py-4 text-center">
+											<ng-container *ngIf="getAction('edit')">
+												<a (click)="showSection('edit', item)"
+													class="font-medium text-blue-600 hover:underline cursor-pointer">Editar</a>
+											</ng-container>
+										</td>
+									</tr>
+								</ng-container>
 							</ng-container>
-						</ng-container>
 
-						<ng-template #noContent>
-							<tr>
-								<td colspan="9" class="px-6 py-4 text-center">Sin información</td>
-							</tr>
-						</ng-template>
-					</tbody>
-				</table>
+							<ng-template #noContent>
+								<tr>
+									<td colspan="9" class="px-6 py-4 text-center">Sin información</td>
+								</tr>
+							</ng-template>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
+</ng-container>
 
 <ng-container *ngIf="section">
 	<div class="absolute z-10 w-full">
@@ -350,14 +361,18 @@
 							(click)="section = null">Cancelar</button>
 						<ng-container [ngSwitch]="section">
 							<ng-container *ngSwitchCase="'add'">
-								<button type="button"
-									class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-									(click)="create()">Guardar</button>
+								<ng-container *ngIf="getAction('create_site')">
+									<button type="button"
+										class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+										(click)="create()">Guardar</button>
+								</ng-container>
 							</ng-container>
 							<ng-container *ngSwitchCase="'edit'">
-								<button type="button"
-									class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-									(click)="update()">Editar</button>
+								<ng-container *ngIf="getAction('edit_site')">
+									<button type="button"
+										class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+										(click)="update()">Editar</button>
+								</ng-container>
 							</ng-container>
 						</ng-container>
 					</div>

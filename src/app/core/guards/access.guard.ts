@@ -37,6 +37,10 @@ export class AccessGuard implements CanActivateChild {
 			return true;
 		}
 
+		if (state.url.includes('/panel/clientes/sede') && (this._menu.getAction('administration.clients', 'view_sites'))) {
+			return true;
+		}
+
 		if (
 			!this._menu
 				.getMenuOneLevel(this._storage.getRolID())

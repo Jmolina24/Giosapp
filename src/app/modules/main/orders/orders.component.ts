@@ -1,3 +1,6 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable quotes */
+/* eslint-disable max-len */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FilesService } from 'app/core/helpers/files.service';
 import { StorageService } from 'app/core/helpers/storage.service';
@@ -43,12 +46,12 @@ export class OrdersComponent implements OnInit {
 		totalPages: number;
 		range?: number;
 	} = {
-			current: 0,
-			pages: [{ data: [], page: 0 }],
-			countForPages: 5,
-			totalPages: 0,
-			range: 3,
-		};
+		current: 0,
+		pages: [{ data: [], page: 0 }],
+		countForPages: 5,
+		totalPages: 0,
+		range: 3,
+	};
 
 	options: 'ACTIVO' | 'PROCESADO' | 'ANULADA' | 'TOTAL' = 'ACTIVO';
 
@@ -62,7 +65,7 @@ export class OrdersComponent implements OnInit {
 		private _services: ServicesService,
 		private _storage: StorageService,
 		private _menu: MenuService
-	) { }
+	) {}
 
 	ngOnInit(): void {
 		this.actions = this._menu.getActions('process.orders');
@@ -77,25 +80,23 @@ export class OrdersComponent implements OnInit {
 	}
 
 	get(): void {
-		this._orders
-			.get()
-			.subscribe((response: any) => {
-				if (!response) {
-					return;
-				}
-				response.map((element: any) => {
-					element.fechaentrega = element.fechaentrega
-						.split('/')
-						.reverse()
-						.join('-');
-					return element;
-				});
-
-				this.list = response;
-				this.listCopy = JSON.parse(JSON.stringify(response));
-
-				this.sort();
+		this._orders.get().subscribe((response: any) => {
+			if (!response) {
+				return;
+			}
+			response.map((element: any) => {
+				element.fechaentrega = element.fechaentrega
+					.split('/')
+					.reverse()
+					.join('-');
+				return element;
 			});
+
+			this.list = response;
+			this.listCopy = JSON.parse(JSON.stringify(response));
+
+			this.sort();
+		});
 	}
 
 	getTypes(): void {
@@ -146,6 +147,7 @@ export class OrdersComponent implements OnInit {
 						(r: any[]) => {
 							this._alert.closeAlert();
 							this.get();
+							const data = JSON.parse(JSON.stringify(this.data));
 							this.showSection(null);
 							const i = r.filter(
 								element => element.codigo !== 0
@@ -158,10 +160,69 @@ export class OrdersComponent implements OnInit {
 								return;
 							}
 
-							this._alert.success({
-								title: response.titulo,
-								text: 'Orden y Detalle(s) de Orden Creados Correctamente...',
-							});
+							// {
+							// 	"idorden": "",
+							// 	"idtipoorden": 13,
+							// 	"fechaentrega": "2023-06-23",
+							// 	"horaentrega": "00:57",
+							// 	"observacion": "",
+							// 	"idcliente": "14",
+							// 	"idclientesede": 277,
+							// 	"idusuarioregistra": 1
+							// }
+
+							// {
+							// 	"codigo": 0,
+							// 	"mensaje": "Orden Creada Correctamente...",
+							// 	"idorden": 47
+							// }
+
+							// {
+							// 	"idservicio": 38,
+							// 	"cantidad": "12",
+							// 	"referencia": "",
+							// 	"observacion": "",
+							// 	"idorden": 47,
+							// 	"iddetalleorden": "0",
+							// 	"idusuarioregistra": 1
+							// }
+
+							// {
+							// 	"codigo": 0,
+							// 	"mensaje": "Detalle Orden Creado Correctamente...",
+							// 	"iddetalleorden": 55
+							// }
+
+							const clienteSede: any = this.getInfoSites(
+								data.idclientesede
+							);
+							console.log(clienteSede);
+							const message = `
+							?? Hola, he generado una orden de servicio%0A *ORD-${response.idorden}*%0A??? ${
+								data.fechaentrega
+							} ? ${
+								data.horaentrega
+							}%0A%0A*Tipo de orden*: ${this.getNameOrderType(
+								data.idtipoorden
+							)}%0A%0A*Sede-Cliente*: ${
+								clienteSede.cliensede
+							}%0A*Dirección*: ${
+								clienteSede.direccion
+							}%0A*Contacto*: ${clienteSede.contacto} ${
+								clienteSede.telefono
+							}%0A%0A?? *Detalle Servicio*${ JSON.parse(JSON.stringify(this.listDetails)).map(e => (`%0A%0A- x${e.cantidad} ${this.getInfoService(e.idservicio).nombre} - ${this.getInfoService(e.idservicio).unidad_medida}`)) }%0A%0A*Usuario Registra*: ${ this._storage.getUser().nombre }%0A%0A?? Envía este mensaje. Te atenderemos enseguida%0A`;
+							this._alert
+								.confirm({
+									title: response.titulo,
+									text: 'Orden y Detalle(s) de Orden Creados Correctamente...¿Desea enviar un mensaje al WhatsApp?',
+								})
+								.then((alertResponse) => {
+									if (alertResponse.isConfirmed) {
+										window.open(
+											`https://api.whatsapp.com/send?phone=57${clienteSede.telefono}&text=${message}`
+										);
+									}
+								});
 						},
 						({ error }) => {
 							this._alert.error({
@@ -270,7 +331,7 @@ export class OrdersComponent implements OnInit {
 				horaentrega: '',
 				observacion: '',
 				idcliente: this.idcliente,
-				idclientesede: this.idclientesede
+				idclientesede: this.idclientesede,
 			};
 
 			this.dataDetail = {
@@ -291,7 +352,6 @@ export class OrdersComponent implements OnInit {
 		this.data['idcliente'] = String(this.data.idcliente);
 
 		this.getSites(this.data.idcliente);
-
 	}
 
 	search(): void {
@@ -398,7 +458,9 @@ export class OrdersComponent implements OnInit {
 		if (this.options === 'TOTAL') {
 			this.list = this.listCopy;
 		} else {
-			this.list = this.listCopy.filter((item: any) => item.estado === this.options);
+			this.list = this.listCopy.filter(
+				(item: any) => item.estado === this.options
+			);
 		}
 
 		this.fnPagination();
@@ -406,5 +468,20 @@ export class OrdersComponent implements OnInit {
 
 	getAction(item: Action): boolean {
 		return this.actions.includes(item);
+	}
+
+	getNameOrderType(idtipoorden: string | number): string {
+		return this.listTypes.find(r => r.idtipoorden == idtipoorden).nombre;
+	}
+
+	getInfoSites(idclientesede: string | number): any {
+		console.log(idclientesede, this.listSites, this.listSites.find(r => r.idclientesede == idclientesede));
+		return this.listSites.find(
+			r => r.idclientesede == idclientesede
+		);
+	}
+
+	getInfoService(idservicio: string | number): any {
+		return this.listServices.find(r => r.idservicio === idservicio);
 	}
 }

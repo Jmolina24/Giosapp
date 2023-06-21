@@ -4,6 +4,7 @@ import { FilesService } from 'app/core/helpers/files.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { ClientsService } from 'app/core/services/clients.service';
 import { GeneralService } from 'app/core/services/general.service';
+import { Action, MenuService } from 'app/core/services/menu.service';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -48,33 +49,39 @@ export class DetailSiteComponent implements OnInit {
 		range: 3,
 	};
 
+	actions: Action[];
+
 	constructor(
 		private _service: ClientsService,
 		private _general: GeneralService,
 		private route: ActivatedRoute,
 		private _alert: SweetAlertService,
-		private _files: FilesService
+		private _files: FilesService,
+		private _menu: MenuService
 	) {}
 
 	ngOnInit(): void {
-		this.route.params.subscribe((params) => {
-			this.idcliente = params['id'];
-			if (!this.idcliente) {
-				return;
-			}
+		this.actions = this._menu.getActions('administration.clients');
+		if (this.getAction('view_sites')) {
+			this.route.params.subscribe((params) => {
+				this.idcliente = params['id'];
+				if (!this.idcliente) {
+					return;
+				}
 
-			this.get(this.idcliente);
+				this.get(this.idcliente);
 
-			this.getBySite(this.idcliente);
+				this.getBySite(this.idcliente);
 
-			this.getDeptos();
+				this.getDeptos();
 
-			this.getAll();
+				this.getAll();
 
-			this.search();
+				this.search();
 
-			this.getTypes();
-		});
+				this.getTypes();
+			});
+		}
 	}
 
 	get(idcliente: string = '0'): void {
@@ -295,5 +302,9 @@ export class DetailSiteComponent implements OnInit {
 			this.list,
 			this.info.numerodocumento + '_' + this.info.razonsocial
 		);
+	}
+
+	getAction(item: Action): boolean {
+		return this.actions.includes(item);
 	}
 }
