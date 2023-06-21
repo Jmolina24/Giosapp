@@ -148,6 +148,7 @@ export class OrdersComponent implements OnInit {
 							this._alert.closeAlert();
 							this.get();
 							const data = JSON.parse(JSON.stringify(this.data));
+							const listDetails = JSON.parse(JSON.stringify(this.listDetails));
 							this.showSection(null);
 							const i = r.filter(
 								element => element.codigo !== 0
@@ -160,47 +161,18 @@ export class OrdersComponent implements OnInit {
 								return;
 							}
 
-							// {
-							// 	"idorden": "",
-							// 	"idtipoorden": 13,
-							// 	"fechaentrega": "2023-06-23",
-							// 	"horaentrega": "00:57",
-							// 	"observacion": "",
-							// 	"idcliente": "14",
-							// 	"idclientesede": 277,
-							// 	"idusuarioregistra": 1
-							// }
-
-							// {
-							// 	"codigo": 0,
-							// 	"mensaje": "Orden Creada Correctamente...",
-							// 	"idorden": 47
-							// }
-
-							// {
-							// 	"idservicio": 38,
-							// 	"cantidad": "12",
-							// 	"referencia": "",
-							// 	"observacion": "",
-							// 	"idorden": 47,
-							// 	"iddetalleorden": "0",
-							// 	"idusuarioregistra": 1
-							// }
-
-							// {
-							// 	"codigo": 0,
-							// 	"mensaje": "Detalle Orden Creado Correctamente...",
-							// 	"iddetalleorden": 55
-							// }
-
-							const clienteSede: any = this.getInfoSites(
-								data.idclientesede
-							);
-							console.log(clienteSede);
+							this._alert
+								.confirm({
+									title: response.titulo,
+									text: 'Orden y Detalle(s) de Orden Creados Correctamente...¿Desea enviar un mensaje al WhatsApp?',
+								})
+								.then((alertResponse) => {
+									if (alertResponse.isConfirmed) {
+										const clienteSede: any = this.getInfoSites(data.idclientesede);
 							const message = `
-							?? Hola, he generado una orden de servicio%0A *ORD-${response.idorden}*%0A??? ${
+							👋 Hola, he generado una orden de servicio%0A *ORD-${response.idorden}*%0A🗓️ ${
 								data.fechaentrega
-							} ? ${
+							} ⏰ ${
 								data.horaentrega
 							}%0A%0A*Tipo de orden*: ${this.getNameOrderType(
 								data.idtipoorden
@@ -210,14 +182,7 @@ export class OrdersComponent implements OnInit {
 								clienteSede.direccion
 							}%0A*Contacto*: ${clienteSede.contacto} ${
 								clienteSede.telefono
-							}%0A%0A?? *Detalle Servicio*${ JSON.parse(JSON.stringify(this.listDetails)).map(e => (`%0A%0A- x${e.cantidad} ${this.getInfoService(e.idservicio).nombre} - ${this.getInfoService(e.idservicio).unidad_medida}`)) }%0A%0A*Usuario Registra*: ${ this._storage.getUser().nombre }%0A%0A?? Envía este mensaje. Te atenderemos enseguida%0A`;
-							this._alert
-								.confirm({
-									title: response.titulo,
-									text: 'Orden y Detalle(s) de Orden Creados Correctamente...¿Desea enviar un mensaje al WhatsApp?',
-								})
-								.then((alertResponse) => {
-									if (alertResponse.isConfirmed) {
+							}%0A%0A📝 *Detalle Servicio*${ listDetails.map(e => (`%0A%0A- x${e.cantidad} ${this.getInfoService(e.idservicio).nombre} - ${this.getInfoService(e.idservicio).unidad_medida}`)) }%0A%0A*Usuario Registra*: ${ this._storage.getUser().nombre }%0A%0A👆 Envía este mensaje. Te atenderemos enseguida%0A`;
 										window.open(
 											`https://api.whatsapp.com/send?phone=57${clienteSede.telefono}&text=${message}`
 										);

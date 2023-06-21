@@ -219,8 +219,7 @@ export class SweetAlertService {
 		return await Swal.fire({
 			title: content.title,
 			text: content.text,
-			icon: 'info',
-			timer: 5000,
+			icon: 'question',
 			showDenyButton: true,
 			showCancelButton: false,
 			confirmButtonText: 'Confirmar',
