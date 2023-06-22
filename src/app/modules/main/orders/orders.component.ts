@@ -148,7 +148,9 @@ export class OrdersComponent implements OnInit {
 							this._alert.closeAlert();
 							this.get();
 							const data = JSON.parse(JSON.stringify(this.data));
-							const listDetails = JSON.parse(JSON.stringify(this.listDetails));
+							const listDetails = JSON.parse(
+								JSON.stringify(this.listDetails)
+							);
 							this.showSection(null);
 							const i = r.filter(
 								element => element.codigo !== 0
@@ -168,21 +170,39 @@ export class OrdersComponent implements OnInit {
 								})
 								.then((alertResponse) => {
 									if (alertResponse.isConfirmed) {
-										const clienteSede: any = this.getInfoSites(data.idclientesede);
-							const message = `
+										const clienteSede: any =
+											this.getInfoSites(
+												data.idclientesede
+											);
+										const message = `
 							👋 Hola, he generado una orden de servicio%0A *ORD-${response.idorden}*%0A🗓️ ${
-								data.fechaentrega
-							} ⏰ ${
-								data.horaentrega
-							}%0A%0A*Tipo de orden*: ${this.getNameOrderType(
-								data.idtipoorden
-							)}%0A%0A*Sede-Cliente*: ${
-								clienteSede.cliensede
-							}%0A*Dirección*: ${
-								clienteSede.direccion
-							}%0A*Contacto*: ${clienteSede.contacto} ${
-								clienteSede.telefono
-							}%0A%0A📝 *Detalle Servicio*${ listDetails.map(e => (`%0A%0A- x${e.cantidad} ${this.getInfoService(e.idservicio).nombre} - ${this.getInfoService(e.idservicio).unidad_medida}`)) }%0A%0A*Usuario Registra*: ${ this._storage.getUser().nombre }%0A%0A👆 Envía este mensaje. Te atenderemos enseguida%0A`;
+											data.fechaentrega
+										} ⏰ ${
+											data.horaentrega
+										}%0A%0A*Tipo de orden*: ${this.getNameOrderType(
+											data.idtipoorden
+										)}%0A%0A*Sede-Cliente*: ${
+											clienteSede.cliensede
+										}%0A*Dirección*: ${
+											clienteSede.direccion
+										}%0A*Contacto*: ${
+											clienteSede.contacto
+										} ${
+											clienteSede.telefono
+										}%0A%0A📝 *Detalle Servicio*${listDetails.map(
+											e =>
+												`%0A%0A- x${e.cantidad} ${
+													this.getInfoService(
+														e.idservicio
+													).nombre
+												} - ${
+													this.getInfoService(
+														e.idservicio
+													).unidad_medida
+												}`
+										)}%0A%0A*Usuario Registra*: ${
+											this._storage.getUser().nombre
+										}%0A%0A👆 Envía este mensaje. Te atenderemos enseguida%0A`;
 										window.open(
 											`https://api.whatsapp.com/send?phone=57${clienteSede.telefono}&text=${message}`
 										);
@@ -440,10 +460,12 @@ export class OrdersComponent implements OnInit {
 	}
 
 	getInfoSites(idclientesede: string | number): any {
-		console.log(idclientesede, this.listSites, this.listSites.find(r => r.idclientesede == idclientesede));
-		return this.listSites.find(
-			r => r.idclientesede == idclientesede
+		console.log(
+			idclientesede,
+			this.listSites,
+			this.listSites.find(r => r.idclientesede == idclientesede)
 		);
+		return this.listSites.find(r => r.idclientesede == idclientesede);
 	}
 
 	getInfoService(idservicio: string | number): any {

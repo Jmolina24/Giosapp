@@ -1,7 +1,7 @@
 /* eslint-disable quote-props */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ChartComponent, ApexOptions } from 'ng-apexcharts';
+import { ChartComponent, ApexOptions, ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexPlotOptions, ApexXAxis } from 'ng-apexcharts';
 
 import * as _ from 'lodash';
 import { OrdersService } from 'app/core/services/orders.service';
@@ -59,15 +59,24 @@ const githubIssues = {
 	},
 };
 
+export type ChartOptions = {
+	series: ApexAxisChartSeries;
+	chart: ApexChart;
+	dataLabels: ApexDataLabels;
+	plotOptions: ApexPlotOptions;
+	xaxis: ApexXAxis;
+  };
+
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-	@ViewChild('chart') chart: ChartComponent;
+	// @ViewChild('chart') chart: ChartComponent;
 
 	chartGithubIssues: ApexOptions = {};
+	chartOptions: Partial<ChartOptions>;
 
 	constructor(private _orders: OrdersService) {}
 
@@ -151,6 +160,39 @@ export class HomeComponent implements OnInit {
 				},
 			},
 		};
+
+		this.chartOptions = {
+			series: [
+			  {
+				name: 'basic',
+				data: [20, 40],
+				color: '#F44336'
+			  },
+			  {
+				name: 'basic',
+				data: [20, 40],
+				color: '#F44336'
+			  },
+			],
+			chart: {
+			  type: 'bar',
+			  height: 350
+			},
+			plotOptions: {
+			  bar: {
+				horizontal: true
+			  }
+			},
+			dataLabels: {
+			  enabled: false
+			},
+			xaxis: {
+			  categories: [
+				'Extemporanios',
+				'En Tiempos'
+			  ]
+			}
+		  };
 	}
 
 	private _test(): void {

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
@@ -78,12 +79,12 @@ export class DetailsComponent implements OnInit, OnChanges {
 		totalPages: number;
 		range?: number;
 	} = {
-			current: 0,
-			pages: [{ data: [], page: 0 }],
-			countForPages: 5,
-			totalPages: 0,
-			range: 3,
-		};
+		current: 0,
+		pages: [{ data: [], page: 0 }],
+		countForPages: 5,
+		totalPages: 0,
+		range: 3,
+	};
 
 	actions: Action[];
 
@@ -97,7 +98,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 		private _rates: RatesService,
 		private _menu: MenuService,
 		private _storage: StorageService
-	) { }
+	) {}
 
 	ngOnInit(): void {
 		this.idrole = this._storage.getRolID();
@@ -151,7 +152,9 @@ export class DetailsComponent implements OnInit, OnChanges {
 		this._service.getSupports({ iddetalleorden }).subscribe((response) => {
 			this.listSupport = response.map((r) => {
 				if (r.estado === 'CARGADO' && r.soporte) {
-					r.soporte = 'https://demo.mainsoft.technology' + r.soporte.split('/web')[1];
+					r.soporte =
+						'https://demo.mainsoft.technology' +
+						r.soporte.split('/web')[1];
 					const soporte = r.soporte.split('.');
 					r.tipo = soporte[soporte.length - 1].toUpperCase();
 				}
@@ -223,18 +226,20 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	getThirdsServices(idservicio: string, idciudad: string): void {
-		this._rates.get({ idservicio, idciudad }).subscribe((response: any[]) => {
-			if (response.length === 0) {
-				this._alert.error({
-					title: 'Error',
-					text: 'No Existe Tarifa Parametrizada Para El Servicio. Contactar al Administrador',
-				});
-				this.showSection(null, null);
-				return;
-			}
-			this.section = 'assign';
-			this.listThirdsServices = response;
-		});
+		this._rates
+			.get({ idservicio, idciudad })
+			.subscribe((response: any[]) => {
+				if (response.length === 0) {
+					this._alert.error({
+						title: 'Error',
+						text: 'No Existe Tarifa Parametrizada Para El Servicio. Contactar al Administrador',
+					});
+					this.showSection(null, null);
+					return;
+				}
+				this.section = 'assign';
+				this.listThirdsServices = response;
+			});
 	}
 
 	create(): void {
@@ -333,10 +338,40 @@ export class DetailsComponent implements OnInit, OnChanges {
 						return;
 					}
 
-					this._alert.success({
-						title: response.titulo,
-						text: response.mensaje,
-					});
+					this._alert
+						.confirm({
+							title: response.titulo,
+							text:
+								response.mensaje +
+								'¿Desea enviar un mensaje al WhatsApp?',
+						})
+						.then((alertResponse) => {
+							if (alertResponse.isConfirmed) {
+								const data = JSON.parse(
+									JSON.stringify(this.data)
+								);
+								const message = `👋 Hola, te he Asignado un Servicio para Gestión%0A *SER-${
+									data.iddetalleorden
+								}*%0A🗓️ ${data.fechaentrega} ⏰ ${
+									data.horaentrega
+								}%0A%0A*Datos del Cliente*%0A%0ASede-Cliente: ${
+									data.clientesede
+								} (${data.cliente})%0ADireccion: ${
+									data.direccion_sede
+								} (${data.ciudadservicio} - ${
+									data.deptoservicio
+								})%0AContacto: ${data.contacto_sede} ${
+									data.telefono_sede
+								}
+								%0A%0A📝 *Detalle Servicio*
+								%0A%0A- *x${data.cantidad} ${data.servicio} - ${data.unidadmedida}*
+								%0A%0A*Usuario Asigna:* ${this._storage.getUser().nombre}
+								%0A%0A👆 Envía este mensaje. Te atenderemos enseguida.`;
+								window.open(
+									`https://api.whatsapp.com/send?phone=57${data.telefono_sede}&text=${message}`
+								);
+							}
+						});
 
 					this.getByOrden(this.idorden);
 					this.showSection(null);
@@ -352,7 +387,6 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	showSection(section: 'add' | 'edit' | 'assign', data = null): void {
-
 		if (!section) {
 			this.section = section;
 			return;
@@ -381,6 +415,8 @@ export class DetailsComponent implements OnInit, OnChanges {
 				idterceroservicio: '',
 				valor: '',
 			};
+
+			console.log(this.data);
 			this.getThirdsServices(data.idservicio, data.idciudadservicio);
 		}
 	}
@@ -498,11 +534,14 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	getNameDetailSoporte(id: any): string {
-		return this.listSupport.find(e => e.iddetalleordensoporte === id).tiposoporte;
+		return this.listSupport.find(e => e.iddetalleordensoporte === id)
+			.tiposoporte;
 	}
 
 	deleteFile(f: any): void {
-		this.files = this.files.filter(w => w.iddetalleordensoporte !== f.iddetalleordensoporte);
+		this.files = this.files.filter(
+			w => w.iddetalleordensoporte !== f.iddetalleordensoporte
+		);
 	}
 
 	isIdRepeated(id: number): boolean {
@@ -518,7 +557,9 @@ export class DetailsComponent implements OnInit, OnChanges {
 			return;
 		}
 
-		if (this.files.some(e => this.isIdRepeated(e.iddetalleordensoporte))) {
+		if (
+			this.files.some(e => this.isIdRepeated(e.iddetalleordensoporte))
+		) {
 			this._alert.error({
 				title: 'Error',
 				text: 'Solamente se permite un archivo por tipo de soporte',
@@ -634,11 +675,16 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	changeFileNextOrPrevius(section: 'next' | 'previus', file: any): void {
-		const d = this.listSupport.findIndex(r => r.iddetalleordensoporte === file.iddetalleordensoporte);
+		const d = this.listSupport.findIndex(
+			r => r.iddetalleordensoporte === file.iddetalleordensoporte
+		);
 
 		switch (section) {
 			case 'next':
-				this.support = this.listSupport[d + 1 === this.listSupport.length ? 0 : d + 1];
+				this.support =
+					this.listSupport[
+						d + 1 === this.listSupport.length ? 0 : d + 1
+					];
 				break;
 			case 'previus':
 				this.support = this.listSupport[d === 0 ? 0 : d - 1];
