@@ -1,10 +1,10 @@
 /* eslint-disable quote-props */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ChartComponent, ApexOptions, ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexPlotOptions, ApexXAxis } from 'ng-apexcharts';
+import { Component, OnInit } from '@angular/core';
+import { ApexOptions, ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexPlotOptions, ApexXAxis } from 'ng-apexcharts';
 
 import * as _ from 'lodash';
 import { OrdersService } from 'app/core/services/orders.service';
+import { StorageService } from 'app/core/helpers/storage.service';
 
 const githubIssues = {
 	overview: {
@@ -78,7 +78,11 @@ export class HomeComponent implements OnInit {
 	chartGithubIssues: ApexOptions = {};
 	chartOptions: Partial<ChartOptions>;
 
-	constructor(private _orders: OrdersService) {}
+	user: any = {};
+
+	constructor(private _orders: OrdersService, private _storage: StorageService) {
+		this.user = _storage.getUser();
+	}
 
 	ngOnInit(): void {
 		this._prepareChartData();
