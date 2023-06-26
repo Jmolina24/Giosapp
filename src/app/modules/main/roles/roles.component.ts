@@ -40,6 +40,10 @@ export class RolesComponent implements OnInit {
 
 	actions: Action[];
 
+	selectedValue: string;
+	options: string[] = ['Opción 1', 'Prueba 2'];
+
+
 	constructor(
 		private _service: RolesService,
 		private _alert: SweetAlertService,
@@ -332,5 +336,9 @@ export class RolesComponent implements OnInit {
 
 	getAction(item: Action): boolean {
 		return this.actions.includes(item);
+	}
+
+	onOptionSelected(event: any): void {
+		console.log('Opción seleccionada:', event.option.value);
 	}
 }

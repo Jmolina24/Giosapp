@@ -664,6 +664,11 @@ export class DetailsComponent implements OnInit, OnChanges {
 		this._file.download(url);
 	}
 
+	downloadAll(): void {
+		// this._file.downloadAll([{ soporte: 'http://localhost:5200/assets/images/logo/logo_verde.png', tipo: 'png' }].map(({ soporte, tipo }) => ({ soporte, tipo })));
+		this._file.downloadAll(this.getUploadedFiles().map(({ soporte, tipo }) => ({ soporte: 'https://demo.mainsoft.technology' + soporte, tipo })));
+	}
+
 	fnModalViewFile(file: any = null): void {
 		if (file) {
 			this.support = file;
@@ -694,5 +699,9 @@ export class DetailsComponent implements OnInit, OnChanges {
 
 	getAction(item: Action): boolean {
 		return this.actions.includes(item);
+	}
+
+	getUploadedFiles(): any[] {
+		return this.listSupport.filter(({ estado }) => estado === 'CARGADO');
 	}
 }

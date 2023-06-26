@@ -28,6 +28,7 @@ import { DetailFileComponent } from 'app/modules/main/detail-file/detail-file.co
 import { SetTimeDifferencePipe } from 'app/core/pipes/set-time-difference.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @NgModule({
 	declarations: [
@@ -62,7 +63,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 		MatSelectModule,
 		SharedModule,
 		NgApexchartsModule,
-		MatTooltipModule
+		MatTooltipModule,
+		MatAutocompleteModule
 	],
 })
 export class MainModule {}

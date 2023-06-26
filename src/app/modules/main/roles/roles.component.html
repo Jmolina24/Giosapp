@@ -229,7 +229,17 @@
 						<input id="name" matInput placeholder="Nombre del rol" name="name" [(ngModel)]="data.nombre">
 					</mat-form-field>
 
+
 					<mat-form-field class="w-full">
+						<mat-label class="text-lg font-medium mb-1">Tipo</mat-label>
+						<input matInput type="text" name="search" [(ngModel)]="selectedValue"
+							[matAutocomplete]="auto" />
+					</mat-form-field>
+					<mat-autocomplete #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+						<mat-option *ngFor="let option of options" [value]="option">{{ option }}</mat-option>
+					</mat-autocomplete>
+
+					<!-- <mat-form-field class="w-full">
 						<mat-label class="text-lg font-medium mb-1">Tipo</mat-label>
 						<mat-select [value]="''" name="type" [(ngModel)]="data.tipo" name="type">
 							<mat-option value="" disabled>Seleccione una opción</mat-option>
@@ -237,7 +247,7 @@
 							<mat-option value="T">Tercero</mat-option>
 							<mat-option value="A">Administrador</mat-option>
 						</mat-select>
-					</mat-form-field>
+					</mat-form-field> -->
 
 					<div class="flex flex-col">
 						<span class="text-lg font-medium mb-2">Permisos</span>

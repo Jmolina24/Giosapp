@@ -2,20 +2,27 @@ import { Injectable } from '@angular/core';
 
 import * as XLSX from 'xlsx';
 import { ApiService } from '../api/api.service';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 import * as File from 'file-saver';
 
-const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+import * as jszip from 'jszip';
+import { SweetAlertService } from './sweet-alert.service';
+
+const EXCEL_TYPE =
+	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class FilesService {
-
-	constructor(private _api: ApiService, private _http: HttpClient) {}
+	constructor(
+		private _api: ApiService,
+		private _http: HttpClient,
+		private _alert: SweetAlertService
+	) {}
 
 	public exportAsExcelFile(
 		data: any[],
@@ -39,8 +46,43 @@ export class FilesService {
 	}
 
 	download(url: string): void {
-		this._http.get(url, { responseType: 'blob' }).subscribe((response: Blob) => {
-			File.saveAs(response);
+		this._http
+			.get(url, { responseType: 'blob' })
+			.subscribe((response: Blob) => {
+				File.saveAs(response);
+			});
+	}
+
+	downloadAll(files: { soporte: string; tipo: string }[]): void {
+		forkJoin(
+			files.map(r =>
+				this._http.get(r.soporte, { responseType: 'blob' })
+			)
+		).subscribe((response: any[]) => {
+			if (response.some(r => !r)) {
+				this._alert.error({
+					title: 'Error',
+					text: 'Error al procesar el contenido.',
+				});
+				return;
+			}
+
+			const zip = new jszip();
+
+			response.forEach((r, i) => {
+				if (r) {
+					zip.file(new Date().getTime().toString() + '.' + files[i].tipo, r);
+				}
+			});
+
+			zip.generateAsync({ type: 'blob' }).then((content) => {
+				File.saveAs(content, 'documentos.zip');
+			});
+		}, ({ message }) => {
+			this._alert.error({
+				title: 'Error',
+				text: message || 'Error al procesar el contenido.',
+			});
 		});
 	}
 }
