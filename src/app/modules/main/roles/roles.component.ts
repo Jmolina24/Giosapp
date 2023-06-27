@@ -41,8 +41,6 @@ export class RolesComponent implements OnInit {
 	actions: Action[];
 
 	selectedValue: string;
-	options: string[] = ['Opción 1', 'Prueba 2'];
-
 
 	constructor(
 		private _service: RolesService,

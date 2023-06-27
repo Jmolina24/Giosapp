@@ -291,7 +291,7 @@
 					</div>
 
 					<div class="w-full flex justify-between">
-						<mat-form-field class="fuse-mat-dense flex-auto mr-2">
+						<!-- <mat-form-field class="fuse-mat-dense flex-auto mr-2">
 							<mat-label class="text-lg font-medium mb-1">Departamentos</mat-label>
 							<mat-select [value]="''" name="deptos" [(ngModel)]="data.iddepartamento"
 								(selectionChange)="getCities(data.iddepartamento)">
@@ -299,16 +299,26 @@
 								<mat-option [value]="item.iddepartamento" *ngFor="let item of listDeptos">{{ item.nombre
 									}}</mat-option>
 							</mat-select>
+						</mat-form-field> -->
+
+						<mat-form-field class="fuse-mat-dense flex-auto mr-2">
+							<mat-label class="text-lg font-medium mb-1">Departamento</mat-label>
+							<input type="text" placeholder="Departamento" matInput [formControl]="control" [matAutocomplete]="auto">
+							<mat-autocomplete #auto="matAutocomplete">
+								<mat-option *ngFor="let option of filteredOptions | async" [value]="option.nombre" (click)="getCities(option.iddepartamento)">
+									{{ option.nombre }}
+								</mat-option>
+							</mat-autocomplete>
 						</mat-form-field>
 
-						<mat-form-field class="fuse-mat-dense flex-auto">
+						<mat-form-field class="fuse-mat-dense flex-auto mr-2">
 							<mat-label class="text-lg font-medium mb-1">Ciudad</mat-label>
-							<mat-select [value]="''" name="cities" [(ngModel)]="data.idciudad"
-								[disabled]="listCities.length === 0">
-								<mat-option value="" disabled>Seleccione una opción</mat-option>
-								<mat-option [value]="item.idciudad" *ngFor="let item of listCities">{{ item.nombre
-									}}</mat-option>
-							</mat-select>
+							<input type="text" placeholder="Ciudad" matInput [formControl]="controlCity" [matAutocomplete]="autoCity">
+							<mat-autocomplete #autoCity="matAutocomplete">
+								<mat-option *ngFor="let option of filteredOptionsCities | async" [value]="option.nombre" (click)="fnCity(option.idciudad)">
+									{{ option.nombre }}
+								</mat-option>
+							</mat-autocomplete>
 						</mat-form-field>
 					</div>
 

@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FilesService } from 'app/core/helpers/files.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { ClientsService } from 'app/core/services/clients.service';
 import { GeneralService } from 'app/core/services/general.service';
 import { Action, MenuService } from 'app/core/services/menu.service';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-detail-site',
@@ -51,6 +53,12 @@ export class DetailSiteComponent implements OnInit {
 
 	actions: Action[];
 
+	control = new FormControl('');
+	filteredOptions: Observable<string[]>;
+
+	controlCity = new FormControl('');
+	filteredOptionsCities: Observable<string[]>;
+
 	constructor(
 		private _service: ClientsService,
 		private _general: GeneralService,
@@ -81,6 +89,16 @@ export class DetailSiteComponent implements OnInit {
 
 				this.getTypes();
 			});
+
+			this.filteredOptions = this.control.valueChanges.pipe(
+				startWith('' ),
+				map(value => this._filter(value || ''))
+			);
+
+			this.filteredOptionsCities = this.controlCity.valueChanges.pipe(
+				startWith(''),
+				map(value => this._filterCities(value || ''))
+			);
 		}
 	}
 
@@ -211,6 +229,8 @@ export class DetailSiteComponent implements OnInit {
 		this.section = section;
 
 		if (!data) {
+			this.control.setValue('');
+			// this.controlCity.setValue('');
 			this.data = {
 				idcliente: Number(this.idcliente),
 				idtiposede: '',
@@ -230,6 +250,9 @@ export class DetailSiteComponent implements OnInit {
 		this.data = JSON.parse(JSON.stringify(data));
 
 		this.getCities(this.data.iddepartamento);
+
+		this.control.setValue(this.data.departamento);
+		this.controlCity.setValue(this.data.ciudad);
 	}
 
 	search(): void {
@@ -306,5 +329,27 @@ export class DetailSiteComponent implements OnInit {
 
 	getAction(item: Action): boolean {
 		return this.actions.includes(item);
+	}
+
+	fnCity(idciudad: any): void {
+		if (idciudad) {
+			this.data.idciudad = idciudad;
+		}
+	}
+
+	private _filter(value: string): string[] {
+		const filterValue = value.toLowerCase();
+
+		return this.listDeptos.filter(option =>
+			option.nombre.toLowerCase().includes(filterValue)
+		);
+	}
+
+	private _filterCities(value: string): string[] {
+		const filterValue = value.toLowerCase();
+
+		return this.listCities.filter(option =>
+			option.nombre.toLowerCase().includes(filterValue)
+		);
 	}
 }
