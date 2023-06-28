@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { FilesService } from 'app/core/helpers/files.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
 import { GeneralService } from 'app/core/services/general.service';
@@ -6,7 +7,8 @@ import { Action, MenuService } from 'app/core/services/menu.service';
 import { RatesService } from 'app/core/services/rates.service';
 import { ServicesService } from 'app/core/services/services.service';
 import { ThirdPartiesService } from 'app/core/services/third-parties.service';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-rates',
@@ -44,6 +46,18 @@ export class RatesComponent implements OnInit {
 
 	actions: Action[];
 
+	control = new FormControl('');
+	filteredOptions: Observable<string[]>;
+
+	controlCity = new FormControl('');
+	filteredOptionsCities: Observable<string[]>;
+
+	controlThird = new FormControl('');
+	filteredOptionsThirds: Observable<string[]>;
+
+	controlService = new FormControl('');
+	filteredOptionsServices: Observable<string[]>;
+
 	constructor(
 		private _service: RatesService,
 		private _alert: SweetAlertService,
@@ -61,6 +75,26 @@ export class RatesComponent implements OnInit {
 			this.get();
 			this.search();
 			this.getSelects();
+
+			this.filteredOptions = this.control.valueChanges.pipe(
+				startWith('' ),
+				map(value => this._filter(value || ''))
+			);
+
+			this.filteredOptionsCities = this.controlCity.valueChanges.pipe(
+				startWith(''),
+				map(value => this._filterCities(value || ''))
+			);
+
+			this.filteredOptionsThirds = this.controlThird.valueChanges.pipe(
+				startWith('' ),
+				map(value => this._filterThirds(value || ''))
+			);
+
+			this.filteredOptionsServices = this.controlService.valueChanges.pipe(
+				startWith(''),
+				map(value => this._filterServices(value || ''))
+			);
 		}
 	}
 
@@ -74,6 +108,8 @@ export class RatesComponent implements OnInit {
 	}
 
 	create(): void {
+		console.log(this.data);
+		return;
 		this._alert.loading();
 
 		this._service
@@ -277,5 +313,55 @@ export class RatesComponent implements OnInit {
 
 	getAction(item: Action): boolean {
 		return this.actions.includes(item);
+	}
+
+	fnCity(idciudad: any): void {
+		if (idciudad) {
+			this.data.idciudad = idciudad;
+		}
+	}
+
+	fnThird(idtercero: any): void {
+		if (idtercero) {
+			this.data.idtercero = idtercero;
+		}
+	}
+
+	fnServicio(idservicio: any): void {
+		if (idservicio) {
+			this.data.idservicio = idservicio;
+		}
+	}
+
+	private _filter(value: string): string[] {
+		const filterValue = value.toLowerCase();
+
+		return this.listDeptos.filter(option =>
+			option.nombre.toLowerCase().includes(filterValue)
+		);
+	}
+
+	private _filterCities(value: string): string[] {
+		const filterValue = value.toLowerCase();
+
+		return !value ? this.listCities : this.listCities.filter(option =>
+			option.nombre.toLowerCase().includes(filterValue)
+		);
+	}
+
+	private _filterThirds(value: string): string[] {
+		const filterValue = value.toLowerCase();
+
+		return this.listThirds.filter(option =>
+			option.tercero.toLowerCase().includes(filterValue)
+		);
+	}
+
+	private _filterServices(value: string): string[] {
+		const filterValue = value.toLowerCase();
+
+		return this.listServices.filter(option =>
+			option.nombre.toLowerCase().includes(filterValue)
+		);
 	}
 }

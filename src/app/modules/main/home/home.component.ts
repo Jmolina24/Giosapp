@@ -201,7 +201,7 @@ export class HomeComponent implements OnInit {
 
 	private _test(): void {
 		this._orders.getDetails().subscribe((response) => {
-			console.log(_.chain(response).groupBy('estado').value());
+			// console.log(_.chain(response).groupBy('estado').value());
 		});
 	}
 }

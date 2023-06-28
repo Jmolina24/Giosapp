@@ -335,8 +335,4 @@ export class RolesComponent implements OnInit {
 	getAction(item: Action): boolean {
 		return this.actions.includes(item);
 	}
-
-	onOptionSelected(event: any): void {
-		console.log('Opción seleccionada:', event.option.value);
-	}
 }

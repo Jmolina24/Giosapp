@@ -265,24 +265,24 @@
 					</mat-form-field>
 
 					<div class="flex justify-between">
-						<mat-form-field class="fuse-mat-dense flex-auto mr-1 w-full">
+						<mat-form-field class="fuse-mat-dense flex-auto mr-1">
 							<mat-label class="text-lg font-medium mb-1">Cliente</mat-label>
-							<mat-select name="client" [(ngModel)]="data.idcliente"
-								(selectionChange)="getSites(data.idcliente)" [disabled]="idcliente !== '0'">
-								<mat-option value="0" disabled>Seleccione una opción</mat-option>
-								<mat-option value="{{item.idcliente}}" *ngFor="let item of listCustomers">{{
-									item.razonsocial }}</mat-option>
-							</mat-select>
+							<input type="text" placeholder="Cliente" matInput [formControl]="control" [matAutocomplete]="auto">
+							<mat-autocomplete #auto="matAutocomplete">
+								<mat-option *ngFor="let option of filteredOptions | async" [value]="option.razonsocial" (click)="getSites(option.idcliente)">
+									{{ option.razonsocial }}
+								</mat-option>
+							</mat-autocomplete>
 						</mat-form-field>
 
-						<mat-form-field class="fuse-mat-dense flex-auto w-full">
+						<mat-form-field class="fuse-mat-dense flex-auto mr-1">
 							<mat-label class="text-lg font-medium mb-1">Sede</mat-label>
-							<mat-select name="type_sede" [(ngModel)]="data.idclientesede"
-								[disabled]="listSites.length === 0 || idcliente !== '0'">
-								<mat-option value="0" disabled>Seleccione una opción</mat-option>
-								<mat-option [value]="item.idclientesede" *ngFor="let item of listSites">{{
-									item.cliensede }}</mat-option>
-							</mat-select>
+							<input type="text" placeholder="Sede" matInput [formControl]="controlSite" [matAutocomplete]="autoSite">
+							<mat-autocomplete #autoSite="matAutocomplete">
+								<mat-option *ngFor="let option of filteredOptionsSites | async" [value]="option.cliensede" (click)="fnSite(option.idclientesede)">
+									{{ option.cliensede }}
+								</mat-option>
+							</mat-autocomplete>
 						</mat-form-field>
 					</div>
 

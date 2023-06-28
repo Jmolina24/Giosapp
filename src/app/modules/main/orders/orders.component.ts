@@ -2,6 +2,7 @@
 /* eslint-disable quotes */
 /* eslint-disable max-len */
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { FilesService } from 'app/core/helpers/files.service';
 import { StorageService } from 'app/core/helpers/storage.service';
 import { SweetAlertService } from 'app/core/helpers/sweet-alert.service';
@@ -10,6 +11,7 @@ import { Action, MenuService } from 'app/core/services/menu.service';
 import { OrdersService } from 'app/core/services/orders.service';
 import { ServicesService } from 'app/core/services/services.service';
 import { Observable, Subject, forkJoin } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-orders',
@@ -57,6 +59,12 @@ export class OrdersComponent implements OnInit {
 
 	actions: Action[];
 
+	control = new FormControl('');
+	filteredOptions: Observable<string[]>;
+
+	controlSite = new FormControl('');
+	filteredOptionsSites: Observable<string[]>;
+
 	constructor(
 		private _orders: OrdersService,
 		private _files: FilesService,
@@ -76,6 +84,22 @@ export class OrdersComponent implements OnInit {
 			this.getTypes();
 			this.getClients();
 			this.getServices();
+
+
+			if (this.idcliente !== '0') {
+				this.control.disable();
+				this.controlSite.disable();
+			}
+
+			this.filteredOptions = this.control.valueChanges.pipe(
+				startWith('' ),
+				map(value => this._filter(value || ''))
+			);
+
+			this.filteredOptionsSites = this.controlSite.valueChanges.pipe(
+				startWith(''),
+				map(value => this._filterSites(value || ''))
+			);
 		}
 	}
 
@@ -309,6 +333,9 @@ export class OrdersComponent implements OnInit {
 		this.section = section;
 
 		if (!data) {
+			this.control.setValue('');
+			this.controlSite.setValue('');
+
 			this.data = {
 				idorden: '',
 				idtipoorden: '0',
@@ -337,6 +364,9 @@ export class OrdersComponent implements OnInit {
 		this.data['idcliente'] = String(this.data.idcliente);
 
 		this.getSites(this.data.idcliente);
+
+		this.control.setValue(this.data.cliente);
+		this.controlSite.setValue(this.data.clientesede);
 	}
 
 	search(): void {
@@ -359,8 +389,14 @@ export class OrdersComponent implements OnInit {
 	}
 
 	getSites(idcliente: string | number): void {
+		this.fnCustomer(idcliente);
+
 		this._clients.bySite({ idcliente }).subscribe((response) => {
 			this.listSites = response;
+			this.filteredOptionsSites = this.controlSite.valueChanges.pipe(
+				startWith(''),
+				map(value => this._filterSites(value || ''))
+			);
 		});
 	}
 
@@ -460,15 +496,38 @@ export class OrdersComponent implements OnInit {
 	}
 
 	getInfoSites(idclientesede: string | number): any {
-		console.log(
-			idclientesede,
-			this.listSites,
-			this.listSites.find(r => r.idclientesede == idclientesede)
-		);
 		return this.listSites.find(r => r.idclientesede == idclientesede);
 	}
 
 	getInfoService(idservicio: string | number): any {
 		return this.listServices.find(r => r.idservicio === idservicio);
+	}
+
+	fnSite(idclientesede: any): void {
+		if (idclientesede) {
+			this.data.idclientesede = idclientesede;
+		}
+	}
+
+	fnCustomer(idcliente: any): void {
+		if (idcliente) {
+			this.data.idcliente = idcliente;
+		}
+	}
+
+	private _filter(value: string): string[] {
+		const filterValue = value.toLowerCase();
+
+		return !value ? this.listCustomers : this.listCustomers.filter(option =>
+			option.razonsocial.toLowerCase().includes(filterValue)
+		);
+	}
+
+	private _filterSites(value: string): string[] {
+		const filterValue = value.toLowerCase();
+
+		return !value ? this.listSites : this.listSites.filter(option =>
+			option.cliensede.toLowerCase().includes(filterValue)
+		);
 	}
 }

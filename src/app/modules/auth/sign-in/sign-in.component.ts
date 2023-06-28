@@ -71,10 +71,10 @@ export class AuthSignInComponent implements OnInit {
 					}
 				}
 			},
-			({ error }: HttpErrorResponse) => {
+			(error: HttpErrorResponse) => {
 				this.alert = {
 					type: 'error',
-					message: error.mensaje,
+					message: error.error.mensaje || error.message,
 				};
 
 				this.showAlert = true;

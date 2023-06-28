@@ -291,16 +291,6 @@
 					</div>
 
 					<div class="w-full flex justify-between">
-						<!-- <mat-form-field class="fuse-mat-dense flex-auto mr-2">
-							<mat-label class="text-lg font-medium mb-1">Departamentos</mat-label>
-							<mat-select [value]="''" name="deptos" [(ngModel)]="data.iddepartamento"
-								(selectionChange)="getCities(data.iddepartamento)">
-								<mat-option value="" disabled>Seleccione una opción</mat-option>
-								<mat-option [value]="item.iddepartamento" *ngFor="let item of listDeptos">{{ item.nombre
-									}}</mat-option>
-							</mat-select>
-						</mat-form-field> -->
-
 						<mat-form-field class="fuse-mat-dense flex-auto mr-2">
 							<mat-label class="text-lg font-medium mb-1">Departamento</mat-label>
 							<input type="text" placeholder="Departamento" matInput [formControl]="control" [matAutocomplete]="auto">

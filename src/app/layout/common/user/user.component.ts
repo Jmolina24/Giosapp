@@ -35,7 +35,6 @@ export class UserComponent implements OnInit, OnDestroy {
 	 */
 	constructor(
 		private _router: Router,
-		private _activatedRoute: ActivatedRoute,
 		private _storage: StorageService
 	) {}
 

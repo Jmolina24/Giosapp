@@ -415,8 +415,6 @@ export class DetailsComponent implements OnInit, OnChanges {
 				idterceroservicio: '',
 				valor: '',
 			};
-
-			console.log(this.data);
 			this.getThirdsServices(data.idservicio, data.idciudadservicio);
 		}
 	}
