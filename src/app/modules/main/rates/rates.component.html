@@ -173,7 +173,7 @@
 								<th scope="col" class="px-6 py-3 text-center">
 									Estado
 								</th>
-								<!-- <th scope="col" class="px-6 py-3 text-center"></th> -->
+								<th scope="col" class="px-6 py-3 text-center"></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -213,18 +213,20 @@
 										<td class="px-6 py-4 text-center">
 											{{ item.estado }}
 										</td>
-										<!--
-										<ng-container *ngIf="getAction('changeStatus')">
-											<a (click)="changeStatus(item, item.estado === 'ACTIVO' ? 'I' : 'A')"
-												class="font-medium hover:underline cursor-pointer mx-3"
-												[ngClass]="{'text-green-700': item.estado === 'INACTIVO', 'text-red-700': item.estado === 'ACTIVO'}">
-												{{ item.estado === 'ACTIVO' ? 'INACTIVAR' : 'ACTIVAR' }}
-											</a>
-										</ng-container>
-										<ng-container *ngIf="getAction('edit')">
-											<a (click)="showSection('edit', item)"
-												class="font-medium text-blue-600 hover:underline cursor-pointer">Editar</a>
-										</ng-container> -->
+										<td class="px-6 py-4 text-center">
+											<!--
+											<ng-container *ngIf="getAction('changeStatus')">
+												<a (click)="changeStatus(item, item.estado === 'ACTIVO' ? 'I' : 'A')"
+													class="font-medium hover:underline cursor-pointer mx-3"
+													[ngClass]="{'text-green-700': item.estado === 'INACTIVO', 'text-red-700': item.estado === 'ACTIVO'}">
+													{{ item.estado === 'ACTIVO' ? 'INACTIVAR' : 'ACTIVAR' }}
+												</a>
+											</ng-container> -->
+											<ng-container *ngIf="getAction('edit')">
+												<a (click)="showSection('edit', item)"
+													class="font-medium text-blue-600 hover:underline cursor-pointer">Editar</a>
+											</ng-container>
+										</td>
 									</tr>
 								</ng-container>
 							</ng-container>

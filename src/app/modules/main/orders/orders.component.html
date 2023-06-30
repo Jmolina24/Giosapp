@@ -330,11 +330,12 @@
 						<ng-container *ngIf="addDetails">
 							<mat-form-field class="fuse-mat-dense flex-auto w-full">
 								<mat-label class="text-lg font-medium mb-1">Servicio</mat-label>
-								<mat-select [value]="''" name="type" [(ngModel)]="dataDetail.idservicio" name="services">
-									<mat-option value="" disabled>Seleccione una opción</mat-option>
-									<mat-option [value]="item.idservicio" *ngFor="let item of listServices">{{
-										item.nombre }}</mat-option>
-								</mat-select>
+								<input type="text" placeholder="Servicio" matInput [formControl]="controlService" [matAutocomplete]="autoService">
+								<mat-autocomplete #autoService="matAutocomplete">
+									<mat-option *ngFor="let option of filteredOptionsServices | async" [value]="option.nombre" (click)="fnService(option.idservicio)">
+										{{ option.nombre }}
+									</mat-option>
+								</mat-autocomplete>
 							</mat-form-field>
 
 							<mat-form-field class="fuse-mat-dense flex-auto w-full">

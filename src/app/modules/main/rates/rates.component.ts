@@ -108,8 +108,6 @@ export class RatesComponent implements OnInit {
 	}
 
 	create(): void {
-		console.log(this.data);
-		return;
 		this._alert.loading();
 
 		this._service
@@ -188,6 +186,13 @@ export class RatesComponent implements OnInit {
 		}
 
 		this.data = JSON.parse(JSON.stringify(data));
+
+		this.getCities(this.data.iddepartamentocobertura);
+
+		this.control.setValue(this.data.departamentocobertura);
+		this.controlCity.setValue(this.data.ciudadcobertura);
+		this.controlThird.setValue(this.data.tercero);
+		this.controlService.setValue(this.data.servicio);
 	}
 
 	changeStatus({ idrol }, status: 'A' | 'I'): void {

@@ -65,6 +65,9 @@ export class OrdersComponent implements OnInit {
 	controlSite = new FormControl('');
 	filteredOptionsSites: Observable<string[]>;
 
+	controlService = new FormControl('');
+	filteredOptionsServices: Observable<string[]>;
+
 	constructor(
 		private _orders: OrdersService,
 		private _files: FilesService,
@@ -99,6 +102,11 @@ export class OrdersComponent implements OnInit {
 			this.filteredOptionsSites = this.controlSite.valueChanges.pipe(
 				startWith(''),
 				map(value => this._filterSites(value || ''))
+			);
+
+			this.filteredOptionsServices = this.controlService.valueChanges.pipe(
+				startWith(''),
+				map(value => this._filterServices(value || ''))
 			);
 		}
 	}
@@ -515,6 +523,12 @@ export class OrdersComponent implements OnInit {
 		}
 	}
 
+	fnService(idservicio: any): void {
+		if (idservicio) {
+			this.dataDetail.idservicio = idservicio;
+		}
+	}
+
 	private _filter(value: string): string[] {
 		const filterValue = value.toLowerCase();
 
@@ -528,6 +542,14 @@ export class OrdersComponent implements OnInit {
 
 		return !value ? this.listSites : this.listSites.filter(option =>
 			option.cliensede.toLowerCase().includes(filterValue)
+		);
+	}
+
+	private _filterServices(value: string): string[] {
+		const filterValue = value.toLowerCase();
+
+		return !value ? this.listServices : this.listServices.filter(option =>
+			option.nombre.toLowerCase().includes(filterValue)
 		);
 	}
 }
