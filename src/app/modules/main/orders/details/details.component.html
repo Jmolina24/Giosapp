@@ -633,7 +633,7 @@
 											</div>
 										</label>
 										<input id="input_file" type="file" class="hidden" [disabled]="isLoading"
-											(change)="onFileChange($event.target.files)">
+											(change)="onFileChange($event.target.files)" multiple>
 									</div>
 								</div>
 								<p class="text-sm text-gray-300">
@@ -642,25 +642,26 @@
 							</ng-container>
 							<ng-container *ngIf="files.length > 0">
 								<div class="max-h-30 overflow-y-auto">
-									<ng-container *ngFor="let item of files">
-										<div class="w-full">
-											<span id="badge-dismiss-default"
-												class="inline-flex items-center px-2 py-1 mr-2 text-sm font-medium text-blue-800 bg-blue-100 rounded">
-												{{ item.file.name }} - {{
-												getNameDetailSoporte(item.iddetalleordensoporte) }}
-												<button (click)="deleteFile(item)" type="button"
-													class="inline-flex items-center p-0.5 ml-2 text-sm text-blue-400 bg-transparent rounded-sm hover:bg-blue-200 hover:text-blue-900"
-													data-dismiss-target="#badge-dismiss-default" aria-label="Remove">
-													<svg aria-hidden="true" class="w-3.5 h-3.5" fill="currentColor"
-														viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-														<path fill-rule="evenodd"
-															d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-															clip-rule="evenodd"></path>
-													</svg>
-													<span class="sr-only">Remove badge</span>
-												</button>
-											</span>
-										</div>
+									<ng-container *ngFor="let item of files; let i = index">
+										<ng-container *ngFor="let file of item.files">
+											<div class="w-full my-2">
+												<span id="badge-dismiss-default"
+													class="inline-flex items-center px-2 py-1 mr-2 text-sm font-medium text-blue-800 bg-blue-100 rounded">
+													{{ file.file.name }} - {{ getNameDetailSoporte(item.iddetalleordensoporte) }}
+													<button (click)="deleteFile(file, i)" type="button"
+														class="inline-flex items-center p-0.5 ml-2 text-sm text-blue-400 bg-transparent rounded-sm hover:bg-blue-200 hover:text-blue-900"
+														data-dismiss-target="#badge-dismiss-default" aria-label="Remove">
+														<svg aria-hidden="true" class="w-3.5 h-3.5" fill="currentColor"
+															viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+															<path fill-rule="evenodd"
+																d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+																clip-rule="evenodd"></path>
+														</svg>
+														<span class="sr-only">Remove badge</span>
+													</button>
+												</span>
+											</div>
+										</ng-container>
 									</ng-container>
 								</div>
 							</ng-container>
@@ -751,7 +752,7 @@
 								(click)="fnBtnModal(null, null)">
 								Cerrar
 							</button>
-							<ng-container *ngIf="getUploadedFiles().length > 0">
+							<ng-container *ngIf="listSupport.length > 0">
 								<button type="submit"
 								class="my-5 w-full flex justify-center bg-blue-500 text-gray-100 p-4  rounded-full tracking-wide
 										font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300 mr-2"
@@ -777,7 +778,7 @@
 				<div class="text-center">
 					<h2 class="mt-5 text-3xl font-bold text-gray-900">
 						Soportes: #{{ infoDetail?.iddetalleorden }} - {{ infoDetail?.servicio }}({{
-						infoDetail?.tipoorden }})
+						infoDetail?.tipoorden }}) - {{ support?.index }}
 					</h2>
 				</div>
 				<div class="flex flex-row flex-auto min-w-0">
@@ -864,7 +865,8 @@
 								class="my-1 mx-2 w-full flex justify-center bg-blue-500 text-gray-100 p-4 rounded-xl tracking-wide
 									font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
 								[matTooltip]="'Abrir en otra pestaña'"
-								[routerLink]="['./../archivo-detalle/', support?.iddetalleorden, support?.iddetalleordensoporte]">
+								[routerLink]="['./../archivo-detalle/', support?.iddetalleorden, support?.iddetalleordensoporte]"
+								[queryParams]="{ file: support?.index }">
 								<mat-icon svgIcon="mat_outline:aspect_ratio" class="text-white"></mat-icon>
 							</button>
 						</div>

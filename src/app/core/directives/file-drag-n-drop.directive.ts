@@ -42,6 +42,6 @@ export class FileDragNDropDirective {
 		this.background = '#ddd';
 
 		const files = e.dataTransfer.files;
-		this.filesChangeEmiter.emit(Array.from(files));
+		this.filesChangeEmiter.emit(files);
 	}
 }

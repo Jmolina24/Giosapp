@@ -21,6 +21,8 @@ import { ServicesService } from 'app/core/services/services.service';
 import { ThirdPartiesService } from 'app/core/services/third-parties.service';
 import { Observable, Subject, forkJoin } from 'rxjs';
 
+import * as _ from 'lodash';
+
 @Component({
 	selector: 'app-details',
 	templateUrl: './details.component.html',
@@ -37,6 +39,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 	idorden: string = '0';
 	idrole: string | number = '0';
 	files: any[] = [];
+	listFiles: any[] = [];
 	formData: FormData = new FormData();
 
 	info: any = null;
@@ -150,16 +153,32 @@ export class DetailsComponent implements OnInit, OnChanges {
 
 	getDetailSupportSelect(iddetalleorden: string): void {
 		this._service.getSupports({ iddetalleorden }).subscribe((response) => {
-			this.listSupport = response.map((r) => {
-				if (r.estado === 'CARGADO' && r.soporte) {
-					r.soporte =
-						'https://demo.mainsoft.technology' +
-						r.soporte.split('/web')[1];
-					const soporte = r.soporte.split('.');
-					r.tipo = soporte[soporte.length - 1].toUpperCase();
-				}
-				return r;
-			});
+			this.listSupport = response
+				.filter(({ estado }) => estado === 'CARGADO')
+				.map((r: any) => {
+					r.soporte = JSON.parse(r.soporte || '[]');
+					if (Array.isArray(r.soporte)) {
+						r.soporte = r.soporte.map((t: string, index) => {
+							const url =
+								'https://demo.mainsoft.technology' +
+								t.split('/web')[1];
+							const y = url.split('.');
+							const tipo = y[y.length - 1].toUpperCase();
+							const supportObject = { tipo, soporte: url, index: r.iddetalleordensoporte + '-' + (index + 1)  };
+							return supportObject;
+						});
+					} else {
+						r.soporte = [];
+					}
+					return r;
+				})
+				.reduce(
+					(accumulator: any[], r: any) =>
+						accumulator.concat(
+							r.soporte.map(t => ({ ...r, ...t }))
+						),
+					[]
+				);
 		});
 	}
 
@@ -489,6 +508,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 			this.formData.delete(key);
 		});
 		this.files = [];
+		this.listFiles = [];
 
 		if (item) {
 			this.getDetailSupportSelect(item.iddetalleorden);
@@ -499,8 +519,13 @@ export class DetailsComponent implements OnInit, OnChanges {
 		modal.classList.toggle('hidden');
 	}
 
-	onFileChange(pFileList: File[] | FileList[]): void {
+	onFileChange(pFileList: FileList[]): void {
+		pFileList = Array.from(pFileList);
 		if (this.isLoading) {
+			return;
+		}
+
+		if (!pFileList) {
 			return;
 		}
 
@@ -512,23 +537,22 @@ export class DetailsComponent implements OnInit, OnChanges {
 			return;
 		}
 
-		if (!Array.isArray(pFileList)) {
-			this.files.push({
-				file: pFileList[0],
-				iddetalleordensoporte: this.infoDetail.iddetalleordensoporte,
-			});
-			return;
-		}
-		pFileList.forEach((e) => {
-			this.files.push({
-				file: e,
-				iddetalleordensoporte: this.infoDetail.iddetalleordensoporte,
-			});
+		const files = pFileList.map((file, index) => ({
+			file,
+			id: new Date().getTime() + index,
+			iddetalleordensoporte: this.infoDetail.iddetalleordensoporte,
+		}));
+
+		this.files.push({
+			files,
+			iddetalleordensoporte: this.infoDetail.iddetalleordensoporte,
 		});
+
+		this.listFiles.push(...files);
 	}
 
 	getIfExitsIdDetailSoporte(id): boolean {
-		return this.files.find(e => e.iddetalleordensoporte === id);
+		return this.listFiles.find(e => e.iddetalleordensoporte === id);
 	}
 
 	getNameDetailSoporte(id: any): string {
@@ -536,10 +560,11 @@ export class DetailsComponent implements OnInit, OnChanges {
 			.tiposoporte;
 	}
 
-	deleteFile(f: any): void {
-		this.files = this.files.filter(
-			w => w.iddetalleordensoporte !== f.iddetalleordensoporte
+	deleteFile(f: any, index: number): void {
+		this.files[index].files = this.files[index].files.filter(
+			r => r.id !== f.id
 		);
+		this.listFiles = this.listFiles.filter(({ id }) => id !== f.id);
 	}
 
 	isIdRepeated(id: number): boolean {
@@ -568,9 +593,9 @@ export class DetailsComponent implements OnInit, OnChanges {
 		this.isLoading = true;
 		this._alert.loading();
 
-		this.files.forEach((r) => {
-			this.formData.append('files', r.file);
-		});
+		this.listFiles.forEach(({ file }) =>
+			this.formData.append('files', file)
+		);
 
 		this._file.upload(this.formData).subscribe(
 			(response) => {
@@ -585,11 +610,19 @@ export class DetailsComponent implements OnInit, OnChanges {
 					return;
 				}
 
+				response.rutas.forEach((element: any, index: number) => {
+					this.listFiles[index].path = element.path;
+				});
+
+				const files = _.chain(this.listFiles)
+					.groupBy('iddetalleordensoporte')
+					.value();
+
 				forkJoin(
-					response.rutas.map((e, i) =>
+					Object.keys(files).map((r: any) =>
 						this.uploadSupport(
-							this.files[i].iddetalleordensoporte,
-							e.path
+							r,
+							files[r].map(({ path }) => path)
 						)
 					)
 				).subscribe(
@@ -634,8 +667,8 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	uploadSupport(
-		iddetalleordensoporte: string,
-		soporte: string
+		iddetalleordensoporte: string | number,
+		soporte: string[]
 	): Observable<any> {
 		return this._service.uploadSupport(iddetalleordensoporte, soporte);
 	}
@@ -663,8 +696,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	downloadAll(): void {
-		// this._file.downloadAll([{ soporte: 'http://localhost:5200/assets/images/logo/logo_verde.png', tipo: 'png' }].map(({ soporte, tipo }) => ({ soporte, tipo })));
-		this._file.downloadAll(this.getUploadedFiles().map(({ soporte, tipo }) => ({ soporte: 'https://demo.mainsoft.technology' + soporte, tipo })));
+		this._file.downloadAll(this.listSupport);
 	}
 
 	fnModalViewFile(file: any = null): void {
@@ -678,28 +710,20 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	changeFileNextOrPrevius(section: 'next' | 'previus', file: any): void {
-		const d = this.listSupport.findIndex(
-			r => r.iddetalleordensoporte === file.iddetalleordensoporte
-		);
+		const data = this.listSupport;
+		const d = data.findIndex(r => r.index === file.index);
 
 		switch (section) {
 			case 'next':
-				this.support =
-					this.listSupport[
-						d + 1 === this.listSupport.length ? 0 : d + 1
-					];
+				this.support = data[d + 1 === data.length ? 0 : d + 1];
 				break;
 			case 'previus':
-				this.support = this.listSupport[d === 0 ? 0 : d - 1];
+				this.support = data[d === 0 ? 0 : d - 1];
 				break;
 		}
 	}
 
 	getAction(item: Action): boolean {
 		return this.actions.includes(item);
-	}
-
-	getUploadedFiles(): any[] {
-		return this.listSupport.filter(({ estado }) => estado === 'CARGADO');
 	}
 }

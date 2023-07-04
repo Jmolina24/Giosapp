@@ -4,7 +4,7 @@
 			<div class="relative shadow-md rounded-lg bg-card px-5 py-7">
 				<ng-container [ngSwitch]="support?.tipo">
 					<ng-container *ngSwitchCase="'PDF'">
-						<object [data]="'https://demo.mainsoft.technology' + support.soporte" type="application/pdf" class="h-100"></object>
+						<object [data]="support.soporte" type="application/pdf" class="h-100"></object>
 					</ng-container>
 					<ng-container *ngSwitchCase="'DOC'"></ng-container>
 					<ng-container *ngSwitchCase="'XLS'"></ng-container>
@@ -13,7 +13,6 @@
 						<ng-container *ngTemplateOutlet="tImage"></ng-container>
 					</ng-container>
 					<ng-container *ngSwitchCase="'PNG'">
-						<!-- <object data="https://www.proturbiomarspa.com/files/_pdf-prueba.pdf#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" class="h-140 w-full"></object> -->
 						<ng-container *ngTemplateOutlet="tImage"></ng-container>
 					</ng-container>
 					<ng-container *ngSwitchCase="'JPEG'">
@@ -22,7 +21,7 @@
 				</ng-container>
 
 				<ng-template #tImage>
-					<img [src]="'https://demo.mainsoft.technology'+ support.soporte" alt="">
+					<img [src]="support.soporte" alt="">
 				</ng-template>
 			</div>
 		</div>
@@ -36,7 +35,7 @@
 							</button>
 				<div class="flex justify-between items-center my-4">
 					<h2 class="text-2xl font-extrabold tracking-tight leading-7 truncate">
-						Archivo #{{ support?.iddetalleordensoporte }} </h2>
+						Archivo #{{ support?.iddetalleordensoporte }} - ({{ support?.index}})</h2>
 					<span
 						class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">{{
 						support?.estado }}</span>
@@ -64,6 +63,25 @@
 						<span class="text-1xl whitespace-nowrap text-gray-500">
 							Motivo de rechazo: {{ support?.motivorechazo }}</span>
 					</div>
+				</div>
+				<div class="flex justify-between mt-4">
+					<button type="submit"
+						class="my-1 mx-2 w-full flex justify-center bg-blue-500 text-gray-100 p-4 rounded-xl tracking-wide
+					font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
+						[matTooltip]="'Anterior'" (click)="changeFileNextOrPrevius('previus', support)">
+						<mat-icon svgIcon="heroicons_outline:arrow-left" class="text-white"></mat-icon>
+					</button>
+					<button type="submit"
+						class="my-1 mx-2 w-full flex justify-center bg-blue-500 text-gray-100 p-4 rounded-xl tracking-wide
+					font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
+						[matTooltip]="'Siguiente'" (click)="changeFileNextOrPrevius('next', support)">
+						<mat-icon svgIcon="heroicons_outline:arrow-right" class="text-white"></mat-icon>
+					</button>
+					<button type="submit" (click)="download(support?.soporte)"
+						class="my-1 mx-2 w-full flex justify-center bg-blue-500 text-gray-100 p-4 rounded-xl tracking-wide
+							font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300" [matTooltip]="'Descargar'">
+						<mat-icon svgIcon="heroicons_outline:arrow-down" class="text-white"></mat-icon>
+					</button>
 				</div>
 			</div>
 		</div>

@@ -195,8 +195,8 @@ export class OrdersService {
 	}
 
 	public uploadSupport(
-		iddetalleordensoporte: string,
-		soporte: string
+		iddetalleordensoporte: string | number,
+		soporte: string[]
 	): Observable<any> {
 		if (!iddetalleordensoporte || !soporte) {
 			return;
@@ -204,7 +204,7 @@ export class OrdersService {
 
 		return this._api.post('upload/soporteOrden', {
 			iddetalleordensoporte,
-			soporte,
+			soporte: JSON.stringify(soporte),
 			idusuarioregistra: this._storage.getUserId(),
 		});
 	}
