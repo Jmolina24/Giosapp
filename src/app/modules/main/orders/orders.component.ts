@@ -236,7 +236,7 @@ export class OrdersComponent implements OnInit {
 											this._storage.getUser().nombre
 										}%0A%0A👆 Envía este mensaje. Te atenderemos enseguida%0A`;
 										window.open(
-											`https://api.whatsapp.com/send?phone=57${clienteSede.telefono}&text=${message}`
+											`https://api.whatsapp.com/send?phone=${clienteSede.celular_whatsapp}&text=${message}`
 										);
 									}
 								});
