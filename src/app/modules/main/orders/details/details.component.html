@@ -586,11 +586,11 @@
 <div class="modal relative z-50 hidden" id="modalUploadFile" aria-labelledby="modal-title" role="dialog"
 	aria-modal="true">
 	<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
-	<div class="fixed inset-0 overflow-y-auto">/
-		<div class="relative min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+	<div class="fixed inset-0 overflow-y-auto">
+		<div class="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
 			<ng-container [ngSwitch]="action">
 				<ng-container *ngSwitchCase="'upload'">
-					<div class="sm:max-w-lg w-full p-10 bg-white rounded-xl z-10">
+					<div class="sm:max-w-lg w-full p-5 bg-white rounded-xl z-10">
 						<div class="text-center">
 							<h2 class="mt-5 text-3xl font-bold text-gray-900">
 								Cargar Soporte: #{{ infoDetail?.iddetalleorden }} - {{ infoDetail?.servicio }}({{
@@ -641,7 +641,7 @@
 								</p>
 							</ng-container>
 							<ng-container *ngIf="files.length > 0">
-								<div class="max-h-30 overflow-y-auto">
+								<div class="max-h-36 overflow-y-auto">
 									<ng-container *ngFor="let item of files; let i = index">
 										<ng-container *ngFor="let file of item.files">
 											<div class="w-full my-2">
@@ -691,14 +691,14 @@
 					</div>
 				</ng-container>
 				<ng-container *ngSwitchCase="'view'">
-					<div class="sm:max-w-2xl w-full p-10 bg-white rounded-xl z-10 ml-4">
+					<div class="sm:max-w-5xl w-full p-5 bg-white rounded-xl z-10 ml-4">
 						<div class="text-center">
 							<h2 class="mt-5 text-3xl font-bold text-gray-900">
 								Soportes: #{{ infoDetail?.iddetalleorden }} - {{ infoDetail?.servicio }}({{
 								infoDetail?.tipoorden }})
 							</h2>
 						</div>
-						<div class="flex flex-wrap justify-center mt-2">
+						<div class="flex flex-wrap justify-center mt-2 h-100 overflow-y-auto">
 							<ng-container *ngFor="let file of listSupport;">
 								<ng-container *ngIf="file.estado === 'CARGADO' && file.soporte">
 									<div class="w-40 h-40 mb-20">

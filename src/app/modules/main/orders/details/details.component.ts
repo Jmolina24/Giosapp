@@ -151,23 +151,35 @@ export class DetailsComponent implements OnInit, OnChanges {
 		});
 	}
 
-	getDetailSupportSelect(iddetalleorden: string): void {
+	getDetailSupportSelect(iddetalleorden: string, action): void {
 		this._service.getSupports({ iddetalleorden }).subscribe((response) => {
-			this.listSupport = response
+			if (action === 'view') {
+				this.listSupport = response
 				.filter(({ estado }) => estado === 'CARGADO')
 				.map((r: any) => {
-					r.soporte = JSON.parse(r.soporte || '[]');
-					if (Array.isArray(r.soporte)) {
-						r.soporte = r.soporte.map((t: string, index) => {
-							const url =
-								'https://demo.mainsoft.technology' +
-								t.split('/web')[1];
-							const y = url.split('.');
-							const tipo = y[y.length - 1].toUpperCase();
-							const supportObject = { tipo, soporte: url, index: r.iddetalleordensoporte + '-' + (index + 1)  };
-							return supportObject;
-						});
-					} else {
+					try {
+						r.soporte = JSON.parse(r.soporte || '[]');
+						if (Array.isArray(r.soporte)) {
+							r.soporte = r.soporte.map((t: string, index) => {
+								const url =
+									'https://demo.mainsoft.technology' +
+									t.split('/web')[1];
+								const y = url.split('.');
+								const tipo = y[y.length - 1].toUpperCase();
+								const supportObject = {
+									tipo,
+									soporte: url,
+									index:
+										r.iddetalleordensoporte +
+										'-' +
+										(index + 1),
+								};
+								return supportObject;
+							});
+						} else {
+							r.soporte = [];
+						}
+					} catch (error) {
 						r.soporte = [];
 					}
 					return r;
@@ -179,6 +191,9 @@ export class DetailsComponent implements OnInit, OnChanges {
 						),
 					[]
 				);
+				return;
+			}
+			this.listSupport = response;
 		});
 	}
 
@@ -511,7 +526,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 		this.listFiles = [];
 
 		if (item) {
-			this.getDetailSupportSelect(item.iddetalleorden);
+			this.getDetailSupportSelect(item.iddetalleorden, action);
 		}
 
 		const modal = document.getElementById('modalUploadFile');
