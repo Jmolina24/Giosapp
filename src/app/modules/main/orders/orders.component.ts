@@ -363,8 +363,9 @@ export class OrdersComponent implements OnInit {
 
 			this.listDetails = [];
 			if (this.data.idcliente !== '0') {
-				this.getSites(this.data.idcliente);
+				this.getSites(this.data.idcliente, true);
 			}
+			this.control.setValue(this.listCustomers.find(r => r.idcliente == this.idcliente)?.razonsocial);
 			return;
 		}
 
@@ -396,10 +397,13 @@ export class OrdersComponent implements OnInit {
 		});
 	}
 
-	getSites(idcliente: string | number): void {
+	getSites(idcliente: string | number, assign: boolean = false): void {
 		this.fnCustomer(idcliente);
 
 		this._clients.bySite({ idcliente }).subscribe((response) => {
+			if (assign) {
+				this.controlSite.setValue(response.find(r => r.idclientesede == this.idclientesede)?.cliensede);
+			}
 			this.listSites = response;
 			this.filteredOptionsSites = this.controlSite.valueChanges.pipe(
 				startWith(''),

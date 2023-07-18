@@ -192,7 +192,7 @@ export class HomeComponent implements OnInit {
 			},
 			xaxis: {
 			  categories: [
-				'Extemporanios',
+				'Extemporáneos',
 				'En Tiempos'
 			  ]
 			}
