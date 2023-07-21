@@ -41,7 +41,8 @@
 						</div> -->
 					</div>
 					<div class="flex flex-col items-center mt-2">
-						<div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500">4000</div>
+						<div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-blue-500">{{
+							score?.score_resumen.resumen[0].completadas }}</div>
 						<!-- <div class="text-lg font-medium text-blue-600 dark:text-blue-500">Due Tasks</div>
 						<div class="flex items-baseline justify-center w-full mt-5 text-secondary">
 							<div class="text-md font-medium truncate">Completed:</div>
@@ -65,7 +66,8 @@
 						</div> -->
 					</div>
 					<div class="flex flex-col items-center mt-2">
-						<div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-red-500">24</div>
+						<div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-red-500">{{
+							score?.score_resumen.resumen[0].generadas }}</div>
 						<!-- <div class="text-lg font-medium text-red-600 dark:text-red-500">Tasks</div>
 						<div class="flex items-baseline justify-center w-full mt-5 text-secondary">
 							<div class="text-md font-medium truncate">From yesterday:</div>
@@ -89,7 +91,8 @@
 						</div> -->
 					</div>
 					<div class="flex flex-col items-center mt-2">
-						<div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500">17</div>
+						<div class="text-7xl sm:text-8xl font-bold tracking-tight leading-none text-green-500">{{
+							score?.score_resumen.resumen[0].pendiente }}</div>
 						<!-- <div class="text-lg font-medium text-green-600 dark:text-green-500">Proposals</div>
 						<div class="flex items-baseline justify-center w-full mt-5 text-secondary">
 							<div class="text-md font-medium truncate">Implemented:</div>
@@ -106,25 +109,30 @@
 						</div>
 					</div>
 					<div class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
-						<!-- New vs. Closed -->
 						<div class="flex flex-col flex-auto">
-							<div class="font-medium text-secondary">New vs. Closed</div>
+							<div class="font-medium text-secondary">Resumen x mes</div>
 							<div class="flex flex-col flex-auto">
-								<apx-chart class="flex-auto w-full h-80" [chart]="chartGithubIssues.chart"
-									[colors]="chartGithubIssues.colors" [dataLabels]="chartGithubIssues.dataLabels"
-									[grid]="chartGithubIssues.grid" [labels]="chartGithubIssues.labels"
-									[legend]="chartGithubIssues.legend" [plotOptions]="chartGithubIssues.plotOptions"
-									[series]="chartGithubIssues.series" [states]="chartGithubIssues.states"
-									[stroke]="chartGithubIssues.stroke" [tooltip]="chartGithubIssues.tooltip"
-									[xaxis]="chartGithubIssues.xaxis" [yaxis]="chartGithubIssues.yaxis"></apx-chart>
+								<ng-container *ngIf="chartsResumenMes?.series.length > 0">
+									<apx-chart class="flex-auto w-full h-80" [chart]="chartsResumenMes?.chart"
+										[colors]="chartsResumenMes?.colors" [dataLabels]="chartsResumenMes?.dataLabels"
+										[grid]="chartsResumenMes?.grid" [labels]="chartsResumenMes?.labels"
+										[legend]="chartsResumenMes?.legend" [plotOptions]="chartsResumenMes?.plotOptions"
+										[series]="chartsResumenMes?.series" [states]="chartsResumenMes?.states"
+										[stroke]="chartsResumenMes?.stroke" [tooltip]="chartsResumenMes?.tooltip"
+										[xaxis]="chartsResumenMes?.xaxis" [yaxis]="chartsResumenMes?.yaxis"></apx-chart>
+								</ng-container>
 							</div>
 						</div>
 						<!-- Overview -->
 						<div class="flex flex-col">
 							<div class="font-medium text-secondary">Progreso Servicios</div>
-							<apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
-								[dataLabels]="chartOptions.dataLabels" [plotOptions]="chartOptions.plotOptions"
-								[xaxis]="chartOptions.xaxis"></apx-chart>
+							<ng-container *ngIf="chartsProgressServices?.series.length > 0">
+								<apx-chart [series]="chartsProgressServices?.series"
+									[chart]="chartsProgressServices?.chart"
+									[dataLabels]="chartsProgressServices?.dataLabels"
+									[plotOptions]="chartsProgressServices?.plotOptions"
+									[xaxis]="chartOptions?.xaxis"></apx-chart>
+							</ng-container>
 						</div>
 					</div>
 				</div>

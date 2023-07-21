@@ -1,10 +1,32 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable quote-props */
-import { Component, OnInit } from '@angular/core';
-import { ApexOptions, ApexAxisChartSeries, ApexChart, ApexDataLabels, ApexPlotOptions, ApexXAxis } from 'ng-apexcharts';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+	ApexOptions,
+	ApexAxisChartSeries,
+	ApexChart,
+	ApexDataLabels,
+	ApexPlotOptions,
+	ApexXAxis,
+} from 'ng-apexcharts';
 
 import * as _ from 'lodash';
 import { OrdersService } from 'app/core/services/orders.service';
 import { StorageService } from 'app/core/helpers/storage.service';
+import {
+	ProgresoServicio,
+	ResumenMes,
+	ScoreResumen,
+	ScoreService,
+} from 'app/core/services/score.service';
+
+export type ChartOptions = {
+	series: ApexAxisChartSeries;
+	chart: ApexChart;
+	dataLabels: ApexDataLabels;
+	plotOptions: ApexPlotOptions;
+	xaxis: ApexXAxis;
+};
 
 const githubIssues = {
 	overview: {
@@ -59,38 +81,69 @@ const githubIssues = {
 	},
 };
 
-export type ChartOptions = {
-	series: ApexAxisChartSeries;
-	chart: ApexChart;
-	dataLabels: ApexDataLabels;
-	plotOptions: ApexPlotOptions;
-	xaxis: ApexXAxis;
-  };
-
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
 	// @ViewChild('chart') chart: ChartComponent;
 
-	chartGithubIssues: ApexOptions = {};
-	chartOptions: Partial<ChartOptions>;
+	chartsResumenMes: ApexOptions;
+	chartsProgressServices: Partial<ChartOptions>;
 
 	user: any = {};
 
-	constructor(private _orders: OrdersService, private _storage: StorageService) {
+	score!: {
+		progreso_servicio?: ProgresoServicio[];
+		resumen_mes?: ResumenMes[];
+		score_resumen?: ScoreResumen;
+	};
+
+	constructor(
+		private _orders: OrdersService,
+		private _storage: StorageService,
+		private _score: ScoreService
+	) {
 		this.user = _storage.getUser();
 	}
-
-	ngOnInit(): void {
-		this._prepareChartData();
-		this._test();
+	ngAfterViewInit(): void {
+		this._score.get().subscribe((r) => {
+			this.score = r;
+			this._prepareChartData(r.resumen_mes);
+			this.loadDataChart(r.progreso_servicio);
+		});
 	}
 
-	private _prepareChartData(): void {
-		this.chartGithubIssues = {
+	ngOnInit(): void {}
+
+
+	loadDataChart(data: any[]): void {
+		this.chartsProgressServices = {
+			series: data.map((item: any) => ({
+				name: item.condicion,
+				data: [item.generadas]
+			})),
+			chart: {
+				type: 'bar',
+				height: 350,
+			},
+			plotOptions: {
+				bar: {
+					horizontal: true,
+				},
+			},
+			dataLabels: {
+				enabled: false,
+			},
+			xaxis: {
+				categories: data.map((item: any) => item.condicion),
+			},
+		};
+	}
+
+	private _prepareChartData(data: any[]): void {
+		this.chartsResumenMes = {
 			chart: {
 				fontFamily: 'inherit',
 				foreColor: 'inherit',
@@ -164,44 +217,5 @@ export class HomeComponent implements OnInit {
 				},
 			},
 		};
-
-		this.chartOptions = {
-			series: [
-			  {
-				name: 'basic',
-				data: [20, 40],
-				color: '#F44336'
-			  },
-			  {
-				name: 'basic',
-				data: [20, 40],
-				color: '#F44336'
-			  },
-			],
-			chart: {
-			  type: 'bar',
-			  height: 350
-			},
-			plotOptions: {
-			  bar: {
-				horizontal: true
-			  }
-			},
-			dataLabels: {
-			  enabled: false
-			},
-			xaxis: {
-			  categories: [
-				'Extemporáneos',
-				'En Tiempos'
-			  ]
-			}
-		  };
-	}
-
-	private _test(): void {
-		this._orders.getDetails().subscribe((response) => {
-			// console.log(_.chain(response).groupBy('estado').value());
-		});
 	}
 }
