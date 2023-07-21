@@ -53,12 +53,12 @@ const githubIssues = {
 			{
 				name: 'New issues',
 				type: 'line',
-				data: [42, 28, 43, 34, 20, 25, 22],
+				data: [42, 28],
 			},
 			{
 				name: 'Closed issues',
-				type: 'column',
-				data: [11, 10, 8, 11, 8, 10, 17],
+				type: 'bar',
+				data: [11, 10],
 			},
 		],
 		'last-week': [
@@ -111,18 +111,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
 		this._score.get().subscribe((r) => {
 			this.score = r;
 			this._prepareChartData(r.resumen_mes);
-			this.loadDataChart(r.progreso_servicio);
+			this._loadDataChart(r.progreso_servicio);
 		});
 	}
 
 	ngOnInit(): void {}
 
-
-	loadDataChart(data: any[]): void {
+	private _loadDataChart(data: any[]): void {
 		this.chartsProgressServices = {
 			series: data.map((item: any) => ({
 				name: item.condicion,
-				data: [item.generadas]
+				data: [item.generadas],
 			})),
 			chart: {
 				type: 'bar',
@@ -143,6 +142,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 	}
 
 	private _prepareChartData(data: any[]): void {
+		console.log(data);
 		this.chartsResumenMes = {
 			chart: {
 				fontFamily: 'inherit',
@@ -167,7 +167,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 			grid: {
 				borderColor: 'var(--fuse-border)',
 			},
-			labels: githubIssues.labels,
+			labels: data.map((item: any) => item.periodo),
 			legend: {
 				show: false,
 			},
@@ -176,7 +176,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
 					columnWidth: '50%',
 				},
 			},
-			series: githubIssues.series['last-week'],
+			series: [{
+				name: 'Periodo',
+				type: 'line',
+				data: data.map(r => (r.generadas))}],
 			states: {
 				hover: {
 					filter: {
