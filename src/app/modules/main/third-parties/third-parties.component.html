@@ -64,7 +64,7 @@
 					<div class="flex flex-row items-center mx-4">
 						<span class="text-sm text-gray-700 mx-2">
 							Mostrando <span class="font-semibold text-gray-900">{{
-								contentPagination.pages[contentPagination.current].data.length }}</span> de <span
+								contentPagination.pages[contentPagination.current]?.data.length }}</span> de <span
 								class="font-semibold text-gray-900">{{ list.length }}</span> elementos
 						</span>
 						<div class="inline-flex xs:mt-0">
@@ -170,7 +170,7 @@
 						<tbody>
 							<ng-container *ngIf="list.length; else noContent">
 								<ng-container
-									*ngFor="let item of contentPagination.pages[contentPagination.current].data;">
+									*ngFor="let item of contentPagination.pages[contentPagination.current]?.data;">
 									<tr class="bg-white border-b hover:bg-gray-50">
 										<td class="w-4 p-4">
 											<div class="flex items-center">

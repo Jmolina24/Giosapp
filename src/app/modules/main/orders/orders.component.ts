@@ -68,6 +68,8 @@ export class OrdersComponent implements OnInit {
 	controlService = new FormControl('');
 	filteredOptionsServices: Observable<string[]>;
 
+	roleId: any = '';
+
 	constructor(
 		private _orders: OrdersService,
 		private _files: FilesService,
@@ -88,10 +90,14 @@ export class OrdersComponent implements OnInit {
 			this.getClients();
 			this.getServices();
 
+			this.roleId = this._storage.getRolID();
+
 
 			if (this.idcliente !== '0') {
 				this.control.disable();
-				this.controlSite.disable();
+				if (![2].includes(this.roleId)) {
+					this.controlSite.disable();
+				}
 			}
 
 			this.filteredOptions = this.control.valueChanges.pipe(

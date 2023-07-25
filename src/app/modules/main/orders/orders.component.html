@@ -181,7 +181,7 @@
 						</thead>
 						<tbody>
 							<ng-container *ngIf="list.length; else noContent">
-								<ng-container *ngFor="let item of contentPagination.pages[contentPagination.current].data;">
+								<ng-container *ngFor="let item of contentPagination.pages[contentPagination.current]?.data;">
 									<tr
 										class="bg-white border-b hover:bg-gray-50">
 										<td class="w-4 p-4">
@@ -290,13 +290,13 @@
 						<mat-form-field class="fuse-mat-dense flex-auto w-full mr-1">
 							<mat-label class="text-lg font-medium mb-1">Fecha de entrega</mat-label>
 							<input id="delivery_date" matInput datepicker type="date" placeholder="Fecha de entrega"
-								name="delivery_date" [(ngModel)]="data.fechaentrega">
+								name="delivery_date" [(ngModel)]="data.fechaentrega" [disabled]="[2].includes(roleId)">
 						</mat-form-field>
 
 						<mat-form-field class="fuse-mat-dense flex-auto w-full mr-1">
 							<mat-label class="text-lg font-medium mb-1">Hora de entrega</mat-label>
 							<input id="delivery_time" matInput type="time" placeholder="Hora de entrega"
-								name="delivery_time" [(ngModel)]="data.horaentrega">
+								name="delivery_time" [(ngModel)]="data.horaentrega" [disabled]="[2].includes(roleId)">
 						</mat-form-field>
 					</div>
 

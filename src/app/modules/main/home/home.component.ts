@@ -38,6 +38,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 	chartsProgressServices: Partial<ChartOptions>;
 
 	user: any = {};
+	roleId: any = '';
 
 	score!: {
 		progreso_servicio?: ProgresoServicio[];
@@ -50,13 +51,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
 		private _score: ScoreService
 	) {
 		this.user = _storage.getUser();
+		this.roleId = _storage.getRolID();
 	}
 	ngAfterViewInit(): void {
 		const { idcliente,  idclientesede, idtercero } = this.user;
 		this._score.get({ idcliente,  idclientesede, idtercero }).subscribe((r) => {
 			this.score = r;
 			this._prepareChartData(r.resumen_mes);
-			this._loadDataChart(r.progreso_servicio);
+
+			if (![2].includes(this.roleId)) {
+				this._loadDataChart(r.progreso_servicio);
+			}
 		});
 	}
 
