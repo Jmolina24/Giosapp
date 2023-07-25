@@ -64,6 +64,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	listSupport: any[] = [];
+	listSupportAll: any[] = [];
 	listServices: any[] = [];
 	listThirds: any[] = [];
 	listThirdsServices: any[] = [];
@@ -157,6 +158,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 				this.listSupport = response
 				.filter(({ estado }) => estado === 'CARGADO')
 				.map((r: any) => {
+					r.show = false;
 					try {
 						r.soporte = JSON.parse(r.soporte || '[]');
 						if (Array.isArray(r.soporte)) {
@@ -183,8 +185,9 @@ export class DetailsComponent implements OnInit, OnChanges {
 						r.soporte = [];
 					}
 					return r;
-				})
-				.reduce(
+				});
+
+				this.listSupportAll = this.listSupport.reduce(
 					(accumulator: any[], r: any) =>
 						accumulator.concat(
 							r.soporte.map(t => ({ ...r, ...t }))
@@ -711,10 +714,11 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	downloadAll(): void {
-		this._file.downloadAll(this.listSupport);
+		this._file.downloadAll(this.listSupportAll);
 	}
 
-	fnModalViewFile(file: any = null): void {
+	fnModalViewFile(file: any = null, item: any = null): void {
+		file = { ...file, ...item};
 		if (file) {
 			this.support = file;
 		}
@@ -725,7 +729,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 	}
 
 	changeFileNextOrPrevius(section: 'next' | 'previus', file: any): void {
-		const data = this.listSupport;
+		const data = this.listSupportAll;
 		const d = data.findIndex(r => r.index === file.index);
 
 		switch (section) {
