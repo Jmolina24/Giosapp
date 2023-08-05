@@ -405,7 +405,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 								%0A%0A*Usuario Asigna:* ${this._storage.getUser().nombre}
 								%0A%0A👆 Envía este mensaje. Te atenderemos enseguida.`;
 								window.open(
-									`https://api.whatsapp.com/send?phone=${data.celular_whatsapp}&text=${message}`
+									`https://api.whatsapp.com/send?phone=${this.infoThirdsServices.celular_whatsapp}&text=${message}`
 								);
 							}
 						});
