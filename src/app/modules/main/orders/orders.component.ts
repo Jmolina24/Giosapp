@@ -10,8 +10,8 @@ import { ClientsService } from 'app/core/services/clients.service';
 import { Action, MenuService } from 'app/core/services/menu.service';
 import { OrdersService } from 'app/core/services/orders.service';
 import { ServicesService } from 'app/core/services/services.service';
-import { Observable, Subject, forkJoin } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Observable, Subject, forkJoin, of, throwError } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-orders',
@@ -48,12 +48,12 @@ export class OrdersComponent implements OnInit {
 		totalPages: number;
 		range?: number;
 	} = {
-		current: 0,
-		pages: [{ data: [], page: 0 }],
-		countForPages: 5,
-		totalPages: 0,
-		range: 3,
-	};
+			current: 0,
+			pages: [{ data: [], page: 0 }],
+			countForPages: 5,
+			totalPages: 0,
+			range: 3,
+		};
 
 	options: 'ACTIVO' | 'PROCESADO' | 'ANULADA' | 'TOTAL' = 'ACTIVO';
 
@@ -78,7 +78,7 @@ export class OrdersComponent implements OnInit {
 		private _services: ServicesService,
 		private _storage: StorageService,
 		private _menu: MenuService
-	) {}
+	) { }
 
 	ngOnInit(): void {
 		this.actions = this._menu.getActions('process.orders');
@@ -101,7 +101,7 @@ export class OrdersComponent implements OnInit {
 			}
 
 			this.filteredOptions = this.control.valueChanges.pipe(
-				startWith('' ),
+				startWith(''),
 				map(value => this._filter(value || ''))
 			);
 
@@ -167,7 +167,6 @@ export class OrdersComponent implements OnInit {
 		}
 		this._alert.loading();
 		this.create()
-			// .pipe(switchMap((r: any) => this.createDetail(r)))
 			.subscribe(
 				(response) => {
 					if (response.codigo !== 0) {
@@ -213,34 +212,25 @@ export class OrdersComponent implements OnInit {
 												data.idclientesede
 											);
 										const message = `
-							👋 Hola, he generado una orden de servicio%0A *ORD-${response.idorden}*%0A🗓️ ${
-											data.fechaentrega
-										} ⏰ ${
-											data.horaentrega
-										}%0A%0A*Tipo de orden*: ${this.getNameOrderType(
-											data.idtipoorden
-										)}%0A%0A*Sede-Cliente*: ${
-											clienteSede.cliensede
-										}%0A*Dirección*: ${
-											clienteSede.direccion
-										}%0A*Contacto*: ${
-											clienteSede.contacto
-										} ${
-											clienteSede.telefono
-										}%0A%0A📝 *Detalle Servicio*${listDetails.map(
-											e =>
-												`%0A%0A- x${e.cantidad} ${
-													this.getInfoService(
+							👋 Hola, he generado una orden de servicio%0A *ORD-${response.idorden}*%0A🗓️ ${data.fechaentrega
+											} ⏰ ${data.horaentrega
+											}%0A%0A*Tipo de orden*: ${this.getNameOrderType(
+												data.idtipoorden
+											)}%0A%0A*Sede-Cliente*: ${clienteSede.cliensede
+											}%0A*Dirección*: ${clienteSede.direccion
+											}%0A*Contacto*: ${clienteSede.contacto
+											} ${clienteSede.telefono
+											}%0A%0A📝 *Detalle Servicio*${listDetails.map(
+												e =>
+													`%0A%0A- x${e.cantidad} ${this.getInfoService(
 														e.idservicio
 													).nombre
-												} - ${
-													this.getInfoService(
+													} - ${this.getInfoService(
 														e.idservicio
 													).unidad_medida
-												}`
-										)}%0A%0A*Usuario Registra*: ${
-											this._storage.getUser().nombre
-										}%0A%0A👆 Envía este mensaje. Te atenderemos enseguida%0A`;
+													}`
+											)}%0A%0A*Usuario Registra*: ${this._storage.getUser().nombre
+											}%0A%0A👆 Envía este mensaje. Te atenderemos enseguida%0A`;
 										window.open(
 											`https://api.whatsapp.com/send?phone=${clienteSede.celular_whatsapp}&text=${message}`
 										);
@@ -276,12 +266,35 @@ export class OrdersComponent implements OnInit {
 			return;
 		}
 
-		return this._orders.createDetail({
-			...data,
-			idorden: response.idorden,
-			iddetalleorden: '0',
+		const formData = new FormData();
+
+		data.soporte.forEach(({ file }) => {
+			formData.append('files', file);
 		});
+
+		return this._files.upload(formData).pipe(
+			switchMap(({ rutas }) => {
+				const soporte = rutas.map(({ path, originalname }) => ({ path, name: originalname }));
+
+				const detalleData = {
+					...data,
+					idorden: response.idorden,
+					iddetalleorden: '0',
+					soporte: JSON.stringify(soporte)
+				};
+
+				return this._orders.createDetail(detalleData);
+			}),
+			catchError(error => {
+				this._alert.error({
+					title: error.titulo || 'Error',
+					text: error.mensaje || 'Error al procesar la solicitud.',
+				});
+				return throwError(error); // or throwError(error) if you want to propagate the error
+			})
+		);
 	}
+
 
 	update(): void {
 		this._alert.loading();
@@ -365,6 +378,7 @@ export class OrdersComponent implements OnInit {
 				cantidad: '0',
 				referencia: '',
 				observacion: '',
+				soporte: []
 			};
 
 			this.listDetails = [];
@@ -486,7 +500,7 @@ export class OrdersComponent implements OnInit {
 	}
 
 	getNameService(id: number): string {
-		return this.listServices.find(r => r.idservicio === id).nombre;
+		return this.listServices.find(r => r.idservicio === id)?.nombre;
 	}
 
 	removeDetail(id: number): void {
@@ -561,5 +575,22 @@ export class OrdersComponent implements OnInit {
 		return !value ? this.listServices : this.listServices.filter(option =>
 			option.nombre.toLowerCase().includes(filterValue)
 		);
+	}
+
+	onFileChange(pFileList: FileList[]): void {
+		pFileList = Array.from(pFileList);
+
+		if (!pFileList) {
+			return;
+		}
+
+		this.dataDetail.soporte = pFileList.map((file, index) => ({
+			file,
+			id: new Date().getTime() + index
+		}));
+	}
+
+	deleteFile(id: number): void {
+		this.dataDetail.soporte = this.dataDetail.soporte.filter(r => r.id !== id);
 	}
 }

@@ -5,7 +5,8 @@
 				<div class="mt-2">
 					<div class="w-full flex justify-between items-center px-3">
 						<div>
-							<h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+							<h2
+								class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
 								Ordenes </h2>
 							<div class="flex flex-wrap items-center font-medium">
 								<div>
@@ -16,17 +17,20 @@
 
 
 						<div class="flex flex-row justify-between">
-							<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100" [ngClass]="{'border-2 border-blue-500': options === 'TOTAL'}"
-							(click)="options = 'TOTAL'; sort()">
+							<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100"
+								[ngClass]="{'border-2 border-blue-500': options === 'TOTAL'}"
+								(click)="options = 'TOTAL'; sort()">
 								<div class="flex flex-col items-center">
-									<div class="text-4xl font-bold tracking-tight leading-none text-blue-500">{{ listCopy.length
+									<div class="text-4xl font-bold tracking-tight leading-none text-blue-500">{{
+										listCopy.length
 										}}</div>
 									<div class="text-sm font-medium text-blue-600">Total</div>
 								</div>
 							</div>
 
-							<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100" [ngClass]="{'border-2 border-green-500': options === 'ACTIVO'}"
-							(click)="options = 'ACTIVO'; sort()">
+							<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100"
+								[ngClass]="{'border-2 border-green-500': options === 'ACTIVO'}"
+								(click)="options = 'ACTIVO'; sort()">
 								<div class="flex flex-col items-center">
 									<div class="text-4xl font-bold tracking-tight leading-none text-green-500">{{
 										getLengthStatus('ACTIVO') }}</div>
@@ -34,8 +38,9 @@
 								</div>
 							</div>
 
-							<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100" [ngClass]="{'border-2 border-teal-500': options === 'PROCESADO'}"
-							(click)="options = 'PROCESADO'; sort()">
+							<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100"
+								[ngClass]="{'border-2 border-teal-500': options === 'PROCESADO'}"
+								(click)="options = 'PROCESADO'; sort()">
 								<div class="flex flex-col items-center">
 									<div class="text-4xl font-bold tracking-tight leading-none text-teal-500">{{
 										getLengthStatus('PROCESADO') }}</div>
@@ -43,10 +48,12 @@
 								</div>
 							</div>
 
-							<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100" [ngClass]="{'border-2 border-red-500': options === 'ANULADA'}"
-							(click)="options = 'ANULADA'; sort()">
+							<div class="flex flex-col flex-auto w-3/12 mx-2 p-3 bg-card shadow rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100"
+								[ngClass]="{'border-2 border-red-500': options === 'ANULADA'}"
+								(click)="options = 'ANULADA'; sort()">
 								<div class="flex flex-col items-center">
-									<div class="text-4xl font-bold tracking-tight leading-none text-red-500">{{ getLengthStatus('ANULADA') }}</div>
+									<div class="text-4xl font-bold tracking-tight leading-none text-red-500">{{
+										getLengthStatus('ANULADA') }}</div>
 									<div class="text-sm font-medium text-red-600">Anuladas</div>
 								</div>
 							</div>
@@ -181,9 +188,9 @@
 						</thead>
 						<tbody>
 							<ng-container *ngIf="list.length; else noContent">
-								<ng-container *ngFor="let item of contentPagination.pages[contentPagination.current]?.data;">
-									<tr
-										class="bg-white border-b hover:bg-gray-50">
+								<ng-container
+									*ngFor="let item of contentPagination.pages[contentPagination.current]?.data;">
+									<tr class="bg-white border-b hover:bg-gray-50">
 										<td class="w-4 p-4">
 											<div class="flex items-center">
 												<input id="checkbox-table-search-1" type="checkbox"
@@ -199,7 +206,7 @@
 										</td>
 										<td scope="row"
 											class="px-6 py-4 text-center font-medium text-gray-900 whitespace-nowrap">
-											 {{ item.clientesede }}({{ item.cliente }})
+											{{ item.clientesede }}({{ item.cliente }})
 										</td>
 										<td class="px-6 py-4 text-center">
 											{{ item.tipoorden }}
@@ -267,9 +274,11 @@
 					<div class="flex justify-between">
 						<mat-form-field class="fuse-mat-dense flex-auto mr-1">
 							<mat-label class="text-lg font-medium mb-1">Cliente</mat-label>
-							<input type="text" placeholder="Cliente" matInput [formControl]="control" [matAutocomplete]="auto">
+							<input type="text" placeholder="Cliente" matInput [formControl]="control"
+								[matAutocomplete]="auto">
 							<mat-autocomplete #auto="matAutocomplete">
-								<mat-option *ngFor="let option of filteredOptions | async" [value]="option.razonsocial" (click)="getSites(option.idcliente)">
+								<mat-option *ngFor="let option of filteredOptions | async" [value]="option.razonsocial"
+									(click)="getSites(option.idcliente)">
 									{{ option.razonsocial }}
 								</mat-option>
 							</mat-autocomplete>
@@ -277,9 +286,11 @@
 
 						<mat-form-field class="fuse-mat-dense flex-auto mr-1">
 							<mat-label class="text-lg font-medium mb-1">Sede</mat-label>
-							<input type="text" placeholder="Sede" matInput [formControl]="controlSite" [matAutocomplete]="autoSite">
+							<input type="text" placeholder="Sede" matInput [formControl]="controlSite"
+								[matAutocomplete]="autoSite">
 							<mat-autocomplete #autoSite="matAutocomplete">
-								<mat-option *ngFor="let option of filteredOptionsSites | async" [value]="option.cliensede" (click)="fnSite(option.idclientesede)">
+								<mat-option *ngFor="let option of filteredOptionsSites | async"
+									[value]="option.cliensede" (click)="fnSite(option.idclientesede)">
 									{{ option.cliensede }}
 								</mat-option>
 							</mat-autocomplete>
@@ -318,21 +329,32 @@
 						</div>
 
 						<ng-container *ngFor="let item of listDetails">
-							<span id="badge-dismiss-default" class="inline-flex items-center px-2 py-1 mr-2 text-sm font-medium text-blue-800 bg-blue-100 rounded">
-								{{ getNameService(item.idservicio) }} ({{ item.cantidad }})
-								<button (click)="removeDetail(item.idservicio)" type="button" class="inline-flex items-center p-0.5 ml-2 text-sm text-blue-400 bg-transparent rounded-sm hover:bg-blue-200 hover:text-blue-900" data-dismiss-target="#badge-dismiss-default" aria-label="Remove">
-									<svg aria-hidden="true" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+							<span id="badge-dismiss-default"
+								class="inline-flex items-center px-2 py-1 mr-2 text-sm font-medium text-blue-800 bg-blue-100 rounded">
+								{{ getNameService(item.idservicio) }} ({{ item.cantidad }}) - Soportes: ({{
+								item.soporte.length }})
+								<button (click)="removeDetail(item.idservicio)" type="button"
+									class="inline-flex items-center p-0.5 ml-2 text-sm text-blue-400 bg-transparent rounded-sm hover:bg-blue-200 hover:text-blue-900"
+									data-dismiss-target="#badge-dismiss-default" aria-label="Remove">
+									<svg aria-hidden="true" class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"
+										xmlns="http://www.w3.org/2000/svg">
+										<path fill-rule="evenodd"
+											d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+											clip-rule="evenodd"></path>
+									</svg>
 									<span class="sr-only">Remove badge</span>
 								</button>
-							  </span>
+							</span>
 						</ng-container>
 
 						<ng-container *ngIf="addDetails">
 							<mat-form-field class="fuse-mat-dense flex-auto w-full">
 								<mat-label class="text-lg font-medium mb-1">Servicio</mat-label>
-								<input type="text" placeholder="Servicio" matInput [formControl]="controlService" [matAutocomplete]="autoService">
+								<input type="text" placeholder="Servicio" matInput [formControl]="controlService"
+									[matAutocomplete]="autoService">
 								<mat-autocomplete #autoService="matAutocomplete">
-									<mat-option *ngFor="let option of filteredOptionsServices | async" [value]="option.nombre" (click)="fnService(option.idservicio)">
+									<mat-option *ngFor="let option of filteredOptionsServices | async"
+										[value]="option.nombre" (click)="fnService(option.idservicio)">
 										{{ option.nombre }}
 									</mat-option>
 								</mat-autocomplete>
@@ -340,7 +362,8 @@
 
 							<mat-form-field class="fuse-mat-dense flex-auto w-full">
 								<mat-label class="text-lg font-medium mb-1">Cantidad</mat-label>
-								<input matInput placeholder="Cantidad" name="cantidad" [(ngModel)]="dataDetail.cantidad">
+								<input matInput placeholder="Cantidad" name="cantidad"
+									[(ngModel)]="dataDetail.cantidad">
 							</mat-form-field>
 
 							<mat-form-field class="fuse-mat-dense flex-auto w-full">
@@ -355,9 +378,42 @@
 									placeholder="Observación..."></textarea>
 							</mat-form-field>
 
+							<label type="button"
+								class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+								for="upload_support">Adjuntar Soporte(s)</label>
+
+							<input type="file" multiple class="hidden" id="upload_support"
+								(change)="onFileChange($event.target.files)">
+
 							<button type="button"
 								class="focus:outline-none text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 								(click)="fnAddDetails()">Agregar</button>
+
+
+							<ng-container *ngIf="dataDetail.soporte?.length > 0">
+								<div class="max-h-36 overflow-y-auto">
+									<ng-container *ngFor="let item of dataDetail.soporte; let i = index">
+										<div class="w-full my-2">
+											<span id="badge-dismiss-default"
+												class="inline-flex items-center px-2 py-1 mr-2 text-sm font-medium text-blue-800 bg-blue-100 rounded">
+												{{ item.file.name }}
+												<button (click)="deleteFile(item.id)" type="button"
+													class="inline-flex items-center p-0.5 ml-2 text-sm text-blue-400 bg-transparent rounded-sm hover:bg-blue-200 hover:text-blue-900"
+													data-dismiss-target="#badge-dismiss-default" aria-label="Remove">
+													<svg aria-hidden="true" class="w-3.5 h-3.5" fill="currentColor"
+														viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+														<path fill-rule="evenodd"
+															d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+															clip-rule="evenodd"></path>
+													</svg>
+													<span class="sr-only">Remove badge</span>
+												</button>
+											</span>
+										</div>
+									</ng-container>
+								</div>
+							</ng-container>
+
 						</ng-container>
 					</ng-container>
 

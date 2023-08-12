@@ -115,6 +115,7 @@ export class OrdersService {
 		cantidad: string;
 		referencia: string;
 		observacion: string;
+		soporte: string;
 	}): Observable<any> {
 		if (!content) {
 			return;

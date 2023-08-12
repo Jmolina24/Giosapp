@@ -46,6 +46,8 @@ export class DetailsComponent implements OnInit, OnChanges {
 
 	infoDetail: any = null;
 
+	supportDetail: any = null;
+
 	list: any[] = [];
 	listCopy: any[] = [];
 	@Output() dataList = new EventEmitter();
@@ -83,12 +85,12 @@ export class DetailsComponent implements OnInit, OnChanges {
 		totalPages: number;
 		range?: number;
 	} = {
-		current: 0,
-		pages: [{ data: [], page: 0 }],
-		countForPages: 5,
-		totalPages: 0,
-		range: 3,
-	};
+			current: 0,
+			pages: [{ data: [], page: 0 }],
+			countForPages: 5,
+			totalPages: 0,
+			range: 3,
+		};
 
 	actions: Action[];
 
@@ -102,7 +104,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 		private _rates: RatesService,
 		private _menu: MenuService,
 		private _storage: StorageService
-	) {}
+	) { }
 
 	ngOnInit(): void {
 		this.idrole = this._storage.getRolID();
@@ -156,36 +158,36 @@ export class DetailsComponent implements OnInit, OnChanges {
 		this._service.getSupports({ iddetalleorden }).subscribe((response) => {
 			if (action === 'view') {
 				this.listSupport = response
-				.filter(({ estado }) => estado === 'CARGADO')
-				.map((r: any) => {
-					r.show = false;
-					try {
-						r.soporte = JSON.parse(r.soporte || '[]');
-						if (Array.isArray(r.soporte)) {
-							r.soporte = r.soporte.map((t: string, index) => {
-								const url =
-									'https://demo.mainsoft.technology' +
-									t.split('/web')[1];
-								const y = url.split('.');
-								const tipo = y[y.length - 1].toUpperCase();
-								const supportObject = {
-									tipo,
-									soporte: url,
-									index:
-										r.iddetalleordensoporte +
-										'-' +
-										(index + 1),
-								};
-								return supportObject;
-							});
-						} else {
+					.filter(({ estado }) => estado === 'CARGADO')
+					.map((r: any) => {
+						r.show = false;
+						try {
+							r.soporte = JSON.parse(r.soporte || '[]');
+							if (Array.isArray(r.soporte)) {
+								r.soporte = r.soporte.map((t: string, index) => {
+									const url =
+										'https://demo.mainsoft.technology' +
+										t.split('/web')[1];
+									const y = url.split('.');
+									const tipo = y[y.length - 1].toUpperCase();
+									const supportObject = {
+										tipo,
+										soporte: url,
+										index:
+											r.iddetalleordensoporte +
+											'-' +
+											(index + 1),
+									};
+									return supportObject;
+								});
+							} else {
+								r.soporte = [];
+							}
+						} catch (error) {
 							r.soporte = [];
 						}
-					} catch (error) {
-						r.soporte = [];
-					}
-					return r;
-				});
+						return r;
+					});
 
 				this.listSupportAll = this.listSupport.reduce(
 					(accumulator: any[], r: any) =>
@@ -282,39 +284,59 @@ export class DetailsComponent implements OnInit, OnChanges {
 	create(): void {
 		this._alert.loading();
 
-		this._service
-			.createDetail({
-				idorden: this.idorden,
-				iddetalleorden: '0',
-				...this.data,
-			})
-			.subscribe(
-				(response) => {
-					this._alert.closeAlert();
-					if (response.codigo !== 0) {
-						this._alert.error({
+		const formData = new FormData();
+
+		this.data.soporte.forEach(({ file }) => {
+			formData.append('files', file);
+		});
+
+		this._file.upload(formData).subscribe((r) => {
+			if (r.codigo !== 0) {
+				this._alert.error({
+					title: r.titulo || 'Error',
+					text: r.mensaje || 'Error al subir los archivos.',
+				});
+				return
+			}
+
+			const soporte = r.rutas.map(({ path, originalname }) => ({ path, name: originalname }));
+
+			this._service
+				.createDetail({
+					idorden: this.idorden,
+					iddetalleorden: '0',
+					...this.data,
+					soporte: JSON.stringify(soporte)
+				})
+				.subscribe(
+					(response) => {
+						this._alert.closeAlert();
+						if (response.codigo !== 0) {
+							this._alert.error({
+								title: response.titulo,
+								text: response.mensaje,
+							});
+							return;
+						}
+
+						this._alert.success({
 							title: response.titulo,
 							text: response.mensaje,
 						});
-						return;
+
+						this.getByOrden(this.idorden);
+						this.showSection(null);
+					},
+					({ error }) => {
+						this._alert.error({
+							title: error.titulo || 'Error',
+							text:
+								error.mensaje || 'Error al procesar la solicitud.',
+						});
 					}
+				);
+		})
 
-					this._alert.success({
-						title: response.titulo,
-						text: response.mensaje,
-					});
-
-					this.getByOrden(this.idorden);
-					this.showSection(null);
-				},
-				({ error }) => {
-					this._alert.error({
-						title: error.titulo || 'Error',
-						text:
-							error.mensaje || 'Error al procesar la solicitud.',
-					});
-				}
-			);
 	}
 
 	update(): void {
@@ -387,19 +409,13 @@ export class DetailsComponent implements OnInit, OnChanges {
 								const data = JSON.parse(
 									JSON.stringify(this.data)
 								);
-								const message = `👋 Hola, te he Asignado un Servicio para Gestión%0A *SER-${
-									data.iddetalleorden
-								}*%0A🗓️ ${data.fechaentrega} ⏰ ${
-									data.horaentrega
-								}%0A%0A*Datos del Cliente*%0A%0ASede-Cliente: ${
-									data.clientesede
-								} (${data.cliente})%0ADireccion: ${
-									data.direccion_sede
-								} (${data.ciudadservicio} - ${
-									data.deptoservicio
-								})%0AContacto: ${data.contacto_sede} ${
-									data.telefono_sede
-								}
+								const message = `👋 Hola, te he Asignado un Servicio para Gestión%0A *SER-${data.iddetalleorden
+									}*%0A🗓️ ${data.fechaentrega} ⏰ ${data.horaentrega
+									}%0A%0A*Datos del Cliente*%0A%0ASede-Cliente: ${data.clientesede
+									} (${data.cliente})%0ADireccion: ${data.direccion_sede
+									} (${data.ciudadservicio} - ${data.deptoservicio
+									})%0AContacto: ${data.contacto_sede} ${data.telefono_sede
+									}
 								%0A%0A📝 *Detalle Servicio*
 								%0A%0A- *x${data.cantidad} ${data.servicio} - ${data.unidadmedida}*
 								%0A%0A*Usuario Asigna:* ${this._storage.getUser().nombre}
@@ -437,6 +453,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 				cantidad: '',
 				referencia: '',
 				observacion: '',
+				soporte: []
 			};
 			return;
 		}
@@ -537,6 +554,33 @@ export class DetailsComponent implements OnInit, OnChanges {
 		modal.classList.toggle('hidden');
 	}
 
+	fnBtnModalStart(item: any = null): void {
+		if (item) {
+			let soporte  = JSON.parse(item.soporte);
+
+			soporte = soporte.map(({ path: t, name}, index) => {
+				const url =
+					'https://demo.mainsoft.technology' +
+					t.split('/web')[1];
+				const y = url.split('.');
+				const tipo = y[y.length - 1].toUpperCase();
+				const supportObject = {
+					tipo,
+					soporte: url,
+					name,
+					index: index + 1
+				};
+				return supportObject;
+			});
+
+			this.infoDetail = {...item, soporte};
+		}
+
+		const modal = document.getElementById('modalListFileStart');
+
+		modal.classList.toggle('hidden');
+	}
+
 	onFileChange(pFileList: FileList[]): void {
 		pFileList = Array.from(pFileList);
 		if (this.isLoading) {
@@ -583,6 +627,23 @@ export class DetailsComponent implements OnInit, OnChanges {
 			r => r.id !== f.id
 		);
 		this.listFiles = this.listFiles.filter(({ id }) => id !== f.id);
+	}
+
+	onFileChangeSupport(pFileList: FileList[]): void {
+		pFileList = Array.from(pFileList);
+
+		if (!pFileList) {
+			return;
+		}
+
+		this.data.soporte = pFileList.map((file, index) => ({
+			file,
+			id: new Date().getTime() + index
+		}));
+	}
+
+	deleteFileSupport(id: number): void {
+		this.data.soporte = this.data.soporte.filter(r => r.id !== id);
 	}
 
 	isIdRepeated(id: number): boolean {
@@ -717,8 +778,12 @@ export class DetailsComponent implements OnInit, OnChanges {
 		this._file.downloadAll(this.listSupportAll);
 	}
 
+	downloadAllStart(): void {
+		this._file.downloadAll(this.infoDetail.soporte);
+	}
+
 	fnModalViewFile(file: any = null, item: any = null): void {
-		file = { ...file, ...item};
+		file = { ...file, ...item };
 		if (file) {
 			this.support = file;
 		}
@@ -728,8 +793,35 @@ export class DetailsComponent implements OnInit, OnChanges {
 		modal.classList.toggle('hidden');
 	}
 
+	fnModalViewFileStart(file: any = null, item: any = null): void {
+		if (file) {
+			file = { ...file, ...item };
+			if (file) {
+				this.support = file;
+			}
+		}
+
+		const modal = document.getElementById('modalViewFileStart');
+
+		modal.classList.toggle('hidden');
+	}
+
 	changeFileNextOrPrevius(section: 'next' | 'previus', file: any): void {
 		const data = this.listSupportAll;
+		const d = data.findIndex(r => r.index === file.index);
+
+		switch (section) {
+			case 'next':
+				this.support = data[d + 1 === data.length ? 0 : d + 1];
+				break;
+			case 'previus':
+				this.support = data[d === 0 ? 0 : d - 1];
+				break;
+		}
+	}
+
+	changeFileNextOrPreviusStart(section: 'next' | 'previus', file: any): void {
+		const data = this.infoDetail.soporte;
 		const d = data.findIndex(r => r.index === file.index);
 
 		switch (section) {
