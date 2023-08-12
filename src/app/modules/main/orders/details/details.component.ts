@@ -219,11 +219,17 @@ export class DetailsComponent implements OnInit, OnChanges {
 			});
 	}
 
-	changeStatusOrderDetail({ iddetalleorden }, status: 'F' | 'P' = 'P'): void {
+	async changeStatusOrderDetail({ iddetalleorden }, status: 'F' | 'P' = 'P'): Promise<void> {
+		const { isConfirmed, value: observacion_tercero } = await this._alert.textarea('¿Desea ingresar alguna observación?');
+
+		if (!isConfirmed) {
+			return;
+		}
+
 		this._alert.loading();
 
 		this._service
-			.changeStatusOrderDatails(iddetalleorden, status)
+			.changeStatusOrderDatails(iddetalleorden, status, observacion_tercero)
 			.subscribe(
 				(response) => {
 					this._alert.closeAlert();

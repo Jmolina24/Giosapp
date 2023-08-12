@@ -66,7 +66,7 @@ export class OrdersService {
 		});
 	}
 
-	public changeStatusOrderDatails(iddetalleorden = '0', status: string = 'F'): Observable<any> {
+	public changeStatusOrderDatails(iddetalleorden = '0', status: string = 'F', observacion_tercero = ''): Observable<any> {
 		if (!iddetalleorden) {
 			return;
 		}
@@ -74,6 +74,7 @@ export class OrdersService {
 		return this._api.post('admin/orden-detalle-status/' + status, {
 			iddetalleorden,
 			idusuarioregistra: this._storage.getUserId(),
+			observacion_tercero
 		});
 	}
 

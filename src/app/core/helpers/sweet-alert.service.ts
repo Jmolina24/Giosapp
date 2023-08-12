@@ -294,4 +294,29 @@ export class SweetAlertService {
 	closeAlert(): void {
 		Swal.close();
 	}
+
+	/**
+	 * Función `textarea(title: string): Promise<SweetAlertResult>`
+	 *
+	 * Esta función muestra una alerta SweetAlert con un campo de entrada de text-area y devuelve una promesa que se resuelve con el resultado de la alerta.
+	 * La función está definida con los siguientes parámetros:
+	 *
+	 * @param title El título de la alerta SweetAlert.
+	 *
+	 * @returns Una promesa que se resuelve con el resultado de la alerta SweetAlert.
+	 * El resultado es un objeto que contiene propiedades como `value` (el valor de entrada del usuario) y `isConfirmed` (indica si se confirmó la alerta).
+	 *
+	 * @remarks
+	 * La función `textarea` utiliza la librería SweetAlert para mostrar una alerta con un campo de entrada de texto en el navegador.
+	 * Se utiliza la función `fire` de SweetAlert con las opciones proporcionadas en el parámetro `title`.
+	 * La alerta mostrará un título, un campo de entrada de texto y botones de confirmación y cancelación.
+	 */
+	async textarea(title: string): Promise<SweetAlertResult> {
+		return await Swal.fire({
+			title: title,
+			input: 'textarea',
+			showCancelButton: true,
+			confirmButtonText: 'Confirmar',
+		});
+	}
 }
