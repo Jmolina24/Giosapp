@@ -562,9 +562,10 @@ export class DetailsComponent implements OnInit, OnChanges {
 
 	fnBtnModalStart(item: any = null): void {
 		if (item) {
-			let soporte  = JSON.parse(item.soporte);
+			console.log(item);
+			let soporte  = JSON.parse(item?.soporte);
 
-			soporte = soporte.map(({ path: t, name}, index) => {
+			soporte = soporte?.map(({ path: t, name}, index) => {
 				const url =
 					'https://demo.mainsoft.technology' +
 					t.split('/web')[1];

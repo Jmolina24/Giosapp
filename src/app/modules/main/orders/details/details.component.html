@@ -326,9 +326,6 @@
 													class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
 													(click)="showSection('assign', item)">Asignar</button>
 											</ng-container>
-											<button type="button"
-													class="text-white bg-teal-700 hover:bg-teal-800 focus:ring-4 focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-													(click)="fnBtnModalStart(item)">Visualizar soportes Iniciales</button>
 										</ng-container>
 										<ng-container *ngIf="!['ASIGNADA', 'POR ASIGNAR'].includes(item.estado)">
 											<ng-container *ngIf="getAction('view_support')">
@@ -356,9 +353,14 @@
 											<ng-container *ngIf="getAction('changeStatusDetail')">
 												<button type="button"
 													class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-													(click)="changeStatusOrderDetail(item, 'F')">Finalizar</button>
+													(click)="changeStatusOrderDetail(item, 'P')">Finalizar</button>
 											</ng-container>
 										</ng-container>
+									</ng-container>
+									<ng-container *ngIf="item.soporte">
+										<button type="button"
+											class="text-white bg-green-400 hover:bg-green-500 focus:ring-4 focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
+											(click)="fnBtnModalStart(item)">Visualizar soportes Iniciales</button>
 									</ng-container>
 								</div>
 								<div>
@@ -952,8 +954,8 @@
 	</div>
 </div>
 
-<div class="modal relative hidden" id="modalViewFileStart" aria-labelledby="modal-title" role="dialog" style="z-index: 200;"
-	aria-modal="true">
+<div class="modal relative hidden" id="modalViewFileStart" aria-labelledby="modal-title" role="dialog"
+	style="z-index: 200;" aria-modal="true">
 	<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
 	<div class="fixed inset-0 overflow-y-auto">
 		<div class="relative min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -1032,76 +1034,74 @@
 </div>
 
 <div class="modal relative z-50 hidden" id="modalListFileStart" aria-labelledby="modal-title" role="dialog"
-aria-modal="true">
-<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
-<div class="fixed inset-0 overflow-y-auto">
-	<div class="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-		<div class="sm:max-w-5xl w-full p-5 bg-white rounded-xl z-10 ml-4">
-			<div class="text-center">
-				<h2 class="mt-5 text-3xl font-bold text-gray-900">
-					Soportes: #{{ infoDetail?.iddetalleorden }} - {{ infoDetail?.servicio }}({{
-					infoDetail?.tipoorden }})
-				</h2>
-			</div>
-			<div class="flex flex-wrap justify-center mt-2 h-100 overflow-y-auto">
-				<div id="accordion-collapse" class="w-full mx-2" data-accordion="collapse">
-					<ng-container *ngFor="let file of infoDetail?.soporte;">
-						<div class="w-40 h-40 mb-20">
-							<a class="flex flex-col m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
-								(click)="fnModalViewFileStart(file, item)">
-								<div class="aspect-w-9 aspect-h-6">
-									<div class="flex items-center justify-center">
-										<!-- Icons -->
-										<div class="relative">
-											<mat-icon class="icon-size-14 text-hint"
-												[svgIcon]="'iconsmind:file'"></mat-icon>
-											<div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-												[class.bg-red-600]="file?.tipo === 'PDF'"
-												[class.bg-blue-600]="file?.tipo === 'DOC'"
-												[class.bg-green-600]="file?.tipo === 'XLS'"
-												[class.bg-gray-600]="file?.tipo === 'TXT'"
-												[class.bg-amber-600]="file?.tipo === 'JPG' || file?.tipo === 'PNG' || file?.tipo === 'JPEG'">
-												{{ file?.tipo }}
+	aria-modal="true">
+	<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+	<div class="fixed inset-0 overflow-y-auto">
+		<div class="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+			<div class="sm:max-w-5xl w-full p-5 bg-white rounded-xl z-10 ml-4">
+				<div class="text-center">
+					<h2 class="mt-5 text-3xl font-bold text-gray-900">
+						Soportes: #{{ infoDetail?.iddetalleorden }} - {{ infoDetail?.servicio }}({{
+						infoDetail?.tipoorden }})
+					</h2>
+				</div>
+				<div class="flex flex-wrap justify-center mt-2 h-100 overflow-y-auto">
+					<div id="accordion-collapse" class="w-full mx-2" data-accordion="collapse">
+						<ng-container *ngFor="let file of infoDetail?.soporte;">
+							<div class="w-40 h-40 mb-20">
+								<a class="flex flex-col m-2 p-4 shadow rounded-2xl cursor-pointer bg-card"
+									(click)="fnModalViewFileStart(file, item)">
+									<div class="aspect-w-9 aspect-h-6">
+										<div class="flex items-center justify-center">
+											<!-- Icons -->
+											<div class="relative">
+												<mat-icon class="icon-size-14 text-hint"
+													[svgIcon]="'iconsmind:file'"></mat-icon>
+												<div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
+													[class.bg-red-600]="file?.tipo === 'PDF'"
+													[class.bg-blue-600]="file?.tipo === 'DOC'"
+													[class.bg-green-600]="file?.tipo === 'XLS'"
+													[class.bg-gray-600]="file?.tipo === 'TXT'"
+													[class.bg-amber-600]="file?.tipo === 'JPG' || file?.tipo === 'PNG' || file?.tipo === 'JPEG'">
+													{{ file?.tipo }}
+												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-								<div
-									class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
-									<div class="truncate" [matTooltip]="file.name">
-										{{file.name}}
+									<div class="flex flex-col flex-auto justify-center text-center text-sm font-medium">
+										<div class="truncate" [matTooltip]="file.name">
+											{{file.name}}
+										</div>
 									</div>
-								</div>
-							</a>
-							<div class="w-full px-5">
-								<a (click)="download(file.soporte)"
-									class="flex justify-center w-full bg-red-500 p-4  rounded-full tracking-wide
-						font-semibold  focus:outline-none focus:shadow-outline hover:bg-red-600 shadow-lg cursor-pointer transition ease-in duration-300 mr-2">
-									<mat-icon svgIcon="heroicons_outline:arrow-down"
-										class="text-white"></mat-icon>
 								</a>
+								<div class="w-full px-5">
+									<a (click)="download(file.soporte)"
+										class="flex justify-center w-full bg-red-500 p-4  rounded-full tracking-wide
+						font-semibold  focus:outline-none focus:shadow-outline hover:bg-red-600 shadow-lg cursor-pointer transition ease-in duration-300 mr-2">
+										<mat-icon svgIcon="heroicons_outline:arrow-down" class="text-white"></mat-icon>
+									</a>
+								</div>
 							</div>
-						</div>
+						</ng-container>
+					</div>
+				</div>
+				<div class="flex justify-between">
+					<button type="submit"
+						class="my-5 w-full flex justify-center bg-red-500 text-gray-100 p-4  rounded-full tracking-wide
+							font-semibold  focus:outline-none focus:shadow-outline hover:bg-red-600 shadow-lg cursor-pointer transition ease-in duration-300 mr-2"
+						(click)="fnBtnModalStart(null)">
+						Cerrar
+					</button>
+					<ng-container *ngIf="infoDetail?.soporte.length > 0">
+						<button type="submit"
+							class="my-5 w-full flex justify-center bg-blue-500 text-gray-100 p-4  rounded-full tracking-wide
+							font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300 mr-2"
+							(click)="downloadAllStart()">
+							Descargar Todos
+						</button>
 					</ng-container>
 				</div>
 			</div>
-			<div class="flex justify-between">
-				<button type="submit"
-					class="my-5 w-full flex justify-center bg-red-500 text-gray-100 p-4  rounded-full tracking-wide
-							font-semibold  focus:outline-none focus:shadow-outline hover:bg-red-600 shadow-lg cursor-pointer transition ease-in duration-300 mr-2"
-					(click)="fnBtnModalStart(null)">
-					Cerrar
-				</button>
-				<ng-container *ngIf="infoDetail?.soporte.length > 0">
-					<button type="submit"
-						class="my-5 w-full flex justify-center bg-blue-500 text-gray-100 p-4  rounded-full tracking-wide
-							font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300 mr-2"
-						(click)="downloadAllStart()">
-						Descargar Todos
-					</button>
-				</ng-container>
-			</div>
 		</div>
 	</div>
-</div>
 </div>
