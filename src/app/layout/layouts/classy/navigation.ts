@@ -148,6 +148,14 @@ const navigation = [
 					},
 				],
 			},
+			{
+				id: 'administration.report',
+				title: 'Reporte',
+				type: 'basic',
+				icon: 'mat_outline:insert_drive_file',
+				link: '/panel/reporte',
+				actions: [],
+			},
 		],
 	},
 	{

@@ -285,7 +285,7 @@ export class OrdersComponent implements OnInit {
 
 				return this._orders.createDetail(detalleData);
 			}),
-			catchError(error => {
+			catchError((error) => {
 				this._alert.error({
 					title: error.titulo || 'Error',
 					text: error.mensaje || 'Error al procesar la solicitud.',
@@ -553,6 +553,23 @@ export class OrdersComponent implements OnInit {
 		}
 	}
 
+	onFileChange(pFileList: FileList[]): void {
+		pFileList = Array.from(pFileList);
+
+		if (!pFileList) {
+			return;
+		}
+
+		this.dataDetail.soporte = pFileList.map((file, index) => ({
+			file,
+			id: new Date().getTime() + index
+		}));
+	}
+
+	deleteFile(id: number): void {
+		this.dataDetail.soporte = this.dataDetail.soporte.filter(r => r.id !== id);
+	}
+
 	private _filter(value: string): string[] {
 		const filterValue = value.toLowerCase();
 
@@ -575,22 +592,5 @@ export class OrdersComponent implements OnInit {
 		return !value ? this.listServices : this.listServices.filter(option =>
 			option.nombre.toLowerCase().includes(filterValue)
 		);
-	}
-
-	onFileChange(pFileList: FileList[]): void {
-		pFileList = Array.from(pFileList);
-
-		if (!pFileList) {
-			return;
-		}
-
-		this.dataDetail.soporte = pFileList.map((file, index) => ({
-			file,
-			id: new Date().getTime() + index
-		}));
-	}
-
-	deleteFile(id: number): void {
-		this.dataDetail.soporte = this.dataDetail.soporte.filter(r => r.id !== id);
 	}
 }

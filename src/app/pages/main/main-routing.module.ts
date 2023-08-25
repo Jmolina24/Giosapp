@@ -5,6 +5,7 @@ import { DetailFileComponent } from 'app/modules/main/detail-file/detail-file.co
 import { HomeComponent } from 'app/modules/main/home/home.component';
 import { ParameterSettingComponent } from 'app/modules/main/parameter-setting/parameter-setting.component';
 import { RatesComponent } from 'app/modules/main/rates/rates.component';
+import { ReportComponent } from 'app/modules/main/report/report.component';
 import { RolesComponent } from 'app/modules/main/roles/roles.component';
 import { ServicesComponent } from 'app/modules/main/services/services.component';
 import { ThirdPartiesComponent } from 'app/modules/main/third-parties/third-parties.component';
@@ -70,6 +71,10 @@ const routes: Routes = [
 	{
 		path: 'archivo-detalle/:iddetalleorden/:iddetalleordensoporte',
 		component: DetailFileComponent,
+	},
+	{
+		path: 'reporte',
+		component: ReportComponent,
 	},
 ];
 

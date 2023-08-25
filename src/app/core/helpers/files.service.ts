@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { ApiService } from '../api/api.service';
 import { Observable, forkJoin } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import * as File from 'file-saver';
 
 import * as jszip from 'jszip';
 import { SweetAlertService } from './sweet-alert.service';
+import { switchMap } from 'rxjs/operators';
 
 const EXCEL_TYPE =
 	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
@@ -51,6 +52,12 @@ export class FilesService {
 			.subscribe((response: Blob) => {
 				File.saveAs(response);
 			});
+	}
+
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	downloadFile(url: string): Observable<any> {
+		return this._http
+			.get(url, { responseType: 'blob' });
 	}
 
 	downloadAll(files: { soporte: string; tipo: string }[]): void {

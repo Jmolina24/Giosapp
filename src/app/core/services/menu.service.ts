@@ -15,6 +15,7 @@ type Modules =
 	| 'administration.services'
 	| 'administration.third-parties'
 	| 'administration.rates'
+	| 'administration.report'
 	| 'process'
 	| 'process.orders'
 	| 'process.assigned-services';

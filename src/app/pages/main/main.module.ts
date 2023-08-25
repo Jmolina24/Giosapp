@@ -29,6 +29,7 @@ import { SetTimeDifferencePipe } from 'app/core/pipes/set-time-difference.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ReportComponent } from 'app/modules/main/report/report.component';
 
 @NgModule({
 	declarations: [
@@ -46,7 +47,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 		FileDragNDropDirective,
 		RatesComponent,
 		DetailFileComponent,
-		SetTimeDifferencePipe
+		SetTimeDifferencePipe,
+		ReportComponent
 	],
 	imports: [
 		CommonModule,

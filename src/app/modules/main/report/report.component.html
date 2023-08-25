@@ -1,0 +1,102 @@
+<div class="flex flex-col flex-auto min-w-0">
+	<div class="flex flex-col sm:py-4 sm:px-5 border-b bg-card">
+		<div class="flex-1 min-w-0">
+			<div class="mt-2">
+				<div class="w-full flex justify-between items-center px-3">
+					<div>
+						<h2 class="text-3xl md:text-4xl font-extrabold tracking-tight leading-7 sm:leading-10 truncate">
+							Genera Reporte </h2>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="flex-auto p-5">
+		<div class="relative shadow-md sm:rounded-lg">
+			<form class="overflow-y-auto p-4" style="max-height: 28rem;">
+				<div class="flex justify-between">
+					<mat-form-field class="fuse-mat-dense flex-auto mr-1">
+						<mat-label class="text-lg font-medium mb-1">Cliente</mat-label>
+						<input type="text" placeholder="Cliente" matInput [formControl]="controlCustomer"
+							[matAutocomplete]="auto">
+						<mat-autocomplete #auto="matAutocomplete">
+							<mat-option *ngFor="let option of filteredOptionsCustomer | async"
+								[value]="option.razonsocial"
+								(click)="getSites(option.idcliente); fnCustomer(option.idcliente)">
+								{{ option.razonsocial }}
+							</mat-option>
+						</mat-autocomplete>
+					</mat-form-field>
+
+					<mat-form-field class="fuse-mat-dense flex-auto mr-1">
+						<mat-label class="text-lg font-medium mb-1">Sede</mat-label>
+						<input type="text" placeholder="Sede" matInput [formControl]="controlSite"
+							[matAutocomplete]="autoSite">
+						<mat-autocomplete #autoSite="matAutocomplete">
+							<mat-option *ngFor="let option of filteredOptionsSites | async" [value]="option.cliensede"
+								(click)="fnSite(option.idclientesede)">
+								{{ option.cliensede }}
+							</mat-option>
+						</mat-autocomplete>
+					</mat-form-field>
+				</div>
+
+				<div class="flex justify-between">
+					<mat-form-field class="fuse-mat-dense flex-auto mr-1">
+						<mat-label class="text-lg font-medium mb-1">Servicios</mat-label>
+						<input type="text" placeholder="Servicio" matInput [formControl]="controlService"
+							[matAutocomplete]="autoService">
+						<mat-autocomplete #autoService="matAutocomplete">
+							<mat-option *ngFor="let option of filteredOptionsServices | async" [value]="option.nombre"
+								(click)="fnService(option.idservicio)">
+								{{ option.codigo }} {{ option.nombre }} - {{ option.tiposervicio }} ({{
+								option.unidad_medida }})
+							</mat-option>
+						</mat-autocomplete>
+					</mat-form-field>
+
+					<mat-form-field class="fuse-mat-dense flex-auto">
+						<mat-label class="text-lg font-medium mb-1">Estado</mat-label>
+						<mat-select name="type_order" [(ngModel)]="data.estado">
+							<mat-option value="" disabled selected>Seleccione una opción</mat-option>
+							<mat-option [value]="item.key" *ngFor="let item of listStatus">{{ item.value
+								}}</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+
+				<div class="flex justify-between">
+					<mat-form-field class="fuse-mat-dense flex-auto w-full mr-1">
+						<mat-label class="text-lg font-medium mb-1">Fecha Inicio</mat-label>
+						<input id="date_start" matInput datepicker type="date" placeholder="Fecha Inicio"
+							name="date_start" [(ngModel)]="data.fechaInicio">
+					</mat-form-field>
+
+					<mat-form-field class="fuse-mat-dense flex-auto w-full mr-1">
+						<mat-label class="text-lg font-medium mb-1">Fecha Fin</mat-label>
+						<input id="date_end" matInput datepicker type="date" placeholder="Fecha FIn" name="date_end"
+							[(ngModel)]="data.fechaFin">
+					</mat-form-field>
+				</div>
+			</form>
+
+
+			<div class="w-full flex justify-center py-2">
+				<button type="submit"
+					class="my-5 w-2/12 flex justify-center bg-blue-500 text-gray-100 p-4  rounded-full tracking-wide
+					font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300"
+					[disabled]="isLoading" (click)="generateExcel()">
+					<svg *ngIf="isLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" f
+						xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+						<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+						</circle>
+						<path class="opacity-75" fill="currentColor"
+							d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+						</path>
+					</svg>
+					{{ isLoading ? 'Cargando...' : 'Generar'}}
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
