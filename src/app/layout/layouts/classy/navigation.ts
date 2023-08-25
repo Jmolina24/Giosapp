@@ -148,14 +148,6 @@ const navigation = [
 					},
 				],
 			},
-			{
-				id: 'administration.report',
-				title: 'Reporte',
-				type: 'basic',
-				icon: 'mat_outline:insert_drive_file',
-				link: '/panel/reporte',
-				actions: [],
-			},
 		],
 	},
 	{
@@ -250,5 +242,22 @@ const navigation = [
 			},
 		],
 	},
+	{
+		id: 'report',
+		title: 'Reportes',
+		subtitle: '',
+		type: 'collapsable',
+		icon: 'mat_outline:insert_drive_file',
+		children: [
+			{
+				id: 'administration.services_generated',
+				title: 'Servicios Generados',
+				type: 'basic',
+				icon: 'heroicons_outline:document-report',
+				link: '/panel/reporte/servicios_generados',
+				actions: [],
+			},
+		],
+	}
 ];
 export { navigation };

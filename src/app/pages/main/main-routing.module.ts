@@ -74,7 +74,12 @@ const routes: Routes = [
 	},
 	{
 		path: 'reporte',
-		component: ReportComponent,
+		children: [
+			{
+				path: 'servicios_generados',
+				component: ReportComponent
+			}
+		]
 	},
 ];
 

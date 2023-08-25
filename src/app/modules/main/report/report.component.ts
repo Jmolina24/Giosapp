@@ -44,12 +44,12 @@ export class ReportComponent implements OnInit {
 	filteredOptionsServices: Observable<string[]>;
 
 	data = {
-		idcliente: '',
-		idclientesede: '',
-		idservicio: '',
+		idcliente: '0',
+		idclientesede: '0',
+		idservicio: '0',
 		fechaInicio: '',
 		fechaFin: '',
-		estado: ''
+		estado: 'T'
 	};
 
 	constructor(private _file: FilesService, private _client: ClientsService, private _service: ServicesService, private _alert: SweetAlertService) { }
@@ -98,7 +98,7 @@ export class ReportComponent implements OnInit {
 
 		const { idcliente, idclientesede, idservicio, fechaInicio, fechaFin, estado } = this.data;
 
-		if ([idcliente, idclientesede, idservicio, fechaInicio, fechaFin].some(r => !r)) {
+		if ([fechaInicio, fechaFin].some(r => !r)) {
 			this._alert.info({ text: 'Ingrese los datos requeridos', title: 'Datos incompletos' });
 			return;
 		}
@@ -106,7 +106,7 @@ export class ReportComponent implements OnInit {
 		this.isLoading = true;
 
 		this._file.downloadFile(
-			`https://apigiosapp.fly.dev/api/v1/report/report-services?idcliente=${idcliente}&idsedecliente=${idclientesede}&idservicio=${idservicio}&estado=${estado}&fechainicio=${fechaInicio}&fechafin=${fechaFin}&tipo=FA`).subscribe((response: Blob) => {
+			`https://apigiosapp.fly.dev/api/v1/report/report-services?idcliente=${this.data.idcliente}&idsedecliente=${this.data.idclientesede}&idservicio=${this.data.idservicio}&estado=${this.data.estado}&fechainicio=${this.data.fechaInicio}&fechafin=${this.data.fechaFin}&tipo=FA`).subscribe((response: Blob) => {
 				File.saveAs(response);
 			}, (error: HttpErrorResponse) => {
 				this.isLoading = false;
