@@ -571,7 +571,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 
 	fnBtnModalStart(item: any = null): void {
 		if (item) {
-			let soporte  = JSON.parse(item?.soporte);
+			let soporte  = JSON.parse(JSON.stringify(item?.soporte));
 
 			soporte = soporte?.map(({ path: t, name}, index) => {
 				const url =
@@ -606,12 +606,19 @@ export class DetailsComponent implements OnInit, OnChanges {
 			return;
 		}
 
-		console.log(pFileList);
-
 		if (!this.infoDetail.iddetalleordensoporte) {
 			this._alert.error({
 				title: 'Error',
 				text: 'Seleccione un tipo de soporte',
+			});
+			return;
+		}
+
+		const f = pFileList as unknown as File[];
+		if (f.some(({ size }) => size >= 5 * 1024 * 1024)) {
+			this._alert.error({
+				title: 'Error',
+				text: 'Algún archivo excede el tamaño máximo de 5 MB',
 			});
 			return;
 		}

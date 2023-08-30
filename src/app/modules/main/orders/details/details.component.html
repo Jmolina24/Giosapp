@@ -880,8 +880,9 @@
 							</ng-template>
 
 							<ng-template #tVideo>
-								<!-- <img [src]="support.soporte" alt=""> -->
-								<video [src]="support.soporte"></video>
+								<video width="600" height="350" controls autoplay class="mx-50">
+									<source [src]="support?.soporte" type="video/mp4">
+								</video>
 							</ng-template>
 						</div>
 					</div>
@@ -977,12 +978,15 @@
 					<div class="flex-auto p-5 w-full">
 						<div class="relative shadow-md rounded-lg bg-card px-5 py-7">
 							<ng-container [ngSwitch]="support?.tipo">
+								<!-- PDF -->
 								<ng-container *ngSwitchCase="'PDF'">
 									<object [data]="support.soporte" type="application/pdf" class="h-100"></object>
 								</ng-container>
+								<!-- Documentos -->
 								<ng-container *ngSwitchCase="'DOC'"></ng-container>
 								<ng-container *ngSwitchCase="'XLS'"></ng-container>
 								<ng-container *ngSwitchCase="'TXT'"></ng-container>
+								<!-- Imagenes -->
 								<ng-container *ngSwitchCase="'JPG'">
 									<ng-container *ngTemplateOutlet="tImage"></ng-container>
 								</ng-container>
@@ -992,10 +996,20 @@
 								<ng-container *ngSwitchCase="'JPEG'">
 									<ng-container *ngTemplateOutlet="tImage"></ng-container>
 								</ng-container>
+								<!-- Videos -->
+								<ng-container *ngSwitchCase="'MP4'">
+									<ng-container *ngTemplateOutlet="tVideo"></ng-container>
+								</ng-container>
 							</ng-container>
 
 							<ng-template #tImage>
-								<img [src]="support.soporte" alt="">
+								<img [src]="support.soporte" [alt]="support.soporte">
+							</ng-template>
+
+							<ng-template #tVideo>
+								<video width="600" height="350" controls autoplay class="mx-50">
+									<source [src]="support?.soporte" type="video/mp4">
+								</video>
 							</ng-template>
 						</div>
 					</div>
