@@ -166,7 +166,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 							if (Array.isArray(r.soporte)) {
 								r.soporte = r.soporte.map((t: string, index) => {
 									const url =
-										'https://demo.mainsoft.technology' +
+										'https://giosapp.mipresapp.co' +
 										t.split('/web')[1];
 									const y = url.split('.');
 									const tipo = y[y.length - 1].toUpperCase();
@@ -575,7 +575,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 
 			soporte = soporte?.map(({ path: t, name}, index) => {
 				const url =
-					'https://demo.mainsoft.technology' +
+					'https://giosapp.mipresapp.co' +
 					t.split('/web')[1];
 				const y = url.split('.');
 				const tipo = y[y.length - 1].toUpperCase();
