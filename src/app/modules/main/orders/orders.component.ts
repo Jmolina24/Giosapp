@@ -560,6 +560,15 @@ export class OrdersComponent implements OnInit {
 			return;
 		}
 
+		const f = pFileList as unknown as File[];
+		if (f.some(({ size }) => size >= 5 * 1024 * 1024)) {
+			this._alert.error({
+				title: 'Error',
+				text: 'Algún archivo excede el tamaño máximo de 5 MB',
+			});
+			return;
+		}
+
 		this.dataDetail.soporte = pFileList.map((file, index) => ({
 			file,
 			id: new Date().getTime() + index
