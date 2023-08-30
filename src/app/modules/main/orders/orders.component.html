@@ -215,7 +215,9 @@
 											{{ item.fechaentrega }} - {{ item.horaentrega }}
 										</td>
 										<td class="px-6 py-4 text-center">
-											{{ item.observacion || 'Sin observación'}}
+											<p class="truncate max-w-26">
+												{{ item.observacion || 'Sin observación'}}
+											</p>
 										</td>
 										<td class="px-6 py-4 text-center">
 											{{ item.usuarioregistra || 'Sin usuario creador' }}

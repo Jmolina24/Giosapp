@@ -189,6 +189,11 @@ export class DetailsComponent implements OnInit, OnChanges {
 						return r;
 					});
 
+				if (this.listSupport.length === 0) {
+					this._alert.info({text: 'No soporte disponible', title: 'Visualización de soporte'});
+					return;
+				}
+
 				this.listSupportAll = this.listSupport.reduce(
 					(accumulator: any[], r: any) =>
 						accumulator.concat(
@@ -209,6 +214,10 @@ export class DetailsComponent implements OnInit, OnChanges {
 				idtercero: this.idtercero,
 			})
 			.subscribe((response: any) => {
+				response = response.map((r) => {
+					r.soporte = JSON.parse(r.soporte);
+					return r;
+				});
 				this.list = response;
 				this.listCopy = JSON.parse(JSON.stringify(response));
 
@@ -302,7 +311,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 					title: r.titulo || 'Error',
 					text: r.mensaje || 'Error al subir los archivos.',
 				});
-				return
+				return;
 			}
 
 			const soporte = r.rutas.map(({ path, originalname }) => ({ path, name: originalname }));
@@ -341,7 +350,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 						});
 					}
 				);
-		})
+		});
 
 	}
 
@@ -562,7 +571,6 @@ export class DetailsComponent implements OnInit, OnChanges {
 
 	fnBtnModalStart(item: any = null): void {
 		if (item) {
-			console.log(item);
 			let soporte  = JSON.parse(item?.soporte);
 
 			soporte = soporte?.map(({ path: t, name}, index) => {
@@ -597,6 +605,8 @@ export class DetailsComponent implements OnInit, OnChanges {
 		if (!pFileList) {
 			return;
 		}
+
+		console.log(pFileList);
 
 		if (!this.infoDetail.iddetalleordensoporte) {
 			this._alert.error({

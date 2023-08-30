@@ -54,10 +54,11 @@
 							<div class="my-4"
 								[ngClass]="{'border-b-2 border-gray-300': info?.motivorechazo && info?.idmotivorechazo}">
 								<div>
-									<span class="text-1xl whitespace-nowrap text-gray-500">
-										Observación: <p>
+									<span class="text-1xl whitespace-nowrap text-gray-500 max-w-max">
+										Observación: </span>
+										<p>
 											{{ info?.observacion || 'Sin observación' }}
-										</p></span>
+										</p>
 								</div>
 							</div>
 
@@ -778,12 +779,7 @@
 																<div class="relative">
 																	<mat-icon class="icon-size-14 text-hint"
 																		[svgIcon]="'iconsmind:file'"></mat-icon>
-																	<div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-																		[class.bg-red-600]="item?.tipo === 'PDF'"
-																		[class.bg-blue-600]="item?.tipo === 'DOC'"
-																		[class.bg-green-600]="item?.tipo === 'XLS'"
-																		[class.bg-gray-600]="item?.tipo === 'TXT'"
-																		[class.bg-amber-600]="item?.tipo === 'JPG' || item?.tipo === 'PNG' || item?.tipo === 'JPEG'">
+																	<div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white bg-amber-600">
 																		{{ item?.tipo }}
 																	</div>
 																</div>
@@ -855,12 +851,15 @@
 					<div class="flex-auto p-5 w-full">
 						<div class="relative shadow-md rounded-lg bg-card px-5 py-7">
 							<ng-container [ngSwitch]="support?.tipo">
+								<!-- PDF -->
 								<ng-container *ngSwitchCase="'PDF'">
 									<object [data]="support.soporte" type="application/pdf" class="h-100"></object>
 								</ng-container>
+								<!-- Documentos -->
 								<ng-container *ngSwitchCase="'DOC'"></ng-container>
 								<ng-container *ngSwitchCase="'XLS'"></ng-container>
 								<ng-container *ngSwitchCase="'TXT'"></ng-container>
+								<!-- Imagenes -->
 								<ng-container *ngSwitchCase="'JPG'">
 									<ng-container *ngTemplateOutlet="tImage"></ng-container>
 								</ng-container>
@@ -870,10 +869,19 @@
 								<ng-container *ngSwitchCase="'JPEG'">
 									<ng-container *ngTemplateOutlet="tImage"></ng-container>
 								</ng-container>
+								<!-- Videos -->
+								<ng-container *ngSwitchCase="'MP4'">
+									<ng-container *ngTemplateOutlet="tVideo"></ng-container>
+								</ng-container>
 							</ng-container>
 
 							<ng-template #tImage>
-								<img [src]="support.soporte" alt="">
+								<img [src]="support.soporte" [alt]="support.soporte">
+							</ng-template>
+
+							<ng-template #tVideo>
+								<!-- <img [src]="support.soporte" alt=""> -->
+								<video [src]="support.soporte"></video>
 							</ng-template>
 						</div>
 					</div>
@@ -1057,12 +1065,7 @@
 											<div class="relative">
 												<mat-icon class="icon-size-14 text-hint"
 													[svgIcon]="'iconsmind:file'"></mat-icon>
-												<div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white"
-													[class.bg-red-600]="file?.tipo === 'PDF'"
-													[class.bg-blue-600]="file?.tipo === 'DOC'"
-													[class.bg-green-600]="file?.tipo === 'XLS'"
-													[class.bg-gray-600]="file?.tipo === 'TXT'"
-													[class.bg-amber-600]="file?.tipo === 'JPG' || file?.tipo === 'PNG' || file?.tipo === 'JPEG'">
+												<div class="absolute left-0 bottom-0 px-1.5 rounded text-sm font-semibold leading-5 text-white bg-amber-600">
 													{{ file?.tipo }}
 												</div>
 											</div>
@@ -1092,7 +1095,7 @@
 						(click)="fnBtnModalStart(null)">
 						Cerrar
 					</button>
-					<ng-container *ngIf="infoDetail?.soporte.length > 0">
+					<ng-container *ngIf="infoDetail?.soporte && infoDetail?.soporte?.length > 0">
 						<button type="submit"
 							class="my-5 w-full flex justify-center bg-blue-500 text-gray-100 p-4  rounded-full tracking-wide
 							font-semibold  focus:outline-none focus:shadow-outline hover:bg-blue-600 shadow-lg cursor-pointer transition ease-in duration-300 mr-2"
