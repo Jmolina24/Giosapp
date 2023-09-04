@@ -266,6 +266,17 @@ export class OrdersComponent implements OnInit {
 			return;
 		}
 
+		if (data.soporte.length === 0) {
+			const detalleData = {
+				...data,
+				idorden: response.idorden,
+				iddetalleorden: '0',
+				soporte: JSON.stringify([])
+			};
+
+			return this._orders.createDetail(detalleData);
+		}
+
 		const formData = new FormData();
 
 		data.soporte.forEach(({ file }) => {
