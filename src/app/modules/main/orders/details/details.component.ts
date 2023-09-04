@@ -190,7 +190,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 					});
 
 				if (this.listSupport.length === 0) {
-					this._alert.info({text: 'No soporte disponible', title: 'Visualización de soporte'});
+					this._alert.info({ text: 'No soporte disponible', title: 'Visualización de soporte' });
 					return;
 				}
 
@@ -299,6 +299,11 @@ export class DetailsComponent implements OnInit, OnChanges {
 	create(): void {
 		this._alert.loading();
 
+		if (this.data.soporte.length === 0) {
+			this.createDetail([]);
+			return;
+		}
+
 		const formData = new FormData();
 
 		this.data.soporte.forEach(({ file }) => {
@@ -315,43 +320,49 @@ export class DetailsComponent implements OnInit, OnChanges {
 			}
 
 			const soporte = r.rutas.map(({ path, originalname }) => ({ path, name: originalname }));
+			this.createDetail(soporte);
+		}, () => {
+			this._alert.closeAlert();
+		});
 
-			this._service
-				.createDetail({
-					idorden: this.idorden,
-					iddetalleorden: '0',
-					...this.data,
-					soporte: JSON.stringify(soporte)
-				})
-				.subscribe(
-					(response) => {
-						this._alert.closeAlert();
-						if (response.codigo !== 0) {
-							this._alert.error({
-								title: response.titulo,
-								text: response.mensaje,
-							});
-							return;
-						}
+	}
 
-						this._alert.success({
+	createDetail(soporte: any): void {
+		this._service
+			.createDetail({
+				idorden: this.idorden,
+				iddetalleorden: '0',
+				...this.data,
+				soporte: JSON.stringify(soporte)
+			})
+			.subscribe(
+				(response) => {
+					this._alert.closeAlert();
+					if (response.codigo !== 0) {
+						this._alert.error({
 							title: response.titulo,
 							text: response.mensaje,
 						});
-
-						this.getByOrden(this.idorden);
-						this.showSection(null);
-					},
-					({ error }) => {
-						this._alert.error({
-							title: error.titulo || 'Error',
-							text:
-								error.mensaje || 'Error al procesar la solicitud.',
-						});
+						return;
 					}
-				);
-		});
 
+					this._alert.success({
+						title: response.titulo,
+						text: response.mensaje,
+					});
+
+					this.getByOrden(this.idorden);
+					this.showSection(null);
+				},
+				({ error }) => {
+					this._alert.closeAlert();
+					this._alert.error({
+						title: error.titulo || 'Error',
+						text:
+							error.mensaje || 'Error al procesar la solicitud.',
+					});
+				}
+			);
 	}
 
 	update(): void {
@@ -571,9 +582,9 @@ export class DetailsComponent implements OnInit, OnChanges {
 
 	fnBtnModalStart(item: any = null): void {
 		if (item) {
-			let soporte  = JSON.parse(JSON.stringify(item?.soporte));
+			let soporte = JSON.parse(JSON.stringify(item?.soporte));
 
-			soporte = soporte?.map(({ path: t, name}, index) => {
+			soporte = soporte?.map(({ path: t, name }, index) => {
 				const url =
 					'https://giosapp.mipresapp.co' +
 					t.split('/web')[1];
@@ -588,7 +599,7 @@ export class DetailsComponent implements OnInit, OnChanges {
 				return supportObject;
 			});
 
-			this.infoDetail = {...item, soporte};
+			this.infoDetail = { ...item, soporte };
 		}
 
 		const modal = document.getElementById('modalListFileStart');
